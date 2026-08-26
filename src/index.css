@@ -1,0 +1,256 @@
+@import "./vars.css";
+
+/* ============================================================
+   Reset
+   ============================================================ */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: calc(var(--nav-h-compact) + var(--sp-6));
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  min-height: 100%;
+  background-color: var(--color-bg);
+  color: var(--color-text);
+  font-family: var(--font-body);
+  font-size: var(--fs-body);
+  line-height: var(--leading-body);
+  font-weight: 400;
+  letter-spacing: var(--tracking-snug);
+  font-feature-settings: "kern" 1, "liga" 1;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+  overflow-x: hidden;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5 {
+  font-family: var(--font-display);
+  color: var(--color-text-strong);
+  font-weight: 600;
+  line-height: var(--leading-tight);
+  letter-spacing: var(--tracking-tight);
+  text-wrap: balance;
+}
+
+h3,
+h4 {
+  line-height: var(--leading-snug);
+  letter-spacing: var(--tracking-snug);
+}
+
+p {
+  text-wrap: pretty;
+}
+
+img,
+svg,
+video {
+  display: block;
+  max-width: 100%;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+button,
+input,
+textarea,
+select {
+  font: inherit;
+  color: inherit;
+}
+
+button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+
+ul,
+ol {
+  list-style: none;
+}
+
+::selection {
+  background: rgba(var(--accent-rgb), 0.32);
+  color: var(--color-text-strong);
+}
+
+/* ============================================================
+   Focus — one ring, everywhere
+   ============================================================ */
+:focus {
+  outline: none;
+}
+
+:focus-visible {
+  outline: 2px solid var(--accent-soft);
+  outline-offset: 3px;
+  border-radius: var(--r-xs);
+}
+
+/* ============================================================
+   Scrollbar
+   ============================================================ */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(var(--accent-rgb), 0.32) transparent;
+}
+
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--color-bg-deep);
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(var(--accent-rgb), 0.26);
+  border: 3px solid var(--color-bg-deep);
+  border-radius: var(--r-pill);
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(var(--accent-rgb), 0.46);
+}
+
+/* ============================================================
+   Skip link
+   ============================================================ */
+.skipLink {
+  position: fixed;
+  top: var(--sp-3);
+  left: var(--sp-3);
+  z-index: calc(var(--z-modal) + 1);
+  transform: translateY(-200%);
+  padding: var(--sp-3) var(--sp-4);
+  border-radius: var(--r-sm);
+  background: var(--color-surface-3);
+  border: 1px solid var(--line-2);
+  font-size: var(--fs-body-sm);
+  transition: transform var(--dur-3) var(--e-out);
+}
+
+.skipLink:focus-visible {
+  transform: translateY(0);
+}
+
+/* ============================================================
+   Reveal system
+
+   One observer sets [data-revealed] (see useScrollReveal). The
+   variant lives in [data-reveal] so different content types get
+   different entrances instead of one uniform fade-up.
+   ============================================================ */
+[data-reveal] {
+  --reveal-delay: 0ms;
+  opacity: 0;
+  transition:
+    opacity var(--dur-4) var(--e-entrance),
+    transform var(--dur-4) var(--e-entrance);
+  transition-delay: var(--reveal-delay);
+  will-change: opacity, transform;
+}
+
+/* default — content blocks rise */
+[data-reveal="up"] {
+  transform: translate3d(0, 22px, 0);
+}
+
+/* copy and metadata — no movement, just presence */
+[data-reveal="fade"] {
+  transform: none;
+}
+
+/* cards — settle in from slightly small */
+[data-reveal="scale"] {
+  transform: translate3d(0, 16px, 0) scale(0.985);
+}
+
+/* side panels — drift in horizontally */
+[data-reveal="side"] {
+  transform: translate3d(24px, 0, 0);
+}
+
+/*
+ * Headings — the line wipes up from behind a mask.
+ *
+ * The mask is `overflow: hidden` on the observed element with the motion on
+ * its child, never `clip-path` on the element itself: clip-path empties an
+ * element's intersection rect, so a clipped element can never trigger the
+ * observer that is supposed to un-clip it.
+ */
+[data-reveal="mask"] {
+  opacity: 1;
+  overflow: hidden;
+  padding-bottom: 0.12em;
+  margin-bottom: -0.12em;
+}
+
+[data-reveal="mask"] > * {
+  display: block;
+  transform: translate3d(0, 108%, 0);
+  transition: transform var(--dur-5) var(--e-entrance);
+  transition-delay: var(--reveal-delay);
+}
+
+[data-reveal="mask"][data-revealed] > * {
+  transform: none;
+}
+
+[data-revealed] {
+  opacity: 1;
+  transform: none;
+  will-change: auto;
+}
+
+/* ============================================================
+   Reduced motion
+   ============================================================ */
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  [data-reveal],
+  [data-reveal="mask"] > * {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+
+  /*
+   * Delays must be zeroed too, not just durations: the hero's entrance is
+   * sequenced with animation-delay, and leaving those in place would hold
+   * content invisible for a second before it snapped in.
+   */
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-delay: 0ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    transition-delay: 0ms !important;
+    scroll-behavior: auto !important;
+  }
+}

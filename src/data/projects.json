@@ -1,0 +1,107 @@
+[
+  {
+    "title": "Employee Directory",
+    "imageSrc": "projects/employee-dir.png",
+    "description": "Built a responsive Employee Directory web app using React with search, filtering, and profile management features like create, edit and delete.",
+    "skills": [
+      "React",
+      "Dark Mode",
+      "JavaScript",
+      "Responsive"
+    ],
+    "demo": "https://employeedirectoryui.netlify.app"
+  },
+  {
+    "title": "College Events",
+    "imageSrc": "projects/college-events.png",
+    "description": "Built a recommendation system that suggests college events based on user interests using content-based filtering and displays recommendations on an interactive React UI.",
+    "skills": [
+      "React",
+      "Node JS",
+      "SQL",
+      "JavaScript",
+      "Material UI"
+    ],
+    "demo": "https://college-events-recommendations.onrender.com"
+  },
+  {
+    "title": "Smart Healthcare",
+    "imageSrc": "projects/smart-healthcare.png",
+    "description": "Developed a healthcare web app featuring a food calorie logger for users to track meals, promoting healthier choices with clean UI and intuitive functionality.",
+    "skills": [
+      "React",
+      "React Router",
+      "Bootstrap",
+      "Google Maps",
+      "JavaScript"
+    ],
+    "demo": "https://smart-healthcare-webapp.netlify.app"
+  },
+  {
+    "title": "College Recommendations",
+    "imageSrc": "projects/college-recommendations.png",
+    "description": "Created a system that provides personalized college suggestions based on user preferences using basic machine learning and displays results on a user-friendly interface.",
+    "skills": [
+      "React",
+      "React Router",
+      "JavaScript",
+      "Node JS",
+      "Express",
+      "SQL"
+    ],
+    "demo": "https://personalised-colleges-recommendations.onrender.com"
+  },
+  {
+    "title": "Shopping Web App",
+    "imageSrc": "projects/project1.png",
+    "description": "Developed an e-commerce web application with user authentication, product catalog, and shopping cart functionality.",
+    "skills": [
+      "React",
+      "React Router",
+      "Rest API",
+      "JavaScript",
+      "HTML",
+      "CSS"
+    ],
+    "demo": "https://e-commerce-by-sai-ram.netlify.app"
+  },
+  {
+    "title": "YouTube video player",
+    "imageSrc": "projects/project2.png",
+    "description": "Developed a web application featuring user authentication, video search, trending, gaming, and saved videos functionalities.",
+    "skills": [
+      "React",
+      "React Router",
+      "JavaScript",
+      "HTML",
+      "API integration",
+      "CSS"
+    ],
+    "demo": "https://ytvideoplayer.ccbp.tech/"
+  },
+  {
+    "title": "Covid19 Dashboard",
+    "imageSrc": "projects/project3.png",
+    "description": "Developed a responsive web app to provide real-time COVID-19 statistics of India, featuring data visualization and state-specific details.",
+    "skills": [
+      "React",
+      "React Router",
+      "Axios",
+      "Bootstrap",
+      "React Icons",
+      "Figma"
+    ],
+    "demo": "https://covid19sairam.ccbp.tech/"
+  },
+  {
+    "title": "Memory game",
+    "imageSrc": "projects/project4.png",
+    "description": "Developed a fun and interactive memory game featuring emojis, challenging players to avoid selecting the same image twice.",
+    "skills": [
+      "React",
+      "React Router",
+      "Bootstrap"
+    ],
+    "demo": "https://memory-game-by-sairam.netlify.app"
+  }
+]

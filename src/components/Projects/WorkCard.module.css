@@ -1,0 +1,159 @@
+@import "../../vars.css";
+
+.card {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-5);
+  height: 100%;
+  padding: var(--pad-card-lg);
+}
+
+/* ============================================================
+   Head
+   ============================================================ */
+.head {
+  display: flex;
+  flex-direction: column;
+}
+
+.headTop {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--sp-4);
+  margin-bottom: var(--sp-5);
+}
+
+.icon {
+  display: grid;
+  place-items: center;
+  width: 42px;
+  height: 42px;
+  border-radius: var(--r-md);
+  color: var(--accent-soft);
+  border: 1px solid rgba(var(--accent-rgb), 0.22);
+  background: rgba(var(--accent-rgb), 0.08);
+  transition:
+    transform var(--dur-3) var(--e-out),
+    border-color var(--dur-3) var(--e-out),
+    color var(--dur-3) var(--e-out);
+}
+
+.status {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  flex-shrink: 0;
+  padding: 0.24rem 0.62rem;
+  border-radius: var(--r-pill);
+  border: 1px solid var(--line-2);
+  background: var(--glass-1);
+  font-family: var(--font-mono);
+  font-size: var(--fs-eyebrow);
+  letter-spacing: var(--tracking-eyebrow);
+  text-transform: uppercase;
+  color: var(--color-text-dim);
+  white-space: nowrap;
+}
+
+.status::before {
+  content: "";
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: currentColor;
+}
+
+.title {
+  font-size: var(--fs-h3);
+  font-weight: 600;
+}
+
+.summary {
+  margin-top: var(--sp-3);
+  font-size: var(--fs-body-sm);
+  line-height: 1.62;
+  color: var(--color-text-muted);
+}
+
+/* accent rule that extends on hover */
+.headRule {
+  display: block;
+  width: 32px;
+  height: 1px;
+  margin-top: var(--sp-4);
+  background: linear-gradient(90deg, rgba(var(--accent-rgb), 0.85), rgba(var(--accent-rgb), 0.05));
+  transition: width var(--dur-4) var(--e-out);
+}
+
+/* ============================================================
+   Highlights
+   ============================================================ */
+.highlights {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-3);
+}
+
+.highlights li {
+  position: relative;
+  padding-left: 1.4rem;
+  font-size: var(--fs-body-sm);
+  line-height: 1.66;
+  color: var(--color-text-muted);
+}
+
+.highlights li::before {
+  content: "";
+  position: absolute;
+  top: 0.62em;
+  left: 0;
+  width: 6px;
+  height: 6px;
+  border-radius: 1px;
+  transform: rotate(45deg);
+  background: rgba(var(--accent-2-rgb), 0.65);
+}
+
+/* ============================================================
+   Stack
+   ============================================================ */
+.stack {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.32rem;
+  margin-top: auto;
+  padding-top: var(--sp-5);
+  border-top: 1px solid var(--line-1);
+}
+
+.tech {
+  padding: 0.26rem 0.58rem;
+  border-radius: var(--r-xs);
+  border: 1px solid var(--line-1);
+  background: var(--glass-1);
+  font-family: var(--font-mono);
+  font-size: 0.6rem;
+  letter-spacing: 0.05em;
+  color: var(--color-text-dim);
+  transition:
+    color var(--dur-3) var(--e-out),
+    border-color var(--dur-3) var(--e-out);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .card:hover .icon {
+    transform: translateY(-2px);
+    color: var(--color-text-strong);
+    border-color: rgba(var(--accent-rgb), 0.5);
+  }
+
+  .card:hover .headRule {
+    width: 68px;
+  }
+
+  .card:hover .tech {
+    color: var(--color-text-muted);
+    border-color: var(--line-2);
+  }
+}

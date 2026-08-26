@@ -1,0 +1,97 @@
+@import "../../vars.css";
+
+/* ------------------------------------------------------------
+   The surface every card in the site is built from.
+
+   Five stacked layers, in order:
+     1. base fill + hairline border
+     2. inner top highlight (the "lit edge")
+     3. pointer-tracked spotlight
+     4. gradient edge that illuminates on hover
+     5. content
+   ------------------------------------------------------------ */
+.card {
+  position: relative;
+  isolation: isolate;
+  border-radius: var(--r-lg);
+  background:
+    linear-gradient(180deg, var(--glass-2), var(--glass-1) 45%, transparent),
+    var(--color-surface-1);
+  border: 1px solid var(--line-1);
+  box-shadow: var(--shadow-md), var(--inner-top);
+  overflow: hidden;
+  transition:
+    transform var(--dur-3) var(--e-out),
+    border-color var(--dur-3) var(--e-out),
+    box-shadow var(--dur-3) var(--e-out);
+}
+
+.content {
+  position: relative;
+  z-index: 3;
+  height: 100%;
+}
+
+/* pointer-tracked highlight */
+.spotlight {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  opacity: 0;
+  pointer-events: none;
+  background: radial-gradient(
+    360px circle at var(--px, 50%) var(--py, 0%),
+    rgba(var(--accent-rgb), 0.14),
+    transparent 60%
+  );
+  transition: opacity var(--dur-3) var(--e-out);
+}
+
+/* gradient hairline that lights up from the pointer corner */
+.edge {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  border-radius: inherit;
+  padding: 1px;
+  opacity: 0;
+  pointer-events: none;
+  background: radial-gradient(
+    420px circle at var(--px, 50%) var(--py, 0%),
+    rgba(var(--accent-rgb), 0.85),
+    rgba(var(--accent-2-rgb), 0.35) 40%,
+    transparent 70%
+  );
+  -webkit-mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  mask-composite: exclude;
+  transition: opacity var(--dur-3) var(--e-out);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .card:hover,
+  .card:focus-within {
+    transform: translateY(-3px);
+    border-color: var(--line-2);
+    box-shadow: var(--shadow-lg), var(--inner-top);
+  }
+
+  .card:hover .spotlight,
+  .card:focus-within .spotlight,
+  .card:hover .edge,
+  .card:focus-within .edge {
+    opacity: 1;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .card:hover,
+  .card:focus-within {
+    transform: none;
+  }
+}

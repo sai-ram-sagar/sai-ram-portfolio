@@ -1,0 +1,290 @@
+@import "../../vars.css";
+
+.grid {
+  display: grid;
+  gap: clamp(2.25rem, 4vw, 3.5rem);
+  align-items: start;
+}
+
+/* ============================================================
+   Direct details
+   ============================================================ */
+.details {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-8);
+}
+
+.emailLink {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--sp-4);
+  padding-bottom: var(--sp-4);
+  font-family: var(--font-display);
+  font-size: clamp(1.15rem, 0.8rem + 1.7vw, 1.9rem);
+  font-weight: 500;
+  letter-spacing: var(--tracking-tight);
+  color: var(--color-text-strong);
+  word-break: break-word;
+}
+
+/* two-layer underline: the base hairline, then an accent that draws over it */
+.emailLink::before,
+.emailLink::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 1px;
+}
+
+.emailLink::before {
+  background: var(--line-2);
+}
+
+.emailLink::after {
+  background: linear-gradient(90deg, var(--accent), var(--accent-2));
+  transform: scaleX(0);
+  transform-origin: left center;
+  transition: transform var(--dur-4) var(--e-out);
+}
+
+.emailLink:hover::after,
+.emailLink:focus-visible::after {
+  transform: scaleX(1);
+}
+
+.emailLink svg {
+  flex-shrink: 0;
+  color: var(--accent-soft);
+  transition: transform var(--dur-3) var(--e-out);
+}
+
+.emailLink:hover svg {
+  transform: translate(3px, -3px);
+}
+
+.directList {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--sp-3) var(--sp-6);
+}
+
+.directList li {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: var(--fs-body-sm);
+  color: var(--color-text-muted);
+}
+
+.directList svg {
+  color: var(--color-text-dim);
+}
+
+/* ============================================================
+   Socials
+   ============================================================ */
+.socials {
+  display: grid;
+  gap: var(--sp-2);
+}
+
+.social {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: var(--sp-4);
+  padding: 0.8rem 0.95rem;
+  border-radius: var(--r-md);
+  border: 1px solid var(--line-1);
+  background: var(--glass-1);
+  box-shadow: var(--inner-top);
+  transition:
+    transform var(--dur-2) var(--e-out),
+    border-color var(--dur-2) var(--e-out),
+    background-color var(--dur-2) var(--e-out);
+}
+
+.socialIcon {
+  display: grid;
+  place-items: center;
+  width: 34px;
+  height: 34px;
+  border-radius: var(--r-sm);
+  color: var(--color-text-muted);
+  border: 1px solid var(--line-1);
+  background: var(--color-surface-2);
+  transition:
+    color var(--dur-2) var(--e-out),
+    border-color var(--dur-2) var(--e-out);
+}
+
+.socialText {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.socialLabel {
+  font-size: var(--fs-body-sm);
+  font-weight: 500;
+  color: var(--color-text);
+}
+
+.socialHandle {
+  font-family: var(--font-mono);
+  font-size: var(--fs-mono);
+  letter-spacing: 0.04em;
+  color: var(--color-text-dim);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.socialArrow {
+  color: var(--color-text-dim);
+  transition:
+    transform var(--dur-3) var(--e-out),
+    color var(--dur-2) var(--e-out);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .social:hover {
+    transform: translateY(-2px);
+    border-color: rgba(var(--accent-rgb), 0.42);
+    background: var(--glass-2);
+  }
+
+  .social:hover .socialIcon {
+    color: var(--color-text-strong);
+    border-color: rgba(var(--accent-rgb), 0.4);
+  }
+
+  .social:hover .socialArrow {
+    transform: translate(3px, -3px);
+    color: var(--accent-soft);
+  }
+}
+
+.social:active {
+  transform: translateY(0) scale(0.995);
+}
+
+/* ============================================================
+   Form
+   ============================================================ */
+.formCard {
+  padding: var(--pad-card-lg);
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-4);
+}
+
+.formHead {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-3);
+  padding-bottom: var(--sp-4);
+  border-bottom: 1px solid var(--line-1);
+}
+
+.formHead svg {
+  color: var(--accent-soft);
+}
+
+.formHead h3 {
+  font-size: var(--fs-h4);
+  font-weight: 500;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.42rem;
+}
+
+.field label {
+  font-family: var(--font-mono);
+  font-size: var(--fs-eyebrow);
+  letter-spacing: var(--tracking-eyebrow);
+  text-transform: uppercase;
+  color: var(--color-text-dim);
+  transition: color var(--dur-2) var(--e-out);
+}
+
+.field:focus-within label {
+  color: var(--accent-soft);
+}
+
+.field input,
+.field textarea {
+  width: 100%;
+  padding: 0.78rem 0.9rem;
+  border-radius: var(--r-sm);
+  border: 1px solid var(--line-1);
+  background: var(--color-surface-2);
+  color: var(--color-text);
+  font-size: var(--fs-body-sm);
+  transition:
+    border-color var(--dur-2) var(--e-out),
+    background-color var(--dur-2) var(--e-out),
+    box-shadow var(--dur-2) var(--e-out);
+}
+
+.field textarea {
+  resize: vertical;
+  min-height: 112px;
+}
+
+.field input::placeholder,
+.field textarea::placeholder {
+  color: var(--color-text-dim);
+}
+
+.field input:hover,
+.field textarea:hover {
+  border-color: var(--line-2);
+}
+
+.field input:focus,
+.field textarea:focus {
+  outline: none;
+  border-color: rgba(var(--accent-rgb), 0.55);
+  background: var(--color-surface-3);
+  box-shadow: 0 0 0 3px rgba(var(--accent-rgb), 0.13);
+}
+
+.submit {
+  width: 100%;
+  margin-top: var(--sp-2);
+}
+
+.status:empty {
+  display: none;
+}
+
+.status {
+  font-size: var(--fs-body-sm);
+  color: var(--signal);
+}
+
+.statusError {
+  color: #ff9c8a;
+}
+
+/* ============================================================
+   Breakpoints
+   ============================================================ */
+@media (min-width: 940px) {
+  .grid {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    gap: clamp(2.5rem, 5vw, 4.5rem);
+  }
+}

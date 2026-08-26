@@ -1,0 +1,104 @@
+@import "../../vars.css";
+
+.section {
+  position: relative;
+  padding-block: var(--section-gap);
+}
+
+/* ------------------------------------------------------------
+   Boundary: a hairline that brightens toward the centre plus a
+   faint bloom above it, so sections read as scenes in one
+   continuous surface rather than stacked blocks.
+   ------------------------------------------------------------ */
+.divider {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+}
+
+.dividerLine {
+  display: block;
+  height: 100%;
+  background: var(--gradient-divider);
+  transform: scaleX(0);
+  transform-origin: center;
+  transition: transform 1100ms var(--e-out);
+}
+
+.divider[data-revealed] .dividerLine {
+  transform: scaleX(1);
+}
+
+.divider::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: -80px;
+  width: min(46rem, 80vw);
+  height: 160px;
+  transform: translateX(-50%);
+  background: radial-gradient(closest-side, rgba(var(--accent-rgb), 0.09), transparent);
+  pointer-events: none;
+}
+
+.inner {
+  width: 100%;
+  max-width: var(--page-max);
+  margin-inline: auto;
+  padding-inline: var(--page-pad);
+}
+
+/* ------------------------------------------------------------
+   Header
+   ------------------------------------------------------------ */
+.header {
+  margin-bottom: clamp(2.5rem, 1.8rem + 2.2vw, 4rem);
+  max-width: 60ch;
+}
+
+.eyebrow {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-3);
+  margin-bottom: var(--sp-5);
+}
+
+.eyebrowIndex,
+.eyebrowLabel {
+  font-family: var(--font-mono);
+  font-size: var(--fs-eyebrow);
+  font-weight: 500;
+  letter-spacing: var(--tracking-eyebrow);
+  text-transform: uppercase;
+  line-height: 1;
+}
+
+.eyebrowIndex {
+  color: var(--accent-soft);
+}
+
+.eyebrowLabel {
+  color: var(--color-text-dim);
+}
+
+.eyebrowRule {
+  width: 28px;
+  height: 1px;
+  background: linear-gradient(90deg, rgba(var(--accent-rgb), 0.7), rgba(var(--accent-rgb), 0.1));
+}
+
+.title {
+  font-size: var(--fs-h2);
+  font-weight: 600;
+  max-width: 20ch;
+}
+
+.caption {
+  margin-top: var(--sp-4);
+  max-width: 54ch;
+  font-size: var(--fs-lead);
+  line-height: 1.55;
+  color: var(--color-text-muted);
+}

@@ -1,0 +1,42 @@
+[
+  {
+    "title": "ReactJS",
+    "imageSrc": "certificates/reactjs.png"
+  },
+  {
+    "title": "NodeJS",
+    "imageSrc": "certificates/nodejs.png"
+  },
+  {
+    "title": "Python",
+    "imageSrc": "certificates/python.png"
+  },
+  {
+    "title": "SQL",
+    "imageSrc": "certificates/sql.png"
+  },
+  {
+    "title": "JavaScript",
+    "imageSrc": "certificates/javascript.png"
+  },
+  {
+    "title": "HTML & CSS",
+    "imageSrc": "certificates/htmlcss.png"
+  },
+  {
+    "title": "Flexbox",
+    "imageSrc": "certificates/flexbox.png"
+  },
+  {
+    "title": "Dynamic Web Application",
+    "imageSrc": "certificates/dynamicwebapp.png"
+  },
+  {
+    "title": "Developer Foundations",
+    "imageSrc": "certificates/developerfoundations.png"
+  },
+  {
+    "title": "Bootstrap",
+    "imageSrc": "certificates/bootstrap.png"
+  }
+]

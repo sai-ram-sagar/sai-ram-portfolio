@@ -1,0 +1,196 @@
+@import "../../vars.css";
+
+.grid {
+  display: grid;
+  gap: var(--sp-4);
+}
+
+.groupCard {
+  transition:
+    transform var(--dur-3) var(--e-out),
+    border-color var(--dur-3) var(--e-out),
+    box-shadow var(--dur-3) var(--e-out),
+    opacity var(--dur-3) var(--e-out);
+}
+
+/*
+ * Focusing one group recedes the others. It turns a wall of badges into
+ * something you read one category at a time.
+ */
+@media (hover: hover) and (pointer: fine) {
+  .grid:has(.groupCard:hover) .groupCard:not(:hover) {
+    opacity: 0.46;
+  }
+}
+
+.group {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-5);
+  padding: var(--pad-card);
+  height: 100%;
+}
+
+/* ============================================================
+   Header
+   ============================================================ */
+.groupHeader {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: var(--sp-3);
+}
+
+.groupIcon {
+  display: grid;
+  place-items: center;
+  width: 36px;
+  height: 36px;
+  flex-shrink: 0;
+  border-radius: var(--r-sm);
+  color: var(--accent-soft);
+  border: 1px solid rgba(var(--accent-rgb), 0.2);
+  background: rgba(var(--accent-rgb), 0.07);
+  transition:
+    transform var(--dur-3) var(--e-out),
+    border-color var(--dur-3) var(--e-out),
+    color var(--dur-3) var(--e-out);
+}
+
+.groupTitle {
+  font-size: var(--fs-h4);
+  font-weight: 500;
+}
+
+.groupCount {
+  font-family: var(--font-mono);
+  font-size: var(--fs-eyebrow);
+  letter-spacing: var(--tracking-eyebrow);
+  color: var(--color-text-dim);
+  transition: color var(--dur-3) var(--e-out);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .groupCard:hover .groupIcon {
+    transform: translateY(-2px);
+    color: var(--color-text-strong);
+    border-color: rgba(var(--accent-rgb), 0.5);
+  }
+
+  .groupCard:hover .groupCount {
+    color: var(--accent-soft);
+  }
+}
+
+/* ============================================================
+   Chips
+   ============================================================ */
+.chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+}
+
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  padding: 0.4rem 0.68rem;
+  border-radius: var(--r-sm);
+  border: 1px solid var(--line-1);
+  background: var(--glass-1);
+  box-shadow: var(--inner-top);
+  font-size: var(--fs-body-sm);
+  color: var(--color-text-muted);
+  text-align: left;
+  transition:
+    color var(--dur-1) var(--e-out),
+    border-color var(--dur-1) var(--e-out),
+    background-color var(--dur-1) var(--e-out),
+    transform var(--dur-1) var(--e-out);
+}
+
+.chipIcon {
+  width: 16px;
+  height: 16px;
+  flex-shrink: 0;
+  object-fit: contain;
+  opacity: 0.7;
+  transition: opacity var(--dur-2) var(--e-out);
+}
+
+.chipBadge {
+  flex-shrink: 0;
+  color: rgba(var(--accent-rgb), 0.7);
+  transition: color var(--dur-2) var(--e-out);
+}
+
+.chipInteractive {
+  cursor: pointer;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .chip:hover .chipIcon {
+    opacity: 1;
+  }
+
+  .chipInteractive:hover {
+    transform: translateY(-2px);
+    color: var(--color-text-strong);
+    border-color: rgba(var(--accent-rgb), 0.48);
+    background: rgba(var(--accent-rgb), 0.1);
+  }
+
+  .chipInteractive:hover .chipBadge {
+    color: var(--accent-soft);
+  }
+}
+
+.chipInteractive:focus-visible {
+  color: var(--color-text-strong);
+  border-color: rgba(var(--accent-rgb), 0.48);
+}
+
+.chipInteractive:active {
+  transform: translateY(0) scale(0.97);
+  transition-duration: 80ms;
+}
+
+/* ============================================================
+   Legend
+   ============================================================ */
+.legend {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-2);
+  margin-top: var(--sp-6);
+  font-size: var(--fs-body-sm);
+  color: var(--color-text-dim);
+}
+
+.legend svg {
+  flex-shrink: 0;
+  color: rgba(var(--accent-rgb), 0.7);
+}
+
+/* ============================================================
+   Breakpoints
+   ============================================================ */
+@media (min-width: 720px) {
+  .grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (min-width: 1080px) {
+  .grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .chipInteractive:hover,
+  .chipInteractive:active {
+    transform: none;
+  }
+}

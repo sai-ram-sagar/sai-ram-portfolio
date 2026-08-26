@@ -1,0 +1,133 @@
+@import "../../vars.css";
+
+.footer {
+  position: relative;
+  padding-block: var(--sp-8) var(--sp-10);
+}
+
+/* the same boundary treatment the sections use, so the page ends deliberately */
+.footer::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: var(--gradient-divider);
+}
+
+.inner {
+  max-width: var(--page-max);
+  margin-inline: auto;
+  padding-inline: var(--page-pad);
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--sp-5);
+}
+
+.identity {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+}
+
+.name {
+  font-weight: 500;
+  color: var(--color-text);
+}
+
+.role {
+  font-family: var(--font-mono);
+  font-size: var(--fs-eyebrow);
+  letter-spacing: var(--tracking-eyebrow);
+  text-transform: uppercase;
+  color: var(--color-text-dim);
+}
+
+.links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--sp-5);
+}
+
+.links a {
+  position: relative;
+  font-size: var(--fs-body-sm);
+  color: var(--color-text-muted);
+  transition: color var(--dur-2) var(--e-out);
+}
+
+.links a::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -3px;
+  height: 1px;
+  background: currentColor;
+  transform: scaleX(0);
+  transform-origin: right center;
+  transition: transform var(--dur-3) var(--e-out);
+}
+
+.links a:hover,
+.links a:focus-visible {
+  color: var(--color-text-strong);
+}
+
+.links a:hover::after,
+.links a:focus-visible::after {
+  transform: scaleX(1);
+  transform-origin: left center;
+}
+
+.top {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  padding: 0.5rem 0.95rem;
+  border-radius: var(--r-pill);
+  border: 1px solid var(--line-1);
+  background: var(--glass-1);
+  box-shadow: var(--inner-top);
+  font-size: var(--fs-body-sm);
+  color: var(--color-text-muted);
+  transition:
+    color var(--dur-2) var(--e-out),
+    border-color var(--dur-2) var(--e-out),
+    transform var(--dur-1) var(--e-out);
+}
+
+.top:hover {
+  color: var(--color-text-strong);
+  border-color: rgba(var(--accent-rgb), 0.42);
+  transform: translateY(-2px);
+}
+
+.top:active {
+  transform: translateY(0) scale(0.98);
+}
+
+.top svg {
+  transition: transform var(--dur-2) var(--e-out);
+}
+
+.top:hover svg {
+  transform: translateY(-2px);
+}
+
+@media (max-width: 560px) {
+  .inner {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .top:hover,
+  .top:active {
+    transform: none;
+  }
+}

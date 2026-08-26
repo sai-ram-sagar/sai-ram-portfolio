@@ -1,0 +1,102 @@
+@import "../../vars.css";
+
+.group + .group {
+  margin-top: clamp(3.5rem, 2.4rem + 4vw, 6rem);
+}
+
+/* ============================================================
+   Group heading — label, name, rule, count
+   ============================================================ */
+.groupTitle {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-4);
+  margin-bottom: var(--sp-6);
+  font-size: var(--fs-h4);
+  font-weight: 500;
+  color: var(--color-text);
+}
+
+.groupLabel {
+  flex-shrink: 0;
+  padding: 0.24rem 0.62rem;
+  border-radius: var(--r-pill);
+  border: 1px solid rgba(var(--accent-rgb), 0.28);
+  background: rgba(var(--accent-rgb), 0.09);
+  font-family: var(--font-mono);
+  font-size: var(--fs-eyebrow);
+  font-weight: 500;
+  letter-spacing: var(--tracking-eyebrow);
+  text-transform: uppercase;
+  color: var(--accent-soft);
+}
+
+.groupText {
+  flex-shrink: 0;
+}
+
+.groupRule {
+  flex: 1;
+  height: 1px;
+  min-width: 1rem;
+  background: linear-gradient(90deg, var(--line-2), transparent);
+}
+
+.groupCount {
+  flex-shrink: 0;
+  font-family: var(--font-mono);
+  font-size: var(--fs-eyebrow);
+  letter-spacing: var(--tracking-eyebrow);
+  color: var(--color-text-dim);
+}
+
+/* ============================================================
+   Grids
+   ============================================================ */
+.workGrid,
+.projectGrid {
+  display: grid;
+  gap: var(--sp-4);
+}
+
+.moreWrap {
+  display: flex;
+  justify-content: center;
+  margin-top: var(--sp-8);
+}
+
+.more {
+  --reveal-delay: 0ms;
+}
+
+/* ============================================================
+   Breakpoints
+   ============================================================ */
+@media (max-width: 560px) {
+  .groupTitle {
+    flex-wrap: wrap;
+    gap: var(--sp-3);
+  }
+
+  .groupRule {
+    display: none;
+  }
+}
+
+@media (min-width: 760px) {
+  .projectGrid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (min-width: 1000px) {
+  .workGrid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (min-width: 1060px) {
+  .projectGrid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}

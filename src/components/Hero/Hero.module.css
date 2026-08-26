@@ -1,0 +1,603 @@
+@import "../../vars.css";
+
+/* ============================================================
+   Entrance choreography
+
+   Every hero element opts in with the shared `enter` keyframe and
+   orders itself with --enter-delay set in the JSX. One keyframe,
+   one easing, one duration — the sequence is the only variable.
+   ============================================================ */
+@keyframes enter {
+  from {
+    opacity: 0;
+    transform: translate3d(0, 18px, 0);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+.kicker,
+.greeting,
+.specialism,
+.lead,
+.actions,
+.focus,
+.focusItem,
+.portraitWrap,
+.metrics,
+.metric,
+.scrollCue {
+  animation: enter var(--dur-5) var(--e-entrance) both;
+  animation-delay: var(--enter-delay, 0ms);
+}
+
+/* ============================================================
+   Shell
+   ============================================================ */
+.hero {
+  position: relative;
+  min-height: min(100svh, 960px);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding-top: calc(var(--nav-h) + clamp(2rem, 5vw, 4.5rem));
+  padding-bottom: clamp(3rem, 6vw, 5rem);
+}
+
+/* soft light that follows the pointer across the whole hero */
+.pointerGlow {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  opacity: 0;
+  pointer-events: none;
+  background: radial-gradient(
+    620px circle at var(--px, 50%) var(--py, 40%),
+    rgba(var(--accent-rgb), 0.09),
+    transparent 62%
+  );
+  transition: opacity var(--dur-4) var(--e-out);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .hero:hover .pointerGlow {
+    opacity: 1;
+  }
+}
+
+.inner {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  max-width: var(--page-max);
+  margin-inline: auto;
+  padding-inline: var(--page-pad);
+  display: grid;
+  gap: clamp(2.5rem, 5vw, 4rem);
+  align-items: center;
+}
+
+.content {
+  max-width: 40rem;
+}
+
+/* ============================================================
+   Eyebrow
+   ============================================================ */
+.kicker {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--sp-3);
+  padding: 0.4rem 0.9rem 0.4rem 0.7rem;
+  margin-bottom: var(--sp-6);
+  border-radius: var(--r-pill);
+  border: 1px solid var(--line-1);
+  background: var(--glass-1);
+  box-shadow: var(--inner-top);
+  font-family: var(--font-mono);
+  font-size: var(--fs-eyebrow);
+  font-weight: 500;
+  letter-spacing: var(--tracking-eyebrow);
+  text-transform: uppercase;
+  color: var(--color-text-muted);
+  line-height: 1;
+}
+
+.kickerRole {
+  color: var(--color-text);
+}
+
+.kickerDot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--signal);
+  box-shadow: 0 0 0 3px rgba(var(--signal-rgb), 0.15);
+}
+
+.kickerSep {
+  width: 1px;
+  height: 10px;
+  background: var(--line-3);
+}
+
+.kickerPlace {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  white-space: nowrap;
+}
+
+.kicker svg {
+  color: var(--color-text-dim);
+}
+
+/* ============================================================
+   Name
+   ============================================================ */
+.title {
+  font-size: var(--fs-h1);
+  font-weight: 600;
+  line-height: 0.96;
+}
+
+.greeting {
+  display: block;
+  margin-bottom: var(--sp-2);
+  font-size: 0.4em;
+  font-weight: 300;
+  letter-spacing: var(--tracking-snug);
+  color: var(--color-text-muted);
+}
+
+/* the mask lets the name wipe upward instead of simply fading in */
+.nameMask {
+  display: block;
+  overflow: hidden;
+  padding-bottom: 0.08em;
+}
+
+.name {
+  display: block;
+  background: linear-gradient(
+    98deg,
+    var(--color-text-strong) 0%,
+    var(--color-text-strong) 26%,
+    var(--accent-soft) 56%,
+    var(--accent-2-soft) 78%,
+    var(--color-text-strong) 100%
+  );
+  background-size: 230% 100%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  animation:
+    nameWipe var(--dur-5) var(--e-entrance) both,
+    sheen 16s var(--e-inout) 1.6s infinite;
+  animation-delay: var(--enter-delay, 280ms), 1.6s;
+}
+
+@keyframes nameWipe {
+  from {
+    transform: translate3d(0, 100%, 0);
+  }
+  to {
+    transform: none;
+  }
+}
+
+@keyframes sheen {
+  0%,
+  100% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+}
+
+/* ============================================================
+   Specialism line
+   ============================================================ */
+.specialism {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--sp-3);
+  margin-top: var(--sp-5);
+  font-family: var(--font-mono);
+  font-size: var(--fs-body-sm);
+  font-weight: 500;
+  color: var(--color-text);
+}
+
+.specialismRule {
+  flex-shrink: 0;
+  width: 26px;
+  height: 1px;
+  margin-top: 0.62em;
+  background: linear-gradient(90deg, rgba(var(--accent-rgb), 0.85), rgba(var(--accent-rgb), 0.1));
+  transform-origin: left center;
+  animation: drawRule var(--dur-5) var(--e-entrance) both;
+  animation-delay: calc(var(--enter-delay, 0ms) + 60ms);
+}
+
+@keyframes drawRule {
+  from {
+    transform: scaleX(0);
+    opacity: 0;
+  }
+  to {
+    transform: none;
+    opacity: 1;
+  }
+}
+
+.specialismText {
+  min-width: 0;
+}
+
+.stackLine {
+  white-space: nowrap;
+}
+
+.slash {
+  margin-inline: 0.5rem;
+  color: rgba(var(--accent-rgb), 0.85);
+}
+
+/* ============================================================
+   Lead, actions, focus chips
+   ============================================================ */
+.lead {
+  margin-top: var(--sp-5);
+  max-width: 46ch;
+  font-size: var(--fs-lead);
+  line-height: 1.6;
+  color: var(--color-text-muted);
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--sp-3);
+  margin-top: var(--sp-8);
+}
+
+.focus {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--sp-2);
+  margin-top: var(--sp-8);
+  padding-top: var(--sp-6);
+  border-top: 1px solid var(--line-1);
+}
+
+.focusItem {
+  padding: 0.3rem 0.72rem;
+  border-radius: var(--r-xs);
+  border: 1px solid var(--line-1);
+  background: var(--glass-1);
+  font-family: var(--font-mono);
+  font-size: var(--fs-mono);
+  letter-spacing: 0.06em;
+  color: var(--color-text-muted);
+  transition:
+    color var(--dur-1) var(--e-out),
+    border-color var(--dur-1) var(--e-out),
+    transform var(--dur-1) var(--e-out);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .focusItem:hover {
+    transform: translateY(-2px);
+    color: var(--color-text);
+    border-color: rgba(var(--accent-rgb), 0.4);
+  }
+}
+
+/* ============================================================
+   Portrait
+   ============================================================ */
+.portraitWrap {
+  position: relative;
+  justify-self: center;
+  width: min(348px, 76vw);
+  aspect-ratio: 1;
+}
+
+.portraitFrame {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  display: grid;
+  place-items: center;
+}
+
+.portrait {
+  position: relative;
+  z-index: 3;
+  width: 86%;
+  height: 86%;
+  object-fit: cover;
+  border-radius: 50%;
+  animation: portraitIn var(--dur-5) var(--e-entrance) both;
+  animation-delay: calc(var(--enter-delay, 0ms) + 80ms);
+}
+
+@keyframes portraitIn {
+  from {
+    opacity: 0;
+    transform: scale(0.94);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* slow orbiting arc — the only continuously moving element in the hero */
+.orbit {
+  position: absolute;
+  inset: -5%;
+  z-index: 1;
+  border-radius: 50%;
+  padding: 1px;
+  background: conic-gradient(
+    from 0deg,
+    transparent 0deg,
+    rgba(var(--accent-rgb), 0.55) 26deg,
+    transparent 62deg,
+    transparent 360deg
+  );
+  -webkit-mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  mask-composite: exclude;
+  animation: orbit 18s linear infinite;
+  will-change: transform;
+}
+
+@keyframes orbit {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.ring {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  border-radius: 50%;
+  padding: 1px;
+  background: conic-gradient(
+    from 205deg,
+    rgba(var(--accent-rgb), 0.8),
+    rgba(var(--accent-2-rgb), 0.45) 24%,
+    transparent 52%,
+    rgba(var(--accent-rgb), 0.3) 80%,
+    rgba(var(--accent-rgb), 0.8) 100%
+  );
+  -webkit-mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  mask-composite: exclude;
+}
+
+.ringGlow {
+  position: absolute;
+  inset: 5%;
+  z-index: 0;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(var(--accent-rgb), 0.26), transparent 66%);
+  filter: blur(40px);
+}
+
+.tick {
+  position: absolute;
+  width: 20px;
+  height: 20px;
+  border: 1px solid rgba(var(--accent-rgb), 0.45);
+}
+
+.tickTL {
+  top: -4px;
+  left: 1%;
+  border-right: 0;
+  border-bottom: 0;
+}
+
+.tickBR {
+  bottom: -4px;
+  right: 1%;
+  border-left: 0;
+  border-top: 0;
+}
+
+/* ============================================================
+   Metrics band
+   ============================================================ */
+.metrics {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  max-width: var(--page-max);
+  margin: clamp(2.75rem, 5vw, 4.25rem) auto 0;
+  padding-inline: var(--page-pad);
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  border-block: 1px solid var(--line-1);
+}
+
+.metric {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+  padding: var(--sp-5);
+  border-left: 1px solid var(--line-1);
+}
+
+.metric:nth-child(odd) {
+  border-left: 0;
+}
+
+.metric:nth-child(n + 3) {
+  border-top: 1px solid var(--line-1);
+}
+
+.metricValue {
+  font-family: var(--font-display);
+  font-size: clamp(1.55rem, 1.1rem + 1.7vw, 2.2rem);
+  font-weight: 600;
+  letter-spacing: var(--tracking-tight);
+  line-height: 1.05;
+  color: var(--color-text-strong);
+  font-variant-numeric: tabular-nums;
+}
+
+.metricLabel {
+  font-family: var(--font-mono);
+  font-size: var(--fs-mono);
+  letter-spacing: 0.05em;
+  color: var(--color-text-dim);
+}
+
+/* ============================================================
+   Scroll cue
+   ============================================================ */
+.scrollCue {
+  position: relative;
+  z-index: 1;
+  display: none;
+  align-items: center;
+  gap: var(--sp-3);
+  width: max-content;
+  margin: clamp(2.25rem, 4vw, 3.25rem) auto 0;
+  font-family: var(--font-mono);
+  font-size: var(--fs-eyebrow);
+  letter-spacing: var(--tracking-eyebrow);
+  text-transform: uppercase;
+  color: var(--color-text-dim);
+  transition: color var(--dur-2) var(--e-out);
+}
+
+.scrollCue:hover {
+  color: var(--color-text);
+}
+
+.scrollTrack {
+  position: relative;
+  width: 1px;
+  height: 26px;
+  overflow: hidden;
+  background: var(--line-2);
+}
+
+.scrollDot {
+  position: absolute;
+  inset-inline: 0;
+  height: 9px;
+  background: var(--accent-soft);
+  animation: trickle 2.6s var(--e-inout) infinite;
+}
+
+@keyframes trickle {
+  0% {
+    transform: translateY(-100%);
+  }
+  60%,
+  100% {
+    transform: translateY(300%);
+  }
+}
+
+.scrollCue svg {
+  transition: transform var(--dur-2) var(--e-out);
+}
+
+.scrollCue:hover svg {
+  transform: translateY(2px);
+}
+
+/* ============================================================
+   Breakpoints
+   ============================================================ */
+@media (min-width: 880px) {
+  .inner {
+    grid-template-columns: minmax(0, 1.12fr) minmax(0, 0.88fr);
+  }
+
+  .portraitWrap {
+    width: min(374px, 100%);
+    justify-self: end;
+  }
+
+  .scrollCue {
+    display: inline-flex;
+  }
+
+  .metrics {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+
+  .metric:nth-child(odd) {
+    border-left: 1px solid var(--line-1);
+  }
+
+  .metric:first-child {
+    border-left: 0;
+  }
+
+  .metric:nth-child(n + 3) {
+    border-top: 0;
+  }
+}
+
+@media (max-width: 879px) {
+  .inner {
+    grid-template-areas:
+      "portrait"
+      "content";
+  }
+
+  .content {
+    grid-area: content;
+  }
+
+  .portraitWrap {
+    grid-area: portrait;
+    width: min(224px, 58vw);
+  }
+}
+
+@media (max-width: 420px) {
+  .kicker {
+    flex-wrap: wrap;
+    row-gap: 0.35rem;
+  }
+
+  .metric {
+    padding: var(--sp-4);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .orbit,
+  .scrollDot,
+  .name {
+    animation: none;
+  }
+
+  .name {
+    background-position: 0% 50%;
+  }
+}

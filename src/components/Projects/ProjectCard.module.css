@@ -1,0 +1,250 @@
+@import "../../vars.css";
+
+.card {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+/* ============================================================
+   Preview
+   ============================================================ */
+.preview {
+  border-bottom: 1px solid var(--line-1);
+  background: var(--color-surface-2);
+}
+
+.chrome {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-3);
+  padding: 0.55rem 0.8rem;
+  border-bottom: 1px solid var(--line-1);
+}
+
+.dots {
+  display: inline-flex;
+  gap: 5px;
+}
+
+.dots i {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--line-3);
+  transition: background-color var(--dur-3) var(--e-out);
+}
+
+.url {
+  flex: 1;
+  min-width: 0;
+  padding: 0.16rem 0.6rem;
+  border-radius: var(--r-pill);
+  background: var(--glass-1);
+  font-family: var(--font-mono);
+  font-size: 0.6rem;
+  letter-spacing: 0.04em;
+  color: var(--color-text-dim);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  transition: color var(--dur-3) var(--e-out);
+}
+
+.shot {
+  position: relative;
+  display: grid;
+  place-items: center;
+  aspect-ratio: 4 / 3;
+  padding: 1.1rem 1.25rem;
+  overflow: hidden;
+  background:
+    radial-gradient(120% 92% at 50% 0%, rgba(var(--accent-rgb), 0.08), transparent 70%),
+    var(--color-surface-2);
+}
+
+/* light that rises behind the capture on hover */
+.shotGlow {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  pointer-events: none;
+  background: radial-gradient(90% 60% at 50% 100%, rgba(var(--accent-rgb), 0.2), transparent 70%);
+  transition: opacity var(--dur-4) var(--e-out);
+}
+
+/*
+ * The captures are a mix of desktop and mobile shapes, so they are contained
+ * rather than cropped — nothing is hidden and nothing is stretched.
+ */
+.image {
+  position: relative;
+  z-index: 1;
+  max-width: 100%;
+  max-height: 100%;
+  width: auto;
+  height: auto;
+  border-radius: var(--r-xs);
+  border: 1px solid var(--line-1);
+  box-shadow: var(--shadow-md);
+  transition:
+    transform var(--dur-5) var(--e-out),
+    box-shadow var(--dur-4) var(--e-out);
+}
+
+/* ============================================================
+   Body
+   ============================================================ */
+.body {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  gap: var(--sp-3);
+  padding: var(--pad-card);
+}
+
+.title {
+  font-size: var(--fs-h4);
+  font-weight: 600;
+  transition: color var(--dur-2) var(--e-out);
+}
+
+.description {
+  font-size: var(--fs-body-sm);
+  line-height: 1.62;
+  color: var(--color-text-muted);
+}
+
+.skills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.32rem;
+  margin-top: auto;
+  padding-top: var(--sp-2);
+}
+
+.skill {
+  padding: 0.22rem 0.52rem;
+  border-radius: var(--r-xs);
+  border: 1px solid var(--line-1);
+  background: var(--glass-1);
+  font-family: var(--font-mono);
+  font-size: 0.6rem;
+  letter-spacing: 0.05em;
+  color: var(--color-text-dim);
+  transition:
+    color var(--dur-3) var(--e-out),
+    border-color var(--dur-3) var(--e-out);
+}
+
+/* ============================================================
+   Link — stretched across the card so the whole surface is
+   clickable while the page still has exactly one link per card.
+   ============================================================ */
+.link {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--sp-3);
+  margin-top: var(--sp-3);
+  padding-top: var(--sp-4);
+  border-top: 1px solid var(--line-1);
+  font-size: var(--fs-body-sm);
+  font-weight: 500;
+  color: var(--color-text);
+  transition: color var(--dur-2) var(--e-out);
+}
+
+.link::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+}
+
+.linkLabel {
+  position: relative;
+}
+
+/* underline that draws in from the left */
+.linkLabel::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -3px;
+  height: 1px;
+  background: currentColor;
+  transform: scaleX(0);
+  transform-origin: left center;
+  transition: transform var(--dur-3) var(--e-out);
+}
+
+.linkArrow {
+  display: grid;
+  place-items: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  border: 1px solid var(--line-1);
+  background: var(--glass-1);
+  transition:
+    transform var(--dur-3) var(--e-out),
+    border-color var(--dur-3) var(--e-out),
+    background-color var(--dur-3) var(--e-out),
+    color var(--dur-3) var(--e-out);
+}
+
+/* ============================================================
+   Hover — five small movements instead of one big scale
+   ============================================================ */
+@media (hover: hover) and (pointer: fine) {
+  .card:hover .image {
+    transform: translateY(-4px) scale(1.035);
+    box-shadow: var(--shadow-lg);
+  }
+
+  .card:hover .shotGlow {
+    opacity: 1;
+  }
+
+  .card:hover .url {
+    color: var(--color-text-muted);
+  }
+
+  .card:hover .dots i {
+    background: rgba(var(--accent-rgb), 0.5);
+  }
+
+  .card:hover .title {
+    color: var(--color-text-strong);
+  }
+
+  .card:hover .skill {
+    color: var(--color-text-muted);
+    border-color: var(--line-2);
+  }
+
+  .card:hover .link,
+  .link:focus-visible {
+    color: var(--accent-soft);
+  }
+
+  .card:hover .linkLabel::after {
+    transform: scaleX(1);
+  }
+
+  .card:hover .linkArrow {
+    transform: translate(3px, -3px);
+    color: #0a0713;
+    border-color: transparent;
+    background: var(--gradient-accent);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .card:hover .image,
+  .card:hover .linkArrow {
+    transform: none;
+  }
+}

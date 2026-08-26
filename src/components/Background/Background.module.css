@@ -1,0 +1,154 @@
+@import "../../vars.css";
+
+.backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: var(--z-backdrop);
+  pointer-events: none;
+  overflow: hidden;
+  background:
+    radial-gradient(128% 82% at 50% -8%, #131024 0%, var(--color-bg) 52%, var(--color-bg-deep) 100%);
+}
+
+/* ------------------------------------------------------------
+   Technical grid — parallaxes slowest, so it reads as the
+   furthest plane. Masked so it never reaches the page edges.
+   ------------------------------------------------------------ */
+.grid {
+  position: absolute;
+  inset: -10% -2%;
+  background-image:
+    linear-gradient(to right, rgba(255, 255, 255, 0.032) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(255, 255, 255, 0.032) 1px, transparent 1px);
+  background-size: 78px 78px;
+  transform: translate3d(0, calc(var(--scroll-y, 0px) * -0.018), 0);
+  -webkit-mask-image: radial-gradient(115% 74% at 50% 10%, #000 0%, transparent 74%);
+  mask-image: radial-gradient(115% 74% at 50% 10%, #000 0%, transparent 74%);
+}
+
+/* ------------------------------------------------------------
+   Aurora fields — three soft pools of light at different depths.
+   Each drifts on a long, offset cycle so the page never settles
+   into a static image, but the movement stays under ~2% of the
+   viewport and is transform-only.
+   ------------------------------------------------------------ */
+.auroraTop,
+.auroraMid,
+.auroraLow {
+  position: absolute;
+  border-radius: 50%;
+  will-change: transform;
+}
+
+.auroraTop {
+  top: -24vh;
+  left: 50%;
+  width: min(76rem, 128vw);
+  height: 48rem;
+  margin-left: min(-38rem, -64vw);
+  background: radial-gradient(circle, rgba(var(--accent-rgb), 0.19), transparent 64%);
+  filter: blur(115px);
+  animation: driftTop 46s var(--e-inout) infinite;
+}
+
+.auroraMid {
+  top: 46vh;
+  right: -18vw;
+  width: min(46rem, 96vw);
+  height: 40rem;
+  background: radial-gradient(circle, rgba(var(--accent-2-rgb), 0.11), transparent 66%);
+  filter: blur(105px);
+  transform: translate3d(0, calc(var(--scroll-y, 0px) * -0.05), 0);
+  animation: driftMid 58s var(--e-inout) infinite;
+}
+
+.auroraLow {
+  bottom: -20vh;
+  left: -14vw;
+  width: min(44rem, 92vw);
+  height: 36rem;
+  background: radial-gradient(circle, rgba(var(--accent-rgb), 0.1), transparent 68%);
+  filter: blur(100px);
+  animation: driftLow 64s var(--e-inout) infinite;
+}
+
+@keyframes driftTop {
+  0%,
+  100% {
+    transform: translate3d(-1.5%, 0, 0) scale(1);
+  }
+  50% {
+    transform: translate3d(1.5%, 2%, 0) scale(1.06);
+  }
+}
+
+@keyframes driftMid {
+  0%,
+  100% {
+    transform: translate3d(0, calc(var(--scroll-y, 0px) * -0.05), 0);
+  }
+  50% {
+    transform: translate3d(-4%, calc(var(--scroll-y, 0px) * -0.05 - 1.5%), 0);
+  }
+}
+
+@keyframes driftLow {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0);
+  }
+  50% {
+    transform: translate3d(3%, -2.5%, 0);
+  }
+}
+
+/* ------------------------------------------------------------
+   Film grain — breaks up the large gradients so they never band.
+   ------------------------------------------------------------ */
+.grain {
+  position: absolute;
+  inset: 0;
+  opacity: 0.34;
+  mix-blend-mode: overlay;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)' opacity='0.34'/%3E%3C/svg%3E");
+}
+
+/* ------------------------------------------------------------
+   Vignette — pulls focus to the centre column.
+   ------------------------------------------------------------ */
+.vignette {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(125% 92% at 50% 42%, transparent 52%, rgba(3, 2, 8, 0.6) 100%);
+}
+
+/* ------------------------------------------------------------
+   Small screens: cheaper blurs, tighter grid, no ambient drift.
+   ------------------------------------------------------------ */
+@media (max-width: 720px) {
+  .grid {
+    background-size: 54px 54px;
+  }
+
+  .auroraTop,
+  .auroraMid,
+  .auroraLow {
+    filter: blur(76px);
+    animation: none;
+    will-change: auto;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .grid,
+  .auroraMid {
+    transform: none;
+  }
+
+  .auroraTop,
+  .auroraMid,
+  .auroraLow {
+    animation: none;
+    will-change: auto;
+  }
+}

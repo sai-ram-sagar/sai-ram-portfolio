@@ -1,0 +1,198 @@
+/* =========================================================
+   Design system — "Aurora Graphite" v2
+
+   One palette, one spacing scale, one radius scale, one glow
+   language, one motion language. Every surface in the site is
+   composed from the tokens below — nothing is styled ad hoc.
+
+   Accent identity: violet primary with a dusty-rose secondary
+   used only at the tail of gradients and in glow falloff, so
+   the warmth reads as refinement rather than colour.
+   ========================================================= */
+
+:root {
+  /* ---------------------------------------------------------
+     1. Base surfaces
+     --------------------------------------------------------- */
+  --color-bg: #07060d;
+  --color-bg-deep: #040309;
+  --color-surface-1: #0c0a15;
+  --color-surface-2: #110e1c;
+  --color-surface-3: #171327;
+
+  /* translucent fills, layered over the page glow */
+  --glass-1: rgba(255, 255, 255, 0.022);
+  --glass-2: rgba(255, 255, 255, 0.042);
+  --glass-3: rgba(255, 255, 255, 0.068);
+
+  /* inner highlight that gives a card its top edge */
+  --inner-top: inset 0 1px 0 rgba(255, 255, 255, 0.055);
+
+  /* ---------------------------------------------------------
+     2. Hairlines
+     --------------------------------------------------------- */
+  --line-1: rgba(255, 255, 255, 0.062);
+  --line-2: rgba(255, 255, 255, 0.105);
+  --line-3: rgba(255, 255, 255, 0.17);
+
+  /* ---------------------------------------------------------
+     3. Accents
+     --------------------------------------------------------- */
+  --accent: #8b7bff;
+  --accent-soft: #ab9fff;
+  --accent-deep: #5b48d9;
+  --accent-2: #e9a6c9;
+  --accent-2-soft: #f3c6dd;
+  --accent-rgb: 139, 123, 255;
+  --accent-2-rgb: 233, 166, 201;
+  --signal: #57d5ba;
+  --signal-rgb: 87, 213, 186;
+
+  --gradient-accent: linear-gradient(118deg, var(--accent) 0%, var(--accent-2) 100%);
+  --gradient-accent-soft: linear-gradient(
+    118deg,
+    rgba(var(--accent-rgb), 0.9) 0%,
+    rgba(var(--accent-2-rgb), 0.72) 100%
+  );
+  --gradient-line: linear-gradient(
+    90deg,
+    rgba(var(--accent-rgb), 0.6),
+    rgba(var(--accent-2-rgb), 0.28) 42%,
+    transparent 92%
+  );
+  /* section divider: fades in and out from the centre */
+  --gradient-divider: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.09) 25%,
+    rgba(var(--accent-rgb), 0.22) 50%,
+    rgba(255, 255, 255, 0.09) 75%,
+    transparent
+  );
+
+  /* ---------------------------------------------------------
+     4. Text
+     --------------------------------------------------------- */
+  --color-text-strong: #f4f2ff;
+  --color-text: #e4e1f0;
+  --color-text-muted: #9d99b4;
+  --color-text-dim: #6d6a85;
+
+  /* ---------------------------------------------------------
+     5. Typography
+     --------------------------------------------------------- */
+  --font-display: "Outfit", "Segoe UI", system-ui, sans-serif;
+  --font-body: "Outfit", "Segoe UI", system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", Consolas, monospace;
+
+  --fs-eyebrow: clamp(0.625rem, 0.6rem + 0.12vw, 0.7rem);
+  --fs-mono: clamp(0.66rem, 0.63rem + 0.14vw, 0.74rem);
+  --fs-meta: clamp(0.72rem, 0.69rem + 0.14vw, 0.8rem);
+  --fs-body-sm: clamp(0.875rem, 0.85rem + 0.14vw, 0.935rem);
+  --fs-body: clamp(0.94rem, 0.91rem + 0.18vw, 1.04rem);
+  --fs-lead: clamp(1.02rem, 0.95rem + 0.34vw, 1.19rem);
+  --fs-h4: clamp(1.02rem, 0.97rem + 0.24vw, 1.16rem);
+  --fs-h3: clamp(1.18rem, 1.06rem + 0.5vw, 1.45rem);
+  --fs-h2: clamp(1.9rem, 1.42rem + 2.1vw, 3.05rem);
+  --fs-h1: clamp(2.5rem, 1.5rem + 4.9vw, 5.1rem);
+
+  --tracking-tight: -0.032em;
+  --tracking-snug: -0.018em;
+  --tracking-mono: 0.16em;
+  --tracking-eyebrow: 0.22em;
+
+  --leading-tight: 1.04;
+  --leading-snug: 1.28;
+  --leading-body: 1.66;
+
+  /* ---------------------------------------------------------
+     6. Spacing scale (4px base)
+     --------------------------------------------------------- */
+  --sp-1: 0.25rem;
+  --sp-2: 0.5rem;
+  --sp-3: 0.75rem;
+  --sp-4: 1rem;
+  --sp-5: 1.25rem;
+  --sp-6: 1.5rem;
+  --sp-8: 2rem;
+  --sp-10: 2.5rem;
+  --sp-12: 3rem;
+  --sp-16: 4rem;
+  --sp-20: 5rem;
+
+  /* card padding, kept identical across every card in the site */
+  --pad-card: clamp(1.25rem, 0.95rem + 1.1vw, 1.75rem);
+  --pad-card-lg: clamp(1.5rem, 1.1rem + 1.5vw, 2.15rem);
+
+  /* ---------------------------------------------------------
+     7. Layout
+     --------------------------------------------------------- */
+  --page-max: 1180px;
+  --page-pad: clamp(1.15rem, 0.55rem + 2.6vw, 3rem);
+  --section-gap: clamp(5.5rem, 3.4rem + 7.5vw, 9.5rem);
+  --nav-h: 76px;
+  --nav-h-compact: 62px;
+
+  /* ---------------------------------------------------------
+     8. Radii
+     --------------------------------------------------------- */
+  --r-xs: 6px;
+  --r-sm: 10px;
+  --r-md: 14px;
+  --r-lg: 20px;
+  --r-xl: 26px;
+  --r-2xl: 34px;
+  --r-pill: 999px;
+
+  /* ---------------------------------------------------------
+     9. Elevation + glow
+     --------------------------------------------------------- */
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.45);
+  --shadow-md: 0 14px 34px -16px rgba(0, 0, 0, 0.8);
+  --shadow-lg: 0 30px 72px -30px rgba(0, 0, 0, 0.92);
+
+  /* glow marks importance or interaction — never decoration */
+  --glow-sm: 0 6px 20px -10px rgba(var(--accent-rgb), 0.65);
+  --glow-md: 0 14px 42px -16px rgba(var(--accent-rgb), 0.7);
+  --glow-lg: 0 22px 62px -22px rgba(var(--accent-rgb), 0.8);
+  --glow-ring: 0 0 0 1px rgba(var(--accent-rgb), 0.34);
+
+  /* ---------------------------------------------------------
+     10. Motion
+     --------------------------------------------------------- */
+  --e-out: cubic-bezier(0.22, 1, 0.36, 1);
+  --e-inout: cubic-bezier(0.65, 0, 0.35, 1);
+  --e-entrance: cubic-bezier(0.16, 1, 0.3, 1);
+
+  --dur-1: 120ms;
+  --dur-2: 200ms;
+  --dur-3: 320ms;
+  --dur-4: 560ms;
+  --dur-5: 900ms;
+
+  /* legacy aliases kept so every module speaks the same language */
+  --ease-out: var(--e-out);
+  --ease-in-out: var(--e-inout);
+  --dur-fast: var(--dur-1);
+  --dur: var(--dur-2);
+  --dur-slow: var(--dur-4);
+
+  /* ---------------------------------------------------------
+     11. Layers
+     --------------------------------------------------------- */
+  --z-backdrop: 0;
+  --z-content: 1;
+  --z-nav: 100;
+  --z-panel: 99;
+  --z-modal: 200;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --dur-1: 1ms;
+    --dur-2: 1ms;
+    --dur-3: 1ms;
+    --dur-4: 1ms;
+    --dur-5: 1ms;
+  }
+}

@@ -1,0 +1,249 @@
+@import "../../vars.css";
+
+.timeline {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: clamp(2.5rem, 5vw, 4rem);
+  padding-left: 1.75rem;
+}
+
+/* ============================================================
+   Rail
+
+   The track is a static hairline; the fill draws down it once the
+   timeline enters view. Where scroll-driven animation is
+   supported the fill is tied to the scroll position instead, so
+   the line follows the reader rather than playing once.
+   ============================================================ */
+.rail {
+  position: absolute;
+  top: 0.5rem;
+  bottom: 0.5rem;
+  left: 4px;
+  width: 1px;
+  background: var(--line-1);
+  overflow: hidden;
+}
+
+.railFill {
+  display: block;
+  width: 100%;
+  height: 100%;
+  transform: scaleY(0);
+  transform-origin: top center;
+  background: linear-gradient(
+    to bottom,
+    rgba(var(--accent-rgb), 0.9),
+    rgba(var(--accent-2-rgb), 0.45) 55%,
+    transparent
+  );
+  transition: transform 1600ms var(--e-out);
+}
+
+.rail[data-revealed] .railFill {
+  transform: scaleY(1);
+}
+
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+    .railFill {
+      transition: none;
+      transform: scaleY(0);
+      animation: railDraw linear both;
+      animation-timeline: view();
+      animation-range: cover 12% cover 78%;
+    }
+  }
+}
+
+@keyframes railDraw {
+  to {
+    transform: scaleY(1);
+  }
+}
+
+/* ============================================================
+   Entry
+   ============================================================ */
+.entry {
+  position: relative;
+  display: grid;
+  gap: clamp(1.25rem, 3vw, 2.5rem);
+}
+
+.node {
+  position: absolute;
+  top: 0.45rem;
+  left: -1.75rem;
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: var(--accent);
+  box-shadow: 0 0 0 4px rgba(var(--accent-rgb), 0.14);
+  transition:
+    box-shadow var(--dur-4) var(--e-out),
+    transform var(--dur-4) var(--e-out);
+}
+
+.node[data-revealed] {
+  box-shadow:
+    0 0 0 4px rgba(var(--accent-rgb), 0.16),
+    0 0 18px 2px rgba(var(--accent-rgb), 0.5);
+}
+
+/* ============================================================
+   Head
+   ============================================================ */
+.period {
+  margin-bottom: var(--sp-3);
+  font-family: var(--font-mono);
+  font-size: var(--fs-eyebrow);
+  letter-spacing: var(--tracking-eyebrow);
+  text-transform: uppercase;
+  color: var(--accent-soft);
+}
+
+.role {
+  font-size: var(--fs-h3);
+  font-weight: 600;
+}
+
+.company,
+.meta {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  margin-top: var(--sp-2);
+  font-size: var(--fs-body-sm);
+  color: var(--color-text-muted);
+}
+
+.company {
+  color: var(--color-text);
+  font-weight: 500;
+}
+
+.company svg,
+.meta svg {
+  flex-shrink: 0;
+  color: var(--color-text-dim);
+}
+
+.context {
+  margin-top: var(--sp-4);
+  padding: 0.65rem 0.9rem;
+  border-radius: var(--r-sm);
+  border: 1px solid var(--line-1);
+  border-left: 2px solid rgba(var(--accent-2-rgb), 0.5);
+  background: var(--glass-1);
+  box-shadow: var(--inner-top);
+  font-size: var(--fs-body-sm);
+  color: var(--color-text-muted);
+}
+
+/* ============================================================
+   Body
+   ============================================================ */
+.highlights {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-3);
+}
+
+.highlight {
+  position: relative;
+  padding-left: 1.45rem;
+  font-size: var(--fs-body-sm);
+  line-height: 1.66;
+  color: var(--color-text-muted);
+  transition: color var(--dur-2) var(--e-out);
+}
+
+.highlight::before {
+  content: "";
+  position: absolute;
+  top: 0.62em;
+  left: 0;
+  width: 6px;
+  height: 6px;
+  border-radius: 1px;
+  transform: rotate(45deg);
+  background: rgba(var(--accent-rgb), 0.6);
+  transition:
+    background-color var(--dur-2) var(--e-out),
+    transform var(--dur-2) var(--e-out);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .highlight:hover {
+    color: var(--color-text);
+  }
+
+  .highlight:hover::before {
+    background: var(--accent-soft);
+    transform: rotate(45deg) scale(1.2);
+  }
+}
+
+.stack {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--sp-2);
+  margin-top: var(--sp-6);
+  padding-top: var(--sp-5);
+  border-top: 1px solid var(--line-1);
+}
+
+.tech {
+  padding: 0.28rem 0.62rem;
+  border-radius: var(--r-xs);
+  border: 1px solid var(--line-1);
+  background: var(--glass-1);
+  font-family: var(--font-mono);
+  font-size: var(--fs-mono);
+  letter-spacing: 0.05em;
+  color: var(--color-text-muted);
+  transition:
+    color var(--dur-1) var(--e-out),
+    border-color var(--dur-1) var(--e-out),
+    transform var(--dur-1) var(--e-out);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .tech:hover {
+    transform: translateY(-2px);
+    color: var(--color-text);
+    border-color: rgba(var(--accent-rgb), 0.4);
+  }
+}
+
+.entryIndex {
+  display: none;
+}
+
+/* ============================================================
+   Breakpoints
+   ============================================================ */
+@media (min-width: 940px) {
+  .entry {
+    grid-template-columns: minmax(0, 0.82fr) minmax(0, 1.38fr);
+    align-items: start;
+  }
+
+  .head {
+    position: sticky;
+    top: calc(var(--nav-h-compact) + var(--sp-8));
+  }
+
+  .entryIndex {
+    display: block;
+    position: absolute;
+    top: -0.3rem;
+    right: 0;
+    font-family: var(--font-mono);
+    font-size: var(--fs-eyebrow);
+    letter-spacing: var(--tracking-eyebrow);
+    color: var(--color-text-dim);
+  }
+}

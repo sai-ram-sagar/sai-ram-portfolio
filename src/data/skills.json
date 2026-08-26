@@ -1,0 +1,78 @@
+[
+    {
+      "title": "ReactJS",
+      "imageSrc": "skills/react.png"
+    },
+    {
+      "title": "Tailwind CSS",
+      "imageSrc": "skills/tailwind_CSS.png"
+    },
+    {
+      "title": "NodeJS",
+      "imageSrc": "skills/node.png"
+    },
+    {
+      "title": "SQL",
+      "imageSrc": "skills/sql.png"
+    },
+    {
+      "title": "ExpressJS",
+      "imageSrc": "skills/express.png"
+    },
+    {
+      "title": "MongoDB",
+      "imageSrc": "skills/mongodb.png"
+    },
+    {
+        "title": "JavaScript",
+        "imageSrc": "skills/javascript.png"
+      },
+    {
+        "title": "Python",
+        "imageSrc": "skills/python.png"
+    },
+    {
+      "title": "HTML",
+      "imageSrc": "skills/html.png"
+    },
+    {
+      "title": "CSS",
+      "imageSrc": "skills/css.png"
+    },
+    {
+      "title" : "Bootstrap",
+      "imageSrc" : "skills/bootstrap.png"
+    },
+      {
+    "title": "Figma",
+    "imageSrc": "extraSkills/figma.png"
+  },  
+  {
+    "title": "React Icons",
+    "imageSrc": "extraSkills/react-icons.png"
+  },
+  {
+    "title": "Illustrator",
+    "imageSrc": "extraSkills/illustrator.png"
+  },
+  {
+    "title": "ChatGPT",
+    "imageSrc": "extraSkills/chat-gpt.png"
+  },
+  {
+    "title": "Git",
+    "imageSrc": "extraSkills/git.png"
+  },
+  {
+    "title": "Github",
+    "imageSrc": "extraSkills/github.png"
+  },
+  {
+    "title": "Postman",
+    "imageSrc": "extraSkills/postman.png"
+  },
+  {
+    "title": "Material UI",
+    "imageSrc": "extraSkills/materialui.png"
+  }
+  ]

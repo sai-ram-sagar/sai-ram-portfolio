@@ -1,0 +1,148 @@
+@import "../../vars.css";
+
+.grid {
+  display: grid;
+  gap: clamp(2.25rem, 4vw, 3.5rem);
+  align-items: start;
+}
+
+/* ============================================================
+   Editorial column
+   ============================================================ */
+.prose {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-4);
+  max-width: 52ch;
+}
+
+.prose p {
+  color: var(--color-text-muted);
+  font-size: var(--fs-body);
+}
+
+/* opening paragraph carries the weight; the rest recedes */
+.prose .leadParagraph {
+  font-size: var(--fs-lead);
+  line-height: 1.6;
+  color: var(--color-text);
+}
+
+/* ============================================================
+   Fact list — hairline rows, no card
+   ============================================================ */
+.facts {
+  margin-top: var(--sp-4);
+  border-top: 1px solid var(--line-1);
+}
+
+.fact {
+  display: grid;
+  grid-template-columns: 8rem 1fr;
+  gap: var(--sp-4);
+  align-items: baseline;
+  padding: var(--sp-4) 0;
+  border-bottom: 1px solid var(--line-1);
+  transition: border-color var(--dur-2) var(--e-out);
+}
+
+.fact:hover {
+  border-bottom-color: var(--line-2);
+}
+
+.fact dt {
+  font-family: var(--font-mono);
+  font-size: var(--fs-eyebrow);
+  letter-spacing: var(--tracking-eyebrow);
+  text-transform: uppercase;
+  color: var(--color-text-dim);
+}
+
+.fact dd {
+  font-size: var(--fs-body-sm);
+  color: var(--color-text);
+}
+
+/* ============================================================
+   Discipline cards
+   ============================================================ */
+.disciplines {
+  display: grid;
+  gap: var(--sp-3);
+}
+
+.discipline {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: start;
+  gap: var(--sp-4);
+  padding: var(--pad-card);
+}
+
+.disciplineIcon {
+  display: grid;
+  place-items: center;
+  width: 38px;
+  height: 38px;
+  border-radius: var(--r-sm);
+  color: var(--accent-soft);
+  border: 1px solid rgba(var(--accent-rgb), 0.2);
+  background: rgba(var(--accent-rgb), 0.07);
+  transition:
+    color var(--dur-3) var(--e-out),
+    border-color var(--dur-3) var(--e-out),
+    transform var(--dur-3) var(--e-out);
+}
+
+.disciplineBody {
+  min-width: 0;
+}
+
+.disciplineTitle {
+  font-size: var(--fs-h4);
+  font-weight: 500;
+  margin-bottom: 0.35rem;
+}
+
+.disciplineText {
+  color: var(--color-text-muted);
+  font-size: var(--fs-body-sm);
+  line-height: 1.62;
+}
+
+.disciplineIndex {
+  font-family: var(--font-mono);
+  font-size: var(--fs-eyebrow);
+  letter-spacing: var(--tracking-eyebrow);
+  color: var(--color-text-dim);
+  transition: color var(--dur-3) var(--e-out);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .discipline:hover .disciplineIcon {
+    transform: translateY(-2px);
+    border-color: rgba(var(--accent-rgb), 0.45);
+    color: var(--color-text-strong);
+  }
+
+  .discipline:hover .disciplineIndex {
+    color: var(--accent-soft);
+  }
+}
+
+/* ============================================================
+   Breakpoints
+   ============================================================ */
+@media (min-width: 940px) {
+  .grid {
+    grid-template-columns: minmax(0, 0.95fr) minmax(0, 1.05fr);
+    gap: clamp(2.5rem, 5vw, 4.5rem);
+  }
+}
+
+@media (max-width: 480px) {
+  .fact {
+    grid-template-columns: 1fr;
+    gap: 0.3rem;
+  }
+}
