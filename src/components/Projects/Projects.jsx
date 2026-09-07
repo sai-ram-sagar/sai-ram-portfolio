@@ -8,7 +8,17 @@ import { work } from "../../data/work";
 import projects from "../../data/projects.json";
 import styles from "./Projects.module.css";
 
-const INITIAL_COUNT = 6;
+/*
+ * Which projects lead the section is a content decision, so it lives in
+ * projects.json as `featured` rather than in a slice() here. Everything not
+ * featured waits behind "Load more".
+ */
+const featured = projects.filter((project) => project.featured);
+const rest = projects.filter((project) => !project.featured);
+
+/* if nothing is flagged, fall back to showing everything rather than nothing */
+const leadingSet = featured.length ? featured : projects;
+const remainingSet = featured.length ? rest : [];
 
 const GroupHeading = ({ kind, children, count }) => (
   <h3 className={styles.groupTitle} data-reveal="fade">
@@ -23,8 +33,7 @@ const GroupHeading = ({ kind, children, count }) => (
 
 export const Projects = () => {
   const [expanded, setExpanded] = useState(false);
-  const visible = expanded ? projects : projects.slice(0, INITIAL_COUNT);
-  const hidden = projects.length - INITIAL_COUNT;
+  const visible = expanded ? [...leadingSet, ...remainingSet] : leadingSet;
 
   return (
     <Section
@@ -58,7 +67,7 @@ export const Projects = () => {
           ))}
         </div>
 
-        {hidden > 0 && !expanded && (
+        {remainingSet.length > 0 && !expanded && (
           <div className={styles.moreWrap}>
             <Button
               variant="ghost"
@@ -67,7 +76,8 @@ export const Projects = () => {
               className={styles.more}
               onClick={() => setExpanded(true)}
             >
-              Show {hidden} more {hidden === 1 ? "project" : "projects"}
+              Load {remainingSet.length} more{" "}
+              {remainingSet.length === 1 ? "project" : "projects"}
             </Button>
           </div>
         )}

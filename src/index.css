@@ -163,31 +163,44 @@ ol {
    ============================================================ */
 [data-reveal] {
   --reveal-delay: 0ms;
-  opacity: 0;
   transition:
     opacity var(--dur-4) var(--e-entrance),
     transform var(--dur-4) var(--e-entrance);
   transition-delay: var(--reveal-delay);
+}
+
+/*
+ * Everything below is gated on [data-reveal-active], which useScrollReveal
+ * sets on <html> only once it has an observer that can actually run.
+ *
+ * The gate is the whole point: content is visible by default and the reveal
+ * is an enhancement layered on top. Hiding first and relying on an observer
+ * to undo it means any failure to observe — no JS, no IntersectionObserver,
+ * a throwing effect, a document that never becomes visible — leaves the page
+ * blank with no way back.
+ */
+html[data-reveal-active] [data-reveal] {
+  opacity: 0;
   will-change: opacity, transform;
 }
 
-/* default — content blocks rise */
-[data-reveal="up"] {
+/* content blocks rise */
+html[data-reveal-active] [data-reveal="up"] {
   transform: translate3d(0, 22px, 0);
 }
 
 /* copy and metadata — no movement, just presence */
-[data-reveal="fade"] {
+html[data-reveal-active] [data-reveal="fade"] {
   transform: none;
 }
 
 /* cards — settle in from slightly small */
-[data-reveal="scale"] {
+html[data-reveal-active] [data-reveal="scale"] {
   transform: translate3d(0, 16px, 0) scale(0.985);
 }
 
 /* side panels — drift in horizontally */
-[data-reveal="side"] {
+html[data-reveal-active] [data-reveal="side"] {
   transform: translate3d(24px, 0, 0);
 }
 
@@ -199,25 +212,26 @@ ol {
  * element's intersection rect, so a clipped element can never trigger the
  * observer that is supposed to un-clip it.
  */
-[data-reveal="mask"] {
+html[data-reveal-active] [data-reveal="mask"] {
   opacity: 1;
   overflow: hidden;
   padding-bottom: 0.12em;
   margin-bottom: -0.12em;
 }
 
-[data-reveal="mask"] > * {
+html[data-reveal-active] [data-reveal="mask"] > * {
   display: block;
   transform: translate3d(0, 108%, 0);
   transition: transform var(--dur-5) var(--e-entrance);
   transition-delay: var(--reveal-delay);
 }
 
-[data-reveal="mask"][data-revealed] > * {
+html[data-reveal-active] [data-reveal="mask"][data-revealed] > * {
   transform: none;
 }
 
-[data-revealed] {
+/* must stay last: it ties with the variant rules on specificity */
+html[data-reveal-active] [data-revealed] {
   opacity: 1;
   transform: none;
   will-change: auto;

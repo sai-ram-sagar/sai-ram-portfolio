@@ -1,6 +1,7 @@
 [
   {
     "title": "Employee Directory",
+    "featured": true,
     "imageSrc": "projects/employee-dir.png",
     "description": "Built a responsive Employee Directory web app using React with search, filtering, and profile management features like create, edit and delete.",
     "skills": [
@@ -13,6 +14,7 @@
   },
   {
     "title": "College Events",
+    "featured": true,
     "imageSrc": "projects/college-events.png",
     "description": "Built a recommendation system that suggests college events based on user interests using content-based filtering and displays recommendations on an interactive React UI.",
     "skills": [
@@ -26,6 +28,7 @@
   },
   {
     "title": "Smart Healthcare",
+    "featured": true,
     "imageSrc": "projects/smart-healthcare.png",
     "description": "Developed a healthcare web app featuring a food calorie logger for users to track meals, promoting healthier choices with clean UI and intuitive functionality.",
     "skills": [
@@ -39,6 +42,7 @@
   },
   {
     "title": "College Recommendations",
+    "featured": true,
     "imageSrc": "projects/college-recommendations.png",
     "description": "Created a system that provides personalized college suggestions based on user preferences using basic machine learning and displays results on a user-friendly interface.",
     "skills": [
@@ -53,6 +57,7 @@
   },
   {
     "title": "Shopping Web App",
+    "featured": true,
     "imageSrc": "projects/project1.png",
     "description": "Developed an e-commerce web application with user authentication, product catalog, and shopping cart functionality.",
     "skills": [
@@ -67,6 +72,7 @@
   },
   {
     "title": "YouTube video player",
+    "featured": true,
     "imageSrc": "projects/project2.png",
     "description": "Developed a web application featuring user authentication, video search, trending, gaming, and saved videos functionalities.",
     "skills": [
@@ -81,6 +87,7 @@
   },
   {
     "title": "Covid19 Dashboard",
+    "featured": false,
     "imageSrc": "projects/project3.png",
     "description": "Developed a responsive web app to provide real-time COVID-19 statistics of India, featuring data visualization and state-specific details.",
     "skills": [
@@ -95,6 +102,7 @@
   },
   {
     "title": "Memory game",
+    "featured": false,
     "imageSrc": "projects/project4.png",
     "description": "Developed a fun and interactive memory game featuring emojis, challenging players to avoid selecting the same image twice.",
     "skills": [
