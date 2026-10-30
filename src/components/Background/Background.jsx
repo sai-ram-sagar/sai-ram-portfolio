@@ -3,7 +3,7 @@ import styles from "./Background.module.css";
 /**
  * Layered page backdrop.
  *
- * Six decorative layers, all driven by CSS alone — the only input is the
+ * Six decorative layers, all driven by CSS alone - the only input is the
  * `--scroll-y` variable published by usePageScroll, which offsets the grid
  * and the aurora fields at different rates to give the page depth.
  *

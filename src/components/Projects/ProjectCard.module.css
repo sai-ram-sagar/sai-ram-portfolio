@@ -1,193 +1,272 @@
 @import "../../vars.css";
 
-.card {
+/* ------------------------------------------------------------
+   Project file
+
+   Built in four layers, back to front:
+     1. the folder back, with its labelled tab
+     2. a spare sheet tucked behind (depth, not content)
+     3. the capture, filed as a sheet
+     4. the front pocket, with a thumb notch cut from its lip
+   On hover the pocket tips toward you and the sheet is drawn up.
+   ------------------------------------------------------------ */
+.folder {
+  --folder-back: color-mix(in srgb, var(--color-surface-2), var(--accent) 9%);
+  --folder-front: color-mix(in srgb, var(--color-surface-3), var(--accent) 5%);
+  --tab-h: 30px;
+  --sheet-h: 214px;
+  --tuck: 80px; /* how much of the sheet sits inside the pocket */
+
+  position: relative;
   display: flex;
   flex-direction: column;
   height: 100%;
+  perspective: 900px;
 }
 
-/* ============================================================
-   Preview
-   ============================================================ */
-.preview {
-  border-bottom: 1px solid var(--line-1);
-  background: var(--color-surface-2);
-}
-
-.chrome {
-  display: flex;
-  align-items: center;
-  gap: var(--sp-3);
-  padding: 0.55rem 0.8rem;
-  border-bottom: 1px solid var(--line-1);
-}
-
-.dots {
-  display: inline-flex;
-  gap: 5px;
-}
-
-.dots i {
-  width: 7px;
-  height: 7px;
-  border-radius: 50%;
-  background: var(--line-3);
-  transition: background-color var(--dur-3) var(--e-out);
-}
-
-.url {
-  flex: 1;
-  min-width: 0;
-  padding: 0.16rem 0.6rem;
-  border-radius: var(--r-pill);
-  background: var(--glass-1);
-  font-family: var(--font-mono);
-  font-size: 0.6rem;
-  letter-spacing: 0.04em;
-  color: var(--color-text-dim);
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  transition: color var(--dur-3) var(--e-out);
-}
-
-.shot {
-  position: relative;
-  display: grid;
-  place-items: center;
-  aspect-ratio: 4 / 3;
-  padding: 1.1rem 1.25rem;
-  overflow: hidden;
-  background:
-    radial-gradient(120% 92% at 50% 0%, rgba(var(--accent-rgb), 0.08), transparent 70%),
-    var(--color-surface-2);
-}
-
-/* light that rises behind the capture on hover */
-.shotGlow {
-  position: absolute;
-  inset: 0;
-  opacity: 0;
-  pointer-events: none;
-  background: radial-gradient(90% 60% at 50% 100%, rgba(var(--accent-rgb), 0.2), transparent 70%);
-  transition: opacity var(--dur-4) var(--e-out);
+/* on the beige page the folder needs more kraft to separate from the ground */
+:global([data-theme="light"]) .folder {
+  --folder-back: color-mix(in srgb, var(--color-surface-2), var(--accent) 18%);
 }
 
 /*
- * The captures are a mix of desktop and mobile shapes, so they are contained
- * rather than cropped — nothing is hidden and nothing is stretched.
+ * The scroll reveal owns `transform` on this element, so the hover lift uses
+ * the independent `translate` property and is added to the reveal's
+ * transition list rather than replacing it.
  */
-.image {
-  position: relative;
-  z-index: 1;
-  max-width: 100%;
-  max-height: 100%;
-  width: auto;
-  height: auto;
-  border-radius: var(--r-xs);
-  border: 1px solid var(--line-1);
-  box-shadow: var(--shadow-md);
+.folder[data-reveal] {
   transition:
-    transform var(--dur-5) var(--e-out),
-    box-shadow var(--dur-4) var(--e-out);
+    opacity var(--dur-4) var(--e-entrance),
+    transform var(--dur-4) var(--e-entrance),
+    translate var(--dur-4) var(--e-out);
+  transition-delay: var(--reveal-delay), var(--reveal-delay), 0s;
 }
 
 /* ============================================================
-   Body
+   Tab
    ============================================================ */
-.body {
+.tab {
+  position: relative;
+  align-self: flex-start;
+  display: flex;
+  align-items: center;
+  gap: var(--sp-2);
+  max-width: 72%;
+  height: var(--tab-h);
+  padding: 0 0.9rem 0 0.85rem;
+  border-radius: var(--r-sm) var(--r-sm) 0 0;
+  background: var(--folder-back);
+  font-family: var(--font-mono);
+  font-size: 0.62rem;
+  letter-spacing: 0.06em;
+  color: var(--color-text-dim);
+}
+
+/* concave shoulder where the tab meets the folder */
+.tab::after {
+  content: "";
+  position: absolute;
+  right: -14px;
+  bottom: 0;
+  width: 14px;
+  height: 14px;
+  background: radial-gradient(circle at 100% 0, transparent 13.5px, var(--folder-back) 14px);
+}
+
+.tabIndex {
+  flex-shrink: 0;
+  font-weight: 600;
+  color: var(--accent);
+  transition: color var(--dur-3) var(--e-out);
+}
+
+.tabHost {
+  min-width: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* ============================================================
+   Pocket - the folder back everything is filed in
+   ============================================================ */
+.pocket {
+  position: relative;
   display: flex;
   flex-direction: column;
   flex: 1;
-  gap: var(--sp-3);
-  padding: var(--pad-card);
+  padding: 0.75rem 0.75rem 0.7rem;
+  border-radius: 0 var(--r-lg) var(--r-lg) var(--r-lg);
+  background: var(--folder-back);
+  box-shadow: var(--shadow-md);
+  transition: box-shadow var(--dur-4) var(--e-out);
+}
+
+/* a second sheet behind the capture, slightly askew */
+.paper {
+  position: absolute;
+  top: 1.35rem;
+  left: 1.6rem;
+  right: 1.6rem;
+  height: 5rem;
+  border-radius: var(--r-xs);
+  border: 1px solid var(--line-1);
+  background: var(--color-surface-1);
+  transform: rotate(2.2deg);
+  transform-origin: bottom right;
+  transition: transform var(--dur-5) var(--e-out);
+}
+
+/* ============================================================
+   Sheet - the capture of the live site
+   ============================================================ */
+.sheet {
+  position: relative;
+  z-index: 1;
+  height: var(--sheet-h);
+  margin: 0 0.4rem;
+  border-radius: var(--r-xs) var(--r-xs) 0 0;
+  border: 1px solid var(--line-1);
+  background: var(--color-surface-1);
+  box-shadow: 0 -6px 18px -10px rgba(0, 0, 0, 0.45);
+  overflow: hidden;
+  transform-origin: 50% 100%;
+  transition: transform var(--dur-5) cubic-bezier(0.34, 1.36, 0.5, 1);
+}
+
+.sheetSkeleton {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+}
+
+/* captures are mostly tall pages, so the sheet shows the top of each one */
+.image {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: top center;
+  opacity: 0;
+  transition:
+    opacity var(--dur-4) var(--e-out),
+    transform var(--dur-5) var(--e-out);
+}
+
+.imageReady {
+  opacity: 1;
+}
+
+.sheetLink {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+}
+
+/* rubber stamp, pressed onto the sheet on hover */
+.stamp {
+  position: absolute;
+  top: 0.7rem;
+  right: 0.7rem;
+  z-index: 2;
+  padding: 0.18rem 0.45rem;
+  border: 1.5px solid var(--accent);
+  border-radius: 4px;
+  background: color-mix(in srgb, var(--color-surface-1) 82%, transparent);
+  font-family: var(--font-mono);
+  font-size: 0.58rem;
+  font-weight: 700;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--accent);
+  opacity: 0;
+  transform: rotate(-12deg) scale(1.7);
+  transition:
+    opacity var(--dur-2) var(--e-out),
+    transform var(--dur-3) var(--e-out);
+  pointer-events: none;
+}
+
+/* ============================================================
+   Front pocket
+   ============================================================ */
+.front {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  gap: var(--sp-2);
+  margin-top: calc(var(--tuck) * -1);
+  padding: 1.15rem 1.1rem 0.95rem;
+  border-radius: var(--r-md);
+  background:
+    linear-gradient(180deg, var(--glass-2), transparent 55%),
+    var(--folder-front);
+  box-shadow:
+    inset 0 1px 0 rgba(var(--accent-2-rgb), 0.1),
+    0 -10px 24px -14px rgba(0, 0, 0, 0.55);
+  /* thumb notch cut into the lip, the sheet shows through it */
+  -webkit-mask: radial-gradient(30px 13px at 50% 0, transparent 97%, #000 100%);
+  mask: radial-gradient(30px 13px at 50% 0, transparent 97%, #000 100%);
+  transform-origin: 50% 100%;
+  transition: transform var(--dur-5) var(--e-out);
 }
 
 .title {
   font-size: var(--fs-h4);
   font-weight: 600;
-  transition: color var(--dur-2) var(--e-out);
+  line-height: 1.25;
+  color: var(--color-text-strong);
 }
 
 .description {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  overflow: hidden;
   font-size: var(--fs-body-sm);
-  line-height: 1.62;
+  line-height: 1.55;
   color: var(--color-text-muted);
 }
 
-.skills {
+.footer {
   display: flex;
-  flex-wrap: wrap;
-  gap: 0.32rem;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: var(--sp-3);
   margin-top: auto;
   padding-top: var(--sp-2);
 }
 
-.skill {
-  padding: 0.22rem 0.52rem;
-  border-radius: var(--r-xs);
-  border: 1px solid var(--line-1);
-  background: var(--glass-1);
-  font-family: var(--font-mono);
-  font-size: 0.6rem;
-  letter-spacing: 0.05em;
-  color: var(--color-text-dim);
-  transition:
-    color var(--dur-3) var(--e-out),
-    border-color var(--dur-3) var(--e-out);
-}
-
-/* ============================================================
-   Link — stretched across the card so the whole surface is
-   clickable while the page still has exactly one link per card.
-   ============================================================ */
-.link {
+/* skills read as a filing line, not a cloud of chips */
+.skills {
   display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: var(--sp-3);
-  margin-top: var(--sp-3);
-  padding-top: var(--sp-4);
-  border-top: 1px solid var(--line-1);
-  font-size: var(--fs-body-sm);
-  font-weight: 500;
-  color: var(--color-text);
-  transition: color var(--dur-2) var(--e-out);
+  flex-wrap: wrap;
+  row-gap: 0.15rem;
+  min-width: 0;
+  font-family: var(--font-mono);
+  font-size: 0.62rem;
+  letter-spacing: 0.04em;
+  line-height: 1.5;
+  color: var(--color-text-dim);
 }
 
-.link::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  border-radius: inherit;
+.skill + .skill::before {
+  content: "/";
+  margin: 0 0.4em;
+  color: rgba(var(--accent-rgb), 0.55);
 }
 
-.linkLabel {
-  position: relative;
-}
-
-/* underline that draws in from the left */
-.linkLabel::after {
-  content: "";
-  position: absolute;
-  left: 0;
-  right: 0;
-  bottom: -3px;
-  height: 1px;
-  background: currentColor;
-  transform: scaleX(0);
-  transform-origin: left center;
-  transition: transform var(--dur-3) var(--e-out);
-}
-
-.linkArrow {
+.link {
+  flex-shrink: 0;
   display: grid;
   place-items: center;
-  width: 28px;
-  height: 28px;
+  width: 34px;
+  height: 34px;
   border-radius: 50%;
-  border: 1px solid var(--line-1);
-  background: var(--glass-1);
+  border: 1px solid var(--line-2);
+  color: var(--color-text);
   transition:
     transform var(--dur-3) var(--e-out),
     border-color var(--dur-3) var(--e-out),
@@ -195,56 +274,120 @@
     color var(--dur-3) var(--e-out);
 }
 
+/* the whole pocket is the hit area */
+.link::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+}
+
+.front:has(.link:focus-visible) {
+  outline: 2px solid var(--accent);
+  outline-offset: -4px;
+}
+
+/* pointer-tracked light across the pocket */
+.sheen {
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  border-radius: inherit;
+  opacity: 0;
+  pointer-events: none;
+  background: radial-gradient(
+    240px circle at var(--px, 50%) calc(var(--py, 0px) - var(--tab-h)),
+    rgba(var(--accent-rgb), 0.13),
+    transparent 65%
+  );
+  transition: opacity var(--dur-3) var(--e-out);
+}
+
 /* ============================================================
-   Hover — five small movements instead of one big scale
+   Hover / focus - the file is pulled
    ============================================================ */
 @media (hover: hover) and (pointer: fine) {
-  .card:hover .image {
-    transform: translateY(-4px) scale(1.035);
+  .folder:hover,
+  .folder:focus-within {
+    translate: 0 -4px;
+  }
+
+  .folder:hover .pocket,
+  .folder:focus-within .pocket {
     box-shadow: var(--shadow-lg);
   }
 
-  .card:hover .shotGlow {
+  .folder:hover .sheet,
+  .folder:focus-within .sheet {
+    transform: translateY(-26px) rotate(-1.4deg);
+  }
+
+  .folder:hover .image {
+    transform: scale(1.04);
+  }
+
+  .folder:hover .paper,
+  .folder:focus-within .paper {
+    transform: translateY(-12px) rotate(4deg);
+  }
+
+  .folder:hover .front,
+  .folder:focus-within .front {
+    transform: rotateX(-9deg);
+  }
+
+  .folder:hover .stamp,
+  .folder:focus-within .stamp {
+    opacity: 0.95;
+    transform: rotate(-12deg) scale(1);
+    transition-delay: 0.12s;
+  }
+
+  .folder:hover .sheen {
     opacity: 1;
   }
 
-  .card:hover .url {
-    color: var(--color-text-muted);
-  }
-
-  .card:hover .dots i {
-    background: rgba(var(--accent-rgb), 0.5);
-  }
-
-  .card:hover .title {
-    color: var(--color-text-strong);
-  }
-
-  .card:hover .skill {
-    color: var(--color-text-muted);
-    border-color: var(--line-2);
-  }
-
-  .card:hover .link,
-  .link:focus-visible {
+  .folder:hover .tabIndex {
     color: var(--accent-soft);
   }
 
-  .card:hover .linkLabel::after {
-    transform: scaleX(1);
-  }
-
-  .card:hover .linkArrow {
-    transform: translate(3px, -3px);
-    color: #0a0713;
+  .folder:hover .link,
+  .link:focus-visible {
+    transform: rotate(45deg);
+    color: var(--on-accent);
     border-color: transparent;
     background: var(--gradient-accent);
   }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .card:hover .image,
-  .card:hover .linkArrow {
+  .sheet,
+  .paper,
+  .front,
+  .image,
+  .link,
+  .stamp {
+    transition: none;
+  }
+
+  .folder:hover,
+  .folder:focus-within {
+    translate: none;
+  }
+
+  .folder:hover .sheet,
+  .folder:focus-within .sheet,
+  .folder:hover .paper,
+  .folder:focus-within .paper,
+  .folder:hover .front,
+  .folder:focus-within .front,
+  .folder:hover .image,
+  .folder:hover .link {
     transform: none;
+  }
+
+  .folder:hover .stamp,
+  .folder:focus-within .stamp {
+    transform: rotate(-12deg);
   }
 }

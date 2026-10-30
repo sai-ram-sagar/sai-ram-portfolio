@@ -4,21 +4,135 @@
     <meta charset="UTF-8" />
     <link rel="icon" type="image/png" href="/favicon.ico" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="theme-color" content="#05060a" />
-    <title>Sai Ram Sagar — Software Developer</title>
+    <meta name="theme-color" content="#0e0c09" />
+    <script>
+      /* Applied before first paint so the page never flashes the wrong theme.
+         Mirrors readTheme() in src/hooks/useTheme.js. */
+      (function () {
+        try {
+          var stored = localStorage.getItem("theme");
+          document.documentElement.dataset.theme =
+            stored === "light" || stored === "dark"
+              ? stored
+              : window.matchMedia("(prefers-color-scheme: light)").matches
+                ? "light"
+                : "dark";
+        } catch (e) {
+          document.documentElement.dataset.theme = "dark";
+        }
+      })();
+    </script>
+    <title>Sai Ram Sagar - Software Developer</title>
     <meta
       name="description"
       content="Sai Ram Sagar is a Software Developer in Hyderabad building real-time and geospatial web applications with React.js and Node.js."
     />
-    <meta property="og:title" content="Sai Ram Sagar — Software Developer" />
+    <meta property="og:title" content="Sai Ram Sagar - Software Developer" />
     <meta
       property="og:description"
       content="Real-time and geospatial web applications with React.js and Node.js."
     />
     <meta property="og:type" content="website" />
+    <style>
+      /* self-contained: this has to render before the stylesheet is parsed */
+      #boot {
+        position: fixed;
+        inset: 0;
+        padding: 26px clamp(1.15rem, 2.6vw, 3rem);
+        background: var(--color-bg, #0e0c09);
+      }
+      #root:not(:empty) ~ #boot {
+        display: none;
+      }
+      #boot span {
+        display: block;
+        border-radius: 10px;
+        background: rgba(243, 232, 217, 0.06);
+      }
+      [data-theme="light"] #boot span {
+        background: rgba(42, 27, 20, 0.06);
+      }
+      .boot-nav {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        max-width: 1180px;
+        margin: 0 auto;
+      }
+      .boot-mark {
+        width: 34px;
+        height: 34px;
+      }
+      .boot-brand {
+        width: 120px;
+        height: 18px;
+      }
+      .boot-actions {
+        width: 150px;
+        height: 34px;
+        margin-left: auto;
+      }
+      .boot-hero {
+        max-width: 1180px;
+        margin: clamp(70px, 14vh, 140px) auto 0;
+      }
+      .boot-eyebrow {
+        width: 230px;
+        height: 28px;
+        border-radius: 999px;
+        margin-bottom: 26px;
+      }
+      .boot-title {
+        width: min(540px, 80%);
+        height: 56px;
+        margin-bottom: 14px;
+      }
+      .boot-title--short {
+        width: min(360px, 55%);
+        margin-bottom: 30px;
+      }
+      .boot-line {
+        width: min(460px, 70%);
+        height: 16px;
+        margin-bottom: 12px;
+      }
+      .boot-line--short {
+        width: min(300px, 45%);
+        margin-bottom: 32px;
+      }
+      .boot-cta {
+        width: 180px;
+        height: 46px;
+        border-radius: 999px;
+      }
+    </style>
   </head>
   <body>
     <div id="root"></div>
+
+    <!--
+      Shown until React paints. The bundle has to arrive and parse before the
+      page has any content at all, and that window is the one stretch of the
+      visit with nothing on screen.
+
+      It is hidden by CSS the moment #root has children, so there is no
+      teardown to run and no chance of it outliving the app.
+    -->
+    <div id="boot" aria-hidden="true">
+      <div class="boot-nav">
+        <span class="boot-mark"></span>
+        <span class="boot-brand"></span>
+        <span class="boot-actions"></span>
+      </div>
+      <div class="boot-hero">
+        <span class="boot-eyebrow"></span>
+        <span class="boot-title"></span>
+        <span class="boot-title boot-title--short"></span>
+        <span class="boot-line"></span>
+        <span class="boot-line boot-line--short"></span>
+        <span class="boot-cta"></span>
+      </div>
+    </div>
     <script type="module" src="/src/main.jsx"></script>
   </body>
 </html>

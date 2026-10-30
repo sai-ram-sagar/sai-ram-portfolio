@@ -24,7 +24,7 @@ export const useScrollSpy = (ids) => {
         });
 
         if (!visible.size) {
-          /* above the first section — nothing should read as current */
+          /* above the first section - nothing should read as current */
           if (window.scrollY < window.innerHeight * 0.6) setActiveId("");
           return;
         }

@@ -1,0 +1,187 @@
+@import "../../vars.css";
+
+.overlay {
+  position: fixed;
+  inset: 0;
+  z-index: var(--z-modal);
+  display: grid;
+  place-items: center;
+  padding: clamp(0.75rem, 3vw, 2rem);
+  background: var(--scrim);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  animation: fade var(--dur) var(--ease-out);
+}
+
+.frame {
+  width: min(860px, 100%);
+  max-height: 92vh;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  border-radius: var(--r-lg);
+  border: 1px solid var(--line-2);
+  background: var(--color-surface-1);
+  box-shadow: var(--shadow-lg);
+  animation: rise var(--dur-slow) var(--ease-out);
+}
+
+/* ============================================================
+   Bar
+   ============================================================ */
+.bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--sp-3);
+  padding: 0.65rem 0.65rem 0.65rem 1.1rem;
+  border-bottom: 1px solid var(--line-1);
+  background: var(--glass-1);
+}
+
+.label {
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+  min-width: 0;
+  font-family: var(--font-mono);
+  font-size: var(--fs-mono);
+  letter-spacing: var(--tracking-mono);
+  text-transform: uppercase;
+  color: var(--color-text);
+}
+
+.labelDot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--accent);
+  box-shadow: 0 0 0 3px rgba(var(--accent-rgb), 0.18);
+}
+
+.labelMeta {
+  color: var(--color-text-dim);
+  white-space: nowrap;
+}
+
+.tools {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  flex-shrink: 0;
+}
+
+.tool,
+.close {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
+  height: 34px;
+  border-radius: var(--r-sm);
+  border: 1px solid var(--line-1);
+  color: var(--color-text-muted);
+  transition:
+    color var(--dur-fast) var(--ease-out),
+    border-color var(--dur-fast) var(--ease-out),
+    background-color var(--dur-fast) var(--ease-out);
+}
+
+.tool {
+  padding: 0 0.75rem;
+  font-size: var(--fs-meta);
+  font-weight: 500;
+}
+
+.toolPrimary {
+  border-color: transparent;
+  background: var(--gradient-accent);
+  color: var(--on-accent);
+}
+
+.close {
+  width: 34px;
+}
+
+.tool:hover,
+.close:hover {
+  color: var(--color-text-strong);
+  border-color: var(--line-3);
+}
+
+.toolPrimary:hover {
+  color: var(--on-accent);
+  border-color: transparent;
+  filter: brightness(1.06);
+}
+
+/* ============================================================
+   Desk - the scrolling area the page sits on
+   ============================================================ */
+.desk {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  padding: clamp(0.75rem, 2.5vw, 1.75rem);
+  background:
+    radial-gradient(100% 60% at 50% 0%, rgba(var(--accent-rgb), 0.08), transparent 70%),
+    var(--color-surface-2);
+}
+
+.page {
+  position: relative;
+  max-width: 760px;
+  margin: 0 auto;
+  aspect-ratio: 1700 / 2200;
+  border-radius: 4px;
+  background: #fff;
+  box-shadow:
+    0 1px 2px rgba(0, 0, 0, 0.2),
+    0 24px 60px -28px rgba(0, 0, 0, 0.6);
+  overflow: hidden;
+}
+
+.pageSkeleton {
+  position: absolute;
+  inset: 0;
+  border-radius: 0;
+}
+
+.image {
+  display: block;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  transition: opacity var(--dur-4) var(--e-out);
+}
+
+.imageReady {
+  opacity: 1;
+}
+
+@media (max-width: 520px) {
+  /* icons only on narrow screens; each control keeps its aria-label */
+  .toolText,
+  .labelMeta {
+    display: none;
+  }
+
+  .tool {
+    width: 34px;
+    padding: 0;
+  }
+}
+
+@keyframes fade {
+  from {
+    opacity: 0;
+  }
+}
+
+@keyframes rise {
+  from {
+    opacity: 0;
+    transform: translateY(16px) scale(0.98);
+  }
+}

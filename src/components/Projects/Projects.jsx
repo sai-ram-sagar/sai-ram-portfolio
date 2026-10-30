@@ -63,7 +63,12 @@ export const Projects = () => {
 
         <div className={styles.projectGrid}>
           {visible.map((project, index) => (
-            <ProjectCard key={project.title} project={project} delay={(index % 3) * 90} />
+            <ProjectCard
+              key={project.title}
+              project={project}
+              index={index}
+              delay={(index % 3) * 90}
+            />
           ))}
         </div>
 

@@ -2,6 +2,7 @@ import { AudioLines, Map as MapIcon, MonitorSmartphone } from "lucide-react";
 import { Section } from "../ui/Section";
 import { SpotlightCard } from "../ui/SpotlightCard";
 import { profile, disciplines } from "../../data/profile";
+import personalProjects from "../../data/projects.json";
 import styles from "./About.module.css";
 
 const ICONS = { MonitorSmartphone, Map: MapIcon, AudioLines };
@@ -18,7 +19,7 @@ export const About = () => (
     index="01"
     label="About"
     title="Software for the moments that can't wait."
-    caption="My day-to-day is an emergency-response platform where the interface, the map and the audio pipeline all have to stay live at once."
+    caption="I build web apps where every second counts - live dashboards, maps that move, and audio that becomes text as people speak."
   >
     <div className={styles.grid}>
       <div className={styles.prose}>
@@ -68,6 +69,40 @@ export const About = () => (
             </SpotlightCard>
           );
         })}
+      </ul>
+    </div>
+
+    {/* full width under both columns, so neither column ends in a tall empty patch */}
+    <div className={styles.workedOn}>
+      <h3 className={styles.workedOnTitle} data-reveal="fade">
+        Projects I&apos;ve worked on
+      </h3>
+      <ul className={styles.workedOnList}>
+        {profile.workedOn.map((item, index) => (
+          <li
+            key={item.name}
+            className={styles.workedOnItem}
+            data-reveal="fade"
+            style={{ "--reveal-delay": `${index * 70}ms` }}
+          >
+            <span className={styles.workedOnName}>
+              {item.name}
+              {item.status && <span className={styles.workedOnStatus}>{item.status}</span>}
+            </span>
+            <span className={styles.workedOnDetail}>{item.detail}</span>
+          </li>
+        ))}
+        <li
+          className={styles.personal}
+          data-reveal="fade"
+          style={{ "--reveal-delay": `${profile.workedOn.length * 70}ms` }}
+        >
+          On my own time I&apos;ve built {personalProjects.length} apps of my own, all live online:{" "}
+          {personalProjects.map((project) => project.title).join(", ")}.{" "}
+          <a className={styles.personalLink} href="#projects">
+            See them below
+          </a>
+        </li>
       </ul>
     </div>
   </Section>

@@ -1,53 +1,176 @@
 /* =========================================================
-   Design system — "Aurora Graphite" v2
+   Design system - "Aurora Graphite" v2
 
    One palette, one spacing scale, one radius scale, one glow
    language, one motion language. Every surface in the site is
-   composed from the tokens below — nothing is styled ad hoc.
+   composed from the tokens below - nothing is styled ad hoc.
 
-   Accent identity: violet primary with a dusty-rose secondary
-   used only at the tail of gradients and in glow falloff, so
-   the warmth reads as refinement rather than colour.
+   Two themes, both from the supplied swatches:
+     dark  "Classic Brown" - #0E0C09 / #1F1611 / #3A2418 / #D6B895 / #F3E8D9
+     light "Beige Clean"   - #F7EFE4 / #FFFFFF / #2A1B14 / #8A5A3C / #E6D6C3
+
+   In both sets the swatch labelled "Primary Text" for dark
+   (#3A2418) and "Secondary Text" for light (#E6D6C3) fail as
+   text on their own background - 1.34:1 and 1.21:1 against a
+   4.5:1 requirement. Both are used here as the edge/tint tones
+   they visually are; the readable swatch in each set carries
+   the text.
+
+   Section 1 holds everything that changes with the theme.
+   Everything from section 5 down is theme-independent.
    ========================================================= */
 
-:root {
+:root,
+[data-theme="dark"] {
+  color-scheme: dark;
+
   /* ---------------------------------------------------------
-     1. Base surfaces
+     1. Surfaces
      --------------------------------------------------------- */
-  --color-bg: #07060d;
-  --color-bg-deep: #040309;
-  --color-surface-1: #0c0a15;
-  --color-surface-2: #110e1c;
-  --color-surface-3: #171327;
+  --color-bg: #0e0c09;          /* palette: Background */
+  --color-bg-deep: #070604;     /* derived: one step below */
+  --color-surface-1: #17110d;   /* derived: card ground */
+  --color-surface-2: #1f1611;   /* palette: Surface */
+  --color-surface-3: #2a1d15;   /* derived: raised/focus */
+  --color-edge: #3a2418;        /* palette: deepest brown */
 
-  /* translucent fills, layered over the page glow */
-  --glass-1: rgba(255, 255, 255, 0.022);
-  --glass-2: rgba(255, 255, 255, 0.042);
-  --glass-3: rgba(255, 255, 255, 0.068);
-
-  /* inner highlight that gives a card its top edge */
-  --inner-top: inset 0 1px 0 rgba(255, 255, 255, 0.055);
+  --glass-1: rgba(243, 232, 217, 0.026);
+  --glass-2: rgba(243, 232, 217, 0.048);
+  --glass-3: rgba(243, 232, 217, 0.075);
+  --inner-top: inset 0 1px 0 rgba(243, 232, 217, 0.06);
 
   /* ---------------------------------------------------------
      2. Hairlines
      --------------------------------------------------------- */
-  --line-1: rgba(255, 255, 255, 0.062);
-  --line-2: rgba(255, 255, 255, 0.105);
-  --line-3: rgba(255, 255, 255, 0.17);
+  --line-1: rgba(243, 232, 217, 0.08);
+  --line-2: rgba(243, 232, 217, 0.13);
+  --line-3: rgba(243, 232, 217, 0.2);
 
   /* ---------------------------------------------------------
      3. Accents
      --------------------------------------------------------- */
-  --accent: #8b7bff;
-  --accent-soft: #ab9fff;
-  --accent-deep: #5b48d9;
-  --accent-2: #e9a6c9;
-  --accent-2-soft: #f3c6dd;
-  --accent-rgb: 139, 123, 255;
-  --accent-2-rgb: 233, 166, 201;
-  --signal: #57d5ba;
-  --signal-rgb: 87, 213, 186;
+  --accent: #d6b895;            /* palette: Accent - 10.4:1 on bg */
+  --accent-soft: #e7d4b8;       /* derived: emphasis, lighter here */
+  --accent-deep: #a8875f;       /* derived */
+  --accent-2: #f3e8d9;          /* palette: cream, gradient tail */
+  --accent-2-soft: #fbf5ec;
+  --accent-rgb: 214, 184, 149;
+  --accent-2-rgb: 243, 232, 217;
 
+  /* the palette carries one accent, so status reuses it */
+  --signal: #d6b895;
+  --signal-rgb: 214, 184, 149;
+
+  /* ink for text sitting on an accent fill */
+  --on-accent: #1f1611;
+
+  /* ---------------------------------------------------------
+     4. Text
+     --------------------------------------------------------- */
+  --color-text-strong: #f3e8d9; /* palette: 16.1:1 */
+  --color-text: #e2d5c4;        /* derived: 12.5:1 */
+  --color-text-muted: #b09a82;  /* derived: 6.4:1 */
+  --color-text-dim: #8a765f;    /* derived: 4.0:1, non-body use */
+
+  /* ---------------------------------------------------------
+     5. Themed chrome
+     --------------------------------------------------------- */
+  --nav-glass: rgba(14, 12, 9, 0.76);
+  --panel-bg: rgba(10, 9, 6, 0.96);
+  --scrim: rgba(7, 6, 4, 0.88);
+  --sweep: rgba(255, 255, 255, 0.22);
+
+  --backdrop-top: #1d1611;
+  --grid-line: rgba(243, 232, 217, 0.038);
+  --aurora-1: 0.19;
+  --aurora-2: 0.11;
+  --aurora-3: 0.1;
+  --grain-opacity: 0.34;
+  --vignette: rgba(5, 4, 2, 0.62);
+
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.45);
+  --shadow-md: 0 14px 34px -16px rgba(0, 0, 0, 0.8);
+  --shadow-lg: 0 30px 72px -30px rgba(0, 0, 0, 0.92);
+
+  --glow-sm: 0 6px 20px -10px rgba(var(--accent-rgb), 0.65);
+  --glow-md: 0 14px 42px -16px rgba(var(--accent-rgb), 0.7);
+  --glow-lg: 0 22px 62px -22px rgba(var(--accent-rgb), 0.8);
+  --glow-ring: 0 0 0 1px rgba(var(--accent-rgb), 0.34);
+}
+
+/* =========================================================
+   Light - "Beige Clean"
+
+   Not a mechanical inversion. On a light ground the accent has
+   to get darker rather than lighter to stay legible, glass
+   fills tint with ink instead of light, and the glows drop to
+   roughly a third - the same bloom that reads as depth on
+   near-black reads as smudge on beige.
+   ========================================================= */
+[data-theme="light"] {
+  color-scheme: light;
+
+  --color-bg: #f7efe4;          /* palette: Background */
+  --color-bg-deep: #ede0cf;     /* derived: one step deeper */
+  --color-surface-1: #ffffff;   /* palette: Surface - card ground */
+  --color-surface-2: #fbf4ea;   /* derived: insets, previews */
+  --color-surface-3: #ffffff;   /* derived: raised/focus */
+  --color-edge: #e6d6c3;        /* palette: tint */
+
+  --glass-1: rgba(42, 27, 20, 0.028);
+  --glass-2: rgba(42, 27, 20, 0.05);
+  --glass-3: rgba(42, 27, 20, 0.08);
+  --inner-top: inset 0 1px 0 rgba(255, 255, 255, 0.85);
+
+  --line-1: rgba(42, 27, 20, 0.1);
+  --line-2: rgba(42, 27, 20, 0.16);
+  --line-3: rgba(42, 27, 20, 0.26);
+
+  --accent: #8a5a3c;            /* palette: Accent - 5.1:1 on bg */
+  --accent-soft: #70452b;       /* derived: darker for emphasis */
+  --accent-deep: #5a3622;
+  --accent-2: #b57a52;          /* derived: gradient tail */
+  --accent-2-soft: #c99672;
+  --accent-rgb: 138, 90, 60;
+  --accent-2-rgb: 181, 122, 82;
+
+  --signal: #8a5a3c;
+  --signal-rgb: 138, 90, 60;
+
+  --on-accent: #fdf8f2;         /* 5.6:1 on the accent fill */
+
+  --color-text-strong: #2a1b14; /* palette: 14.6:1 */
+  --color-text: #3d2a20;        /* derived: 11.3:1 */
+  --color-text-muted: #6f5646;  /* derived: 6.0:1 */
+  --color-text-dim: #8a705d;    /* derived: 4.0:1, non-body use */
+
+  --nav-glass: rgba(247, 239, 228, 0.82);
+  --panel-bg: rgba(247, 239, 228, 0.97);
+  --scrim: rgba(42, 27, 20, 0.55);
+  --sweep: rgba(255, 255, 255, 0.5);
+
+  --backdrop-top: #fffaf3;
+  --grid-line: rgba(42, 27, 20, 0.05);
+  --aurora-1: 0.1;
+  --aurora-2: 0.07;
+  --aurora-3: 0.06;
+  --grain-opacity: 0.1;
+  --vignette: rgba(42, 27, 20, 0.07);
+
+  --shadow-sm: 0 1px 2px rgba(42, 27, 20, 0.07);
+  --shadow-md: 0 14px 34px -16px rgba(42, 27, 20, 0.22);
+  --shadow-lg: 0 30px 72px -30px rgba(42, 27, 20, 0.3);
+
+  --glow-sm: 0 6px 20px -10px rgba(var(--accent-rgb), 0.3);
+  --glow-md: 0 14px 42px -16px rgba(var(--accent-rgb), 0.32);
+  --glow-lg: 0 22px 62px -22px rgba(var(--accent-rgb), 0.38);
+  --glow-ring: 0 0 0 1px rgba(var(--accent-rgb), 0.28);
+}
+
+/* =========================================================
+   Theme-independent tokens
+   ========================================================= */
+:root {
   --gradient-accent: linear-gradient(118deg, var(--accent) 0%, var(--accent-2) 100%);
   --gradient-accent-soft: linear-gradient(
     118deg,
@@ -64,22 +187,14 @@
   --gradient-divider: linear-gradient(
     90deg,
     transparent,
-    rgba(255, 255, 255, 0.09) 25%,
+    var(--line-1) 25%,
     rgba(var(--accent-rgb), 0.22) 50%,
-    rgba(255, 255, 255, 0.09) 75%,
+    var(--line-1) 75%,
     transparent
   );
 
   /* ---------------------------------------------------------
-     4. Text
-     --------------------------------------------------------- */
-  --color-text-strong: #f4f2ff;
-  --color-text: #e4e1f0;
-  --color-text-muted: #9d99b4;
-  --color-text-dim: #6d6a85;
-
-  /* ---------------------------------------------------------
-     5. Typography
+     Typography
      --------------------------------------------------------- */
   --font-display: "Outfit", "Segoe UI", system-ui, sans-serif;
   --font-body: "Outfit", "Segoe UI", system-ui, sans-serif;
@@ -106,7 +221,7 @@
   --leading-body: 1.66;
 
   /* ---------------------------------------------------------
-     6. Spacing scale (4px base)
+     Spacing scale (4px base)
      --------------------------------------------------------- */
   --sp-1: 0.25rem;
   --sp-2: 0.5rem;
@@ -125,16 +240,17 @@
   --pad-card-lg: clamp(1.5rem, 1.1rem + 1.5vw, 2.15rem);
 
   /* ---------------------------------------------------------
-     7. Layout
+     Layout
      --------------------------------------------------------- */
   --page-max: 1180px;
   --page-pad: clamp(1.15rem, 0.55rem + 2.6vw, 3rem);
-  --section-gap: clamp(5.5rem, 3.4rem + 7.5vw, 9.5rem);
+  /* every value scaled to 20% of its previous size: 5.5/3.4/7.5/9.5 */
+  --section-gap: clamp(1.1rem, 0.68rem + 1.5vw, 1.9rem);
   --nav-h: 76px;
   --nav-h-compact: 62px;
 
   /* ---------------------------------------------------------
-     8. Radii
+     Radii
      --------------------------------------------------------- */
   --r-xs: 6px;
   --r-sm: 10px;
@@ -145,20 +261,7 @@
   --r-pill: 999px;
 
   /* ---------------------------------------------------------
-     9. Elevation + glow
-     --------------------------------------------------------- */
-  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.45);
-  --shadow-md: 0 14px 34px -16px rgba(0, 0, 0, 0.8);
-  --shadow-lg: 0 30px 72px -30px rgba(0, 0, 0, 0.92);
-
-  /* glow marks importance or interaction — never decoration */
-  --glow-sm: 0 6px 20px -10px rgba(var(--accent-rgb), 0.65);
-  --glow-md: 0 14px 42px -16px rgba(var(--accent-rgb), 0.7);
-  --glow-lg: 0 22px 62px -22px rgba(var(--accent-rgb), 0.8);
-  --glow-ring: 0 0 0 1px rgba(var(--accent-rgb), 0.34);
-
-  /* ---------------------------------------------------------
-     10. Motion
+     Motion
      --------------------------------------------------------- */
   --e-out: cubic-bezier(0.22, 1, 0.36, 1);
   --e-inout: cubic-bezier(0.65, 0, 0.35, 1);
@@ -178,7 +281,7 @@
   --dur-slow: var(--dur-4);
 
   /* ---------------------------------------------------------
-     11. Layers
+     Layers
      --------------------------------------------------------- */
   --z-backdrop: 0;
   --z-content: 1;

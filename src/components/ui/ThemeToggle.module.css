@@ -1,0 +1,62 @@
+@import "../../vars.css";
+
+.toggle {
+  display: grid;
+  place-items: center;
+  width: 38px;
+  height: 38px;
+  flex-shrink: 0;
+  border-radius: var(--r-sm);
+  color: var(--color-text);
+  border: 1px solid var(--line-1);
+  background: var(--glass-1);
+  box-shadow: var(--inner-top);
+  transition:
+    border-color var(--dur-2) var(--e-out),
+    background-color var(--dur-2) var(--e-out),
+    color var(--dur-2) var(--e-out),
+    transform var(--dur-1) var(--e-out);
+}
+
+.toggle:hover {
+  color: var(--color-text-strong);
+  border-color: rgba(var(--accent-rgb), 0.5);
+  background: var(--glass-2);
+}
+
+.toggle:active {
+  transform: scale(0.94);
+}
+
+/* both icons occupy the same cell so the button never reflows */
+.icons {
+  display: grid;
+  place-items: center;
+  width: 17px;
+  height: 17px;
+}
+
+.icon {
+  grid-area: 1 / 1;
+  opacity: 0;
+  transform: rotate(-70deg) scale(0.55);
+  transition:
+    opacity var(--dur-3) var(--e-out),
+    transform var(--dur-3) var(--e-out);
+}
+
+.iconActive {
+  opacity: 1;
+  transform: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .icon {
+    transition: opacity var(--dur-1) linear;
+    transform: none;
+  }
+
+  .toggle:active {
+    transform: none;
+  }
+}

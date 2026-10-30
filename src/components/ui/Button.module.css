@@ -41,7 +41,7 @@
   background: linear-gradient(
     100deg,
     transparent 20%,
-    rgba(255, 255, 255, 0.22) 48%,
+    var(--sweep) 48%,
     transparent 76%
   );
   transform: translateX(-110%);
@@ -64,7 +64,7 @@
    Variants
    ------------------------------------------------------------ */
 .primary {
-  color: #0a0713;
+  color: var(--on-accent);
   font-weight: 600;
   background: var(--gradient-accent);
   box-shadow: var(--glow-md);
@@ -84,7 +84,7 @@
 }
 
 /* ------------------------------------------------------------
-   Interaction — pointer devices only, so taps never leave a
+   Interaction - pointer devices only, so taps never leave a
    stuck hover state on mobile.
    ------------------------------------------------------------ */
 @media (hover: hover) and (pointer: fine) {
@@ -126,7 +126,7 @@
   transition-duration: 80ms;
 }
 
-/* loading state — the icon spins in place */
+/* loading state - the icon spins in place */
 .btn[data-loading="true"] .icon {
   animation: btnSpin 900ms linear infinite;
 }

@@ -3,7 +3,7 @@ import styles from "./Button.module.css";
 /**
  * The site's only button/CTA. Centralising it is what keeps every call to
  * action on the same micro-interaction: a light sweeping across the surface,
- * the icon stepping forward, and a small press compression — all under
+ * the icon stepping forward, and a small press compression - all under
  * 200ms so the control always feels immediate.
  */
 export const Button = ({

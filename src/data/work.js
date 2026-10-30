@@ -1,5 +1,5 @@
 /**
- * Key professional projects — taken from the KEY PROJECTS block of the resume.
+ * Key professional projects - taken from the KEY PROJECTS block of the resume.
  * These are internal platform projects with no public demo and no screenshot,
  * so they are presented as detail cards rather than as previews.
  */
@@ -11,7 +11,7 @@ export const work = [
     summary:
       "A mission-planning system that lets operators create, configure and reuse predefined drone flight missions.",
     highlights: [
-      "Implemented a Flight Hub interface for ordered routing through unlimited waypoints — bounded in practice by drone battery endurance — with add, edit, delete and reposition actions and live path rendering.",
+      "Implemented a Flight Hub interface for ordered routing through unlimited waypoints - bounded in practice by drone battery endurance - with add, edit, delete and reposition actions and live path rendering.",
       "Contributing to design discussions on mission planning, drone assignment, dispatch integration and geospatial visualisation.",
     ],
     stack: ["React.js", "Node.js", "Express.js", "REST APIs", "Leaflet", "Geospatial Data"],

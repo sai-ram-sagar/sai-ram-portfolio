@@ -30,7 +30,7 @@ export const Skills = () => {
       index="04"
       label="Skills"
       title="The stack behind the work."
-      caption="Grouped the way I actually use them — from the operator interface down to the audio pipeline."
+      caption="Grouped the way I actually use them - from the operator interface down to the audio pipeline."
     >
       <div className={styles.grid}>
         {skillGroups.map((group, groupIndex) => {
@@ -108,7 +108,7 @@ export const Skills = () => {
 
       <p className={styles.legend} data-reveal="fade">
         <BadgeCheck size={14} strokeWidth={2} aria-hidden="true" />
-        Marked technologies have a course certificate — select one to view it.
+        Marked technologies have a course certificate - select one to view it.
       </p>
 
       {certificate && (

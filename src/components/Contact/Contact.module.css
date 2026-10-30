@@ -1,18 +1,13 @@
 @import "../../vars.css";
 
-.grid {
-  display: grid;
-  gap: clamp(2.25rem, 4vw, 3.5rem);
-  align-items: start;
-}
-
 /* ============================================================
    Direct details
    ============================================================ */
 .details {
   display: flex;
   flex-direction: column;
-  gap: var(--sp-8);
+  gap: var(--sp-6);
+  margin-top: var(--sp-8);
 }
 
 .emailLink {
@@ -277,14 +272,4 @@
 
 .statusError {
   color: #ff9c8a;
-}
-
-/* ============================================================
-   Breakpoints
-   ============================================================ */
-@media (min-width: 940px) {
-  .grid {
-    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
-    gap: clamp(2.5rem, 5vw, 4.5rem);
-  }
 }

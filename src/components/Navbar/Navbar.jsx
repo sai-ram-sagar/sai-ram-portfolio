@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useLayoutEffect, useRef, useState } from "react";
 import { Menu, X, ArrowUpRight } from "lucide-react";
 import { useScrollSpy } from "../../hooks/useScrollSpy";
+import { ThemeToggle } from "../ui/ThemeToggle";
 import styles from "./Navbar.module.css";
 
 const LINKS = [
@@ -21,7 +22,7 @@ export const Navbar = () => {
 
   /*
    * The active pill is one element that slides between links rather than a
-   * background on each link — the movement is what tells you the page moved.
+   * background on each link - the movement is what tells you the page moved.
    * Its position is measured, so it stays correct at any font size or width.
    */
   const positionPill = useCallback(() => {
@@ -100,6 +101,8 @@ export const Navbar = () => {
               <span>Let&apos;s talk</span>
               <ArrowUpRight size={15} strokeWidth={2} aria-hidden="true" />
             </a>
+            <ThemeToggle />
+
             <button
               ref={menuBtn}
               type="button"

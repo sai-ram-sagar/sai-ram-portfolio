@@ -9,7 +9,7 @@ import { useEffect } from "react";
  *    "visible" to "hidden until revealed". It is only set once an observer
  *    exists, so content is never hidden by a system that cannot un-hide it.
  *
- * 2. A MutationObserver registers elements that appear after mount — the extra
+ * 2. A MutationObserver registers elements that appear after mount - the extra
  *    cards behind "Show more projects" would otherwise keep the pre-reveal
  *    opacity forever. For the same reason the IntersectionObserver is never
  *    torn down early: it has to be alive when that content arrives.
@@ -60,7 +60,7 @@ export const useScrollReveal = () => {
         if (el.hasAttribute("data-revealed")) return;
         /*
          * A zero-height viewport (embedded/offscreen frames) makes both the
-         * observer and the rect test meaningless — every element reads as
+         * observer and the rect test meaningless - every element reads as
          * off-screen forever. Show the content rather than judge it.
          */
         if (viewport > 0) {
@@ -80,7 +80,7 @@ export const useScrollReveal = () => {
     register(document.body);
 
     /*
-     * Nodes added after mount come from a deliberate action — pressing "Load
+     * Nodes added after mount come from a deliberate action - pressing "Load
      * more". Those are swept on a short timer instead of being left to the
      * observer: the reader asked for that content, so it must not depend on an
      * intersection callback that may be deferred (or, in a background tab,

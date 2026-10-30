@@ -1,19 +1,24 @@
-import { ArrowDown, ArrowUpRight, Mail, MapPin } from "lucide-react";
+import { useState } from "react";
+import { ArrowDown, ArrowUpRight, FileText, Mail, MapPin } from "lucide-react";
 import { getImageUrl } from "../../utils";
 import { usePointerSpotlight } from "../../hooks/usePointerSpotlight";
+import { useImageReady } from "../../hooks/useImageReady";
 import { Button } from "../ui/Button";
+import { ResumeModal } from "../ui/ResumeModal";
 import { profile } from "../../data/profile";
 import styles from "./Hero.module.css";
 
 /**
  * The hero runs its own entrance rather than the shared scroll-reveal: it is
- * above the fold, so it plays once on load in a fixed order — frame, eyebrow,
- * name, specialism, lead, actions, chips, portrait, metrics. The order lives
+ * above the fold, so it plays once on load in a fixed order - frame, eyebrow,
+ * name, specialism, lead, actions, chips, portrait. The order lives
  * in `--enter-delay` on each element, so the choreography is readable here
  * instead of being buried in the stylesheet.
  */
 export const Hero = () => {
   const { ref, onPointerMove } = usePointerSpotlight();
+  const { ready: portraitReady, imageProps } = useImageReady();
+  const [resumeOpen, setResumeOpen] = useState(false);
 
   return (
     <section className={styles.hero} id="top" ref={ref} onPointerMove={onPointerMove}>
@@ -54,7 +59,7 @@ export const Hero = () => {
           </p>
 
           <p className={styles.lead} style={{ "--enter-delay": "520ms" }}>
-            {profile.summary}
+            {profile.lead}
           </p>
 
           <div className={styles.actions} style={{ "--enter-delay": "600ms" }}>
@@ -64,6 +69,21 @@ export const Hero = () => {
             <Button as="a" href="#experience" variant="ghost" icon={ArrowUpRight}>
               See what I build
             </Button>
+            {/* the wrapper carries the effects that must spill outside the
+                button's clipped surface: the breathing halo and the ping badge */}
+            <span className={styles.resumeCta}>
+              <Button
+                variant="ghost"
+                icon={FileText}
+                iconSide="left"
+                className={styles.resumeBtn}
+                onClick={() => setResumeOpen(true)}
+                aria-haspopup="dialog"
+              >
+                View resume
+              </Button>
+              <span className={styles.resumeBadge} aria-hidden="true" />
+            </span>
           </div>
 
           <ul className={styles.focus} style={{ "--enter-delay": "680ms" }}>
@@ -84,13 +104,17 @@ export const Hero = () => {
             <span className={styles.orbit} aria-hidden="true" />
             <span className={styles.ring} aria-hidden="true" />
             <span className={styles.ringGlow} aria-hidden="true" />
+            {!portraitReady && (
+              <span className={`skeleton ${styles.portraitSkeleton}`} aria-hidden="true" />
+            )}
             <img
-              className={styles.portrait}
-              src={getImageUrl("hero/portfolio-image-round-web.webp")}
+              className={`${styles.portrait} ${portraitReady ? styles.portraitReady : ""}`}
+              src={getImageUrl("hero/portfolio-image-round-web.png")}
               alt={`Portrait of ${profile.fullName}`}
               width="900"
               height="900"
               decoding="async"
+              {...imageProps}
             />
           </div>
           <span className={`${styles.tick} ${styles.tickTL}`} aria-hidden="true" />
@@ -98,26 +122,15 @@ export const Hero = () => {
         </div>
       </div>
 
-      <ul className={styles.metrics} style={{ "--enter-delay": "820ms" }}>
-        {profile.metrics.map((metric, index) => (
-          <li
-            key={metric.label}
-            className={styles.metric}
-            style={{ "--enter-delay": `${860 + index * 70}ms` }}
-          >
-            <span className={styles.metricValue}>{metric.value}</span>
-            <span className={styles.metricLabel}>{metric.label}</span>
-          </li>
-        ))}
-      </ul>
-
-      <a className={styles.scrollCue} href="#about" style={{ "--enter-delay": "1120ms" }}>
+      <a className={styles.scrollCue} href="#about" style={{ "--enter-delay": "880ms" }}>
         <span className={styles.scrollTrack} aria-hidden="true">
           <span className={styles.scrollDot} />
         </span>
         <span className={styles.scrollLabel}>Scroll</span>
         <ArrowDown size={13} strokeWidth={2} aria-hidden="true" />
       </a>
+
+      {resumeOpen && <ResumeModal onClose={() => setResumeOpen(false)} />}
     </section>
   );
 };

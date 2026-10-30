@@ -13,6 +13,9 @@
 
 html {
   scroll-behavior: smooth;
+  /* reserve the gutter: color-scheme repaints the scrollbar on theme change,
+     and without this the page shifts a few pixels mid-transition */
+  scrollbar-gutter: stable;
   scroll-padding-top: calc(var(--nav-h-compact) + var(--sp-6));
   -webkit-text-size-adjust: 100%;
 }
@@ -94,7 +97,7 @@ ol {
 }
 
 /* ============================================================
-   Focus — one ring, everywhere
+   Focus - one ring, everywhere
    ============================================================ */
 :focus {
   outline: none;
@@ -155,6 +158,36 @@ ol {
 }
 
 /* ============================================================
+   Skeletons
+
+   A placeholder for surfaces that genuinely arrive late - the
+   screenshots and certificates, which are hundreds of KB each.
+   Nothing that renders instantly gets one; a skeleton that
+   flashes for a frame is worse than no skeleton.
+   ============================================================ */
+.skeleton {
+  position: relative;
+  overflow: hidden;
+  background: var(--glass-2);
+  border-radius: var(--r-sm);
+}
+
+.skeleton::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  transform: translateX(-100%);
+  background: linear-gradient(90deg, transparent, var(--glass-3), transparent);
+  animation: shimmer 1.5s var(--e-inout) infinite;
+}
+
+@keyframes shimmer {
+  to {
+    transform: translateX(100%);
+  }
+}
+
+/* ============================================================
    Reveal system
 
    One observer sets [data-revealed] (see useScrollReveal). The
@@ -175,8 +208,8 @@ ol {
  *
  * The gate is the whole point: content is visible by default and the reveal
  * is an enhancement layered on top. Hiding first and relying on an observer
- * to undo it means any failure to observe — no JS, no IntersectionObserver,
- * a throwing effect, a document that never becomes visible — leaves the page
+ * to undo it means any failure to observe - no JS, no IntersectionObserver,
+ * a throwing effect, a document that never becomes visible - leaves the page
  * blank with no way back.
  */
 html[data-reveal-active] [data-reveal] {
@@ -189,23 +222,23 @@ html[data-reveal-active] [data-reveal="up"] {
   transform: translate3d(0, 22px, 0);
 }
 
-/* copy and metadata — no movement, just presence */
+/* copy and metadata - no movement, just presence */
 html[data-reveal-active] [data-reveal="fade"] {
   transform: none;
 }
 
-/* cards — settle in from slightly small */
+/* cards - settle in from slightly small */
 html[data-reveal-active] [data-reveal="scale"] {
   transform: translate3d(0, 16px, 0) scale(0.985);
 }
 
-/* side panels — drift in horizontally */
+/* side panels - drift in horizontally */
 html[data-reveal-active] [data-reveal="side"] {
   transform: translate3d(24px, 0, 0);
 }
 
 /*
- * Headings — the line wipes up from behind a mask.
+ * Headings - the line wipes up from behind a mask.
  *
  * The mask is `overflow: hidden` on the observed element with the motion on
  * its child, never `clip-path` on the element itself: clip-path empties an
@@ -215,13 +248,16 @@ html[data-reveal-active] [data-reveal="side"] {
 html[data-reveal-active] [data-reveal="mask"] {
   opacity: 1;
   overflow: hidden;
-  padding-bottom: 0.12em;
-  margin-bottom: -0.12em;
+  /* room for descenders - "shipping", "something" - since overflow:hidden
+     crops them; the negative margin gives the space back to the layout */
+  padding-bottom: 0.26em;
+  margin-bottom: -0.26em;
 }
 
 html[data-reveal-active] [data-reveal="mask"] > * {
   display: block;
-  transform: translate3d(0, 108%, 0);
+  /* clears the taller mask, or the letter tops peek out before the reveal */
+  transform: translate3d(0, 135%, 0);
   transition: transform var(--dur-5) var(--e-entrance);
   transition-delay: var(--reveal-delay);
 }
@@ -238,11 +274,62 @@ html[data-reveal-active] [data-revealed] {
 }
 
 /* ============================================================
+   Theme change - circular reveal
+
+   The new theme is painted over the old one and clipped to a
+   circle that grows from the toggle (see useTheme). Both
+   snapshots must stop cross-fading first, or the default
+   dissolve shows through the clip as a grey wash.
+   ============================================================ */
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation: none;
+  mix-blend-mode: normal;
+}
+
+::view-transition-old(root) {
+  z-index: 1;
+}
+
+::view-transition-new(root) {
+  z-index: 2;
+
+  /*
+   * The soft-edged reveal. Solid to 76% of the radius, then feathered to
+   * nothing - the 76% is mirrored by MASK_SOLID in useTheme.js, which sizes
+   * the mask so the opaque core still covers the viewport at the end.
+   *
+   * `closest-side` pins the gradient radius to half the mask box, so the
+   * feather stays a predictable share of the circle. It starts at zero size
+   * and useTheme animates size and position together.
+   */
+  -webkit-mask-image: radial-gradient(circle closest-side, #000 76%, transparent 100%);
+  mask-image: radial-gradient(circle closest-side, #000 76%, transparent 100%);
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  -webkit-mask-size: 0 0;
+  mask-size: 0 0;
+}
+
+/* ============================================================
    Reduced motion
    ============================================================ */
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;
+  }
+
+  ::view-transition-group(root),
+  ::view-transition-old(root),
+  ::view-transition-new(root) {
+    animation: none !important;
+  }
+
+  /* the placeholder stays, the travelling highlight does not */
+  .skeleton::after {
+    animation: none;
+    opacity: 0.5;
+    transform: none;
   }
 
   [data-reveal],

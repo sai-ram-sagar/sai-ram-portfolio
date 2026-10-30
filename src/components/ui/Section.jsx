@@ -5,8 +5,13 @@ import styles from "./Section.module.css";
  * a display heading and an optional caption.
  *
  * Keeping this in one place is what makes the vertical rhythm, the eyebrow
- * treatment and the heading scale identical everywhere — sections differ in
+ * treatment and the heading scale identical everywhere - sections differ in
  * their content, never in their frame.
+ *
+ * `split` turns the section into two columns with the heading itself as the
+ * first one, for sections whose content is a single panel sitting beside the
+ * copy rather than a grid running underneath it. `headerExtra` then holds
+ * whatever belongs under the heading inside that same column.
  */
 export const Section = ({
   id,
@@ -16,6 +21,8 @@ export const Section = ({
   caption,
   children,
   divider = true,
+  split = false,
+  headerExtra,
   className = "",
 }) => (
   <section id={id} className={`${styles.section} ${className}`} aria-labelledby={`${id}-title`}>
@@ -25,7 +32,7 @@ export const Section = ({
       </span>
     )}
 
-    <div className={styles.inner}>
+    <div className={`${styles.inner} ${split ? styles.split : ""}`}>
       <header className={styles.header}>
         <p className={styles.eyebrow} data-reveal="fade">
           <span className={styles.eyebrowIndex}>{index}</span>
@@ -42,6 +49,8 @@ export const Section = ({
             {caption}
           </p>
         )}
+
+        {headerExtra}
       </header>
 
       {children}

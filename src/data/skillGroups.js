@@ -1,5 +1,5 @@
 /**
- * Skill taxonomy — the six groups and their contents come directly from the
+ * Skill taxonomy - the six groups and their contents come directly from the
  * TECHNICAL SKILLS block of the resume.
  *
  * `certificate` optionally names an entry in certificates.json so the

@@ -1,5 +1,5 @@
 /**
- * Education & certification — taken from the resume.
+ * Education & certification - taken from the resume.
  */
 export const education = [
   {
@@ -10,7 +10,7 @@ export const education = [
     icon: "GraduationCap",
   },
   {
-    qualification: "Software Developer — Course Completion Certificate",
+    qualification: "Software Developer - Course Completion Certificate",
     institution: "NxtWave",
     detail: "Certification",
     period: "",

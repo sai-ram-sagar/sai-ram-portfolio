@@ -1,8 +1,8 @@
 /**
  * Single source of truth for identity + contact content.
- * Every value is taken verbatim from the resume
- * (Sai_Ram_Sagar_Resume_2026) or from the existing portfolio links.
- * Nothing here is invented.
+ * Every fact comes from the resume (Sai_Ram_Sagar_Resume_2026) or from the
+ * existing portfolio links - the About copy rephrases it in plain language,
+ * but nothing here is invented.
  */
 
 export const profile = {
@@ -14,18 +14,51 @@ export const profile = {
   location: "Hyderabad, India",
   email: "sairam.webdev@gmail.com",
 
-  /* Resume summary, split for typographic rhythm — wording unchanged in substance. */
-  summary:
-    "Software Developer with 2+ years on a statewide emergency-response platform (ERSS) serving 700+ police stations across Telangana and handling 6,000–10,000 citizen calls a day.",
-  summaryDetail:
-    "Primarily frontend — real-time React.js operator interfaces and Leaflet geospatial workflows — with backend work on a sub-second Speech-to-Text pipeline in Node.js, WebSocket and Pusher.",
+  /*
+   * The hero leads with the work itself. It used to reuse `summary`, which
+   * opened on platform scale (700+ stations, 6,000-10,000 calls) and printed
+   * the same sentence twice in one scroll - once here and again in About.
+   */
+  lead:
+    "I build web applications that have to work in real time - React.js operator interfaces, Leaflet mapping workflows, and a sub-second Speech-to-Text pipeline in Node.js.",
 
-  /* Figures below are stated in the resume summary / experience bullets. */
-  metrics: [
-    { value: "2+", label: "Years building ERSS" },
-    { value: "700+", label: "Police stations covered" },
-    { value: "6k–10k", label: "Citizen calls a day" },
-    { value: "<1s", label: "Live transcript latency" },
+  /*
+   * About: who I am and how I work, in plain words with the technical detail
+   * kept in. Written so a recruiter and an engineer both get something from it.
+   */
+  summary:
+    "I'm a software developer who builds web applications that react the moment something happens. My work powers public-safety software for Telangana Police: the screens dispatchers use to handle emergency calls, live maps of police vehicles, and a system that turns phone calls into text while the caller is still speaking.",
+  summaryDetail:
+    "Most of my time is spent on the frontend in React.js, building interfaces that update live over WebSocket and Pusher instead of waiting for a page refresh. I also work on the backend in Node.js and Express, and on maps with Leaflet - drawing station boundaries, tracking vehicles and planning drone routes.",
+
+  /* every project from the resume, in plain language */
+  workedOn: [
+    {
+      name: "Emergency dispatch screens",
+      detail:
+        "React.js interfaces for SOS alerts, emergency calls and live incident data, used by up to 50 operators at once across 700+ police stations.",
+    },
+    {
+      name: "Real-time Speech-to-Text",
+      detail:
+        "A Node.js pipeline that detects speech in live call audio and puts the transcript on the operator's screen in under a second.",
+    },
+    {
+      name: "Live vehicle tracking & geofencing",
+      detail:
+        "Leaflet maps showing police vehicles and station boundaries, keeping 100-200 active complaints on screen without slowing down.",
+    },
+    {
+      name: "Drone as First Responder",
+      status: "In progress",
+      detail:
+        "A mission planner where operators plot drone routes through waypoints and save missions to reuse.",
+    },
+    {
+      name: "Shared component library",
+      detail:
+        "Data tables, modals, popups and state patterns reused across 50+ modules, so every screen looks and behaves the same.",
+    },
   ],
 
   focus: ["React.js", "Node.js", "Real-Time Systems", "Leaflet", "Speech-to-Text"],
@@ -36,19 +69,19 @@ export const disciplines = [
     icon: "MonitorSmartphone",
     title: "Real-time frontend",
     description:
-      "React.js operator interfaces for Computer-Aided Dispatch — SOS alerts, emergency calls and live incident data, used by up to 50 dispatch operators.",
+      "React.js screens that change the instant the data does. New alerts, calls and incident updates arrive over WebSocket and Pusher, so nobody has to hit refresh.",
   },
   {
     icon: "Map",
-    title: "Geospatial engineering",
+    title: "Maps & geospatial",
     description:
-      "Live vehicle tracking and police-station geofencing on Leaflet across 700+ stations, with zoom-based rendering, multiple tile sources and tile caching.",
+      "Leaflet maps for vehicle tracking, station boundaries and drone route planning, kept fast with zoom-based rendering and cached map tiles.",
   },
   {
     icon: "AudioLines",
     title: "Streaming backend",
     description:
-      "A Node.js Speech-to-Text pipeline — telephony audio through VAD, WebSocket and Pusher — delivering transcripts to operators in under a second.",
+      "Node.js and Express services that move data as it happens, including a pipeline that turns live phone audio into on-screen text in under a second.",
   },
 ];
 
