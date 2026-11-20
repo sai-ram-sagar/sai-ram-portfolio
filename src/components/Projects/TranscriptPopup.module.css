@@ -1,0 +1,337 @@
+@import "../../vars.css";
+
+/*
+ * Floating transcription window. It lives on the dark navy stage, so - like
+ * the rest of the showcase - it uses the portfolio's cream / muted-gold
+ * palette directly rather than theme tokens that flip on the light theme.
+ *
+ * --ui-x / --ui-y are the pixel position of the monitor screen, written every
+ * frame by the scene; --stage-w / --stage-h are the stage size. --open (0..1)
+ * is set from the timeline: the window grows out of the monitor and shrinks back.
+ */
+.anchor {
+  --pw: 13rem;
+  --ph: 8.4rem;
+  /* lower left of the monitor, on the empty floor, kept inside the stage */
+  --pl: clamp(0.75rem, calc(var(--ui-x, 0px) - var(--pw) - 1.6rem), calc(var(--stage-w, 100vw) - var(--pw) - 0.75rem));
+  --pt: clamp(4rem, calc(var(--ui-y, 0px) + 1.4rem), calc(var(--stage-h, 100vh) - var(--ph) - 0.75rem));
+
+  position: absolute;
+  z-index: 4;
+  width: var(--pw);
+  left: var(--pl);
+  top: var(--pt);
+  pointer-events: none;
+  transition: opacity 0.35s var(--e-out);
+}
+
+/*
+ * The pointer runs from the window's top-right corner to the monitor screen
+ * (--ui-x / --ui-y), whatever the clamping above has done to the window, and
+ * grows and shrinks with the window itself.
+ */
+.pointer {
+  --dx: calc(var(--ui-x, 0px) - var(--pl) - var(--pw));
+  --dy: calc(var(--ui-y, 0px) - var(--pt));
+
+  position: absolute;
+  left: 100%;
+  top: 0;
+  width: hypot(var(--dx), var(--dy));
+  height: 2px;
+  margin-top: -1px;
+  border-radius: 2px;
+  background: linear-gradient(90deg, rgba(155, 140, 255, 0.1), rgba(155, 140, 255, 0.95));
+  transform-origin: 0 50%;
+  transform: rotate(atan2(var(--dy), var(--dx))) scaleX(var(--open, 0));
+  transition: transform 0.35s var(--e-out);
+}
+
+/* a glowing dot where the pointer lands on the monitor */
+.pointer::after {
+  content: "";
+  position: absolute;
+  right: -5px;
+  top: 50%;
+  width: 10px;
+  height: 10px;
+  margin-top: -5px;
+  border-radius: 50%;
+  background: #cfc7ff;
+  box-shadow:
+    0 0 10px 2px rgba(155, 140, 255, 0.9),
+    0 0 0 4px rgba(155, 140, 255, 0.25);
+  animation: ping 1.8s ease-out infinite;
+}
+
+.window {
+  --zoom: 1;
+
+  height: var(--ph);
+  display: flex;
+  flex-direction: column;
+  border-radius: 10px;
+  border: 1px solid rgba(155, 140, 255, 0.4);
+  background: linear-gradient(180deg, rgba(14, 22, 42, 0.92), rgba(8, 13, 26, 0.94));
+  box-shadow:
+    0 14px 34px -14px rgba(0, 0, 0, 0.8),
+    0 0 24px -8px rgba(155, 140, 255, 0.35);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  overflow: hidden;
+  /* grows out of the monitor (up and to the right) and shrinks back into it */
+  transform-origin: 100% 0;
+  transform: scale(calc((0.45 + 0.55 * var(--open, 0)) * var(--zoom)));
+  transition: transform 0.35s var(--e-out);
+  animation: float 6s ease-in-out infinite;
+}
+
+/* a slightly zoomed-in size while the call is live */
+.anchor[data-state="1"] .window {
+  --zoom: 1.05;
+}
+
+.bar {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.3rem 0.45rem;
+  border-bottom: 1px solid rgba(155, 140, 255, 0.2);
+  background: rgba(155, 140, 255, 0.07);
+  font-family: var(--font-mono);
+  font-size: 0.4rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #cfc7ff;
+}
+
+.dots {
+  display: inline-flex;
+  gap: 0.18rem;
+}
+
+.dots i {
+  width: 0.26rem;
+  height: 0.26rem;
+  border-radius: 50%;
+  background: rgba(207, 199, 255, 0.35);
+}
+
+.title {
+  flex: 1;
+  color: #e6e1ff;
+}
+
+.status {
+  padding: 0.08rem 0.3rem;
+  border-radius: var(--r-pill);
+  border: 1px solid rgba(207, 199, 255, 0.3);
+  color: #cfc7ff;
+}
+
+.statusLive {
+  border-color: rgba(255, 107, 122, 0.5);
+  color: #ffb4bc;
+}
+
+.statusLive::before {
+  content: "";
+  display: inline-block;
+  width: 0.22rem;
+  height: 0.22rem;
+  margin-right: 0.22rem;
+  border-radius: 50%;
+  background: #ff6b7a;
+  animation: blink 1.2s ease-in-out infinite;
+}
+
+/* ---- text ---- */
+.body {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  gap: 0.4rem;
+  padding: 0.5rem 0.6rem 0.55rem;
+  overflow: hidden;
+  /* older lines dissolve at the top */
+  -webkit-mask-image: linear-gradient(to bottom, transparent 0, #000 28%);
+  mask-image: linear-gradient(to bottom, transparent 0, #000 28%);
+}
+
+.line {
+  display: grid;
+  gap: 0.1rem;
+}
+
+.older {
+  opacity: 0.55;
+  transition: opacity var(--dur-4) var(--e-out);
+}
+
+.role {
+  font-family: var(--font-mono);
+  font-size: 0.36rem;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+}
+
+.agent {
+  color: #8fb8ff;
+}
+
+.citizen {
+  color: #6dffd4;
+}
+
+.original {
+  font-size: 0.66rem;
+  font-weight: 600;
+  line-height: 1.35;
+  color: #f3e8d9;
+}
+
+.translation {
+  display: flex;
+  gap: 0.3rem;
+  align-items: baseline;
+  font-size: 0.58rem;
+  font-weight: 500;
+  line-height: 1.35;
+  color: #ffd27a;
+}
+
+.lang {
+  flex-shrink: 0;
+  font-family: var(--font-mono);
+  font-size: 0.34rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  color: rgba(255, 210, 122, 0.75);
+}
+
+/* each word arrives with a short lift and glow - this is the live delivery */
+.word {
+  display: inline-block;
+  margin-right: 0.26em;
+  animation: arrive 0.55s var(--e-out) both;
+}
+
+.caret {
+  display: inline-block;
+  width: 0.3rem;
+  height: 1.05em;
+  margin-left: 0.06rem;
+  vertical-align: -0.15em;
+  background: #6dffd4;
+  animation: blink 0.9s steps(1) infinite;
+}
+
+.waiting {
+  font-family: var(--font-mono);
+  font-size: 0.5rem;
+  letter-spacing: 0.06em;
+  color: rgba(207, 199, 255, 0.75);
+}
+
+.ellipsis::after {
+  content: "";
+  animation: dots 1.4s steps(4) infinite;
+}
+
+/* ---- motion ---- */
+@keyframes arrive {
+  from {
+    opacity: 0;
+    transform: translateY(0.35em);
+    text-shadow: 0 0 14px rgba(109, 255, 212, 0.9);
+  }
+  60% {
+    text-shadow: 0 0 8px rgba(109, 255, 212, 0.35);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+    text-shadow: none;
+  }
+}
+
+@keyframes ping {
+  50% {
+    box-shadow:
+      0 0 14px 4px rgba(155, 140, 255, 0.9),
+      0 0 0 9px rgba(155, 140, 255, 0);
+  }
+}
+
+@keyframes float {
+  50% {
+    translate: 0 -5px;
+  }
+}
+
+@keyframes blink {
+  50% {
+    opacity: 0.15;
+  }
+}
+
+@keyframes dots {
+  0% {
+    content: "";
+  }
+  25% {
+    content: ".";
+  }
+  50% {
+    content: "..";
+  }
+  75% {
+    content: "...";
+  }
+}
+
+/* ---- small screens: a small panel along the bottom-left of the scene ---- */
+@media (max-width: 760px) {
+  .anchor {
+    --pw: min(14rem, 66%);
+    --ph: 7.4rem;
+
+    left: 0.6rem;
+    top: auto;
+    bottom: 0.6rem;
+  }
+
+  .window {
+    transform-origin: 0 100%;
+  }
+
+  /* docked panel: nothing to point across */
+  .pointer {
+    display: none;
+  }
+
+  /* only the two latest lines fit the small panel */
+  .body .line:nth-last-child(n + 3) {
+    display: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .window {
+    animation: none;
+    transition: none;
+  }
+
+  .word,
+  .caret,
+  .statusLive::before,
+  .ellipsis::after,
+  .pointer::after {
+    animation: none;
+  }
+
+  .ellipsis::after {
+    content: "...";
+  }
+}

@@ -2,6 +2,7 @@ import { useCallback, useEffect, useLayoutEffect, useRef, useState } from "react
 import { Menu, X, ArrowUpRight } from "lucide-react";
 import { useScrollSpy } from "../../hooks/useScrollSpy";
 import { ThemeToggle } from "../ui/ThemeToggle";
+import { PaletteMenu } from "../ui/PaletteMenu";
 import styles from "./Navbar.module.css";
 
 const LINKS = [
@@ -101,6 +102,7 @@ export const Navbar = () => {
               <span>Let&apos;s talk</span>
               <ArrowUpRight size={15} strokeWidth={2} aria-hidden="true" />
             </a>
+            <PaletteMenu />
             <ThemeToggle />
 
             <button

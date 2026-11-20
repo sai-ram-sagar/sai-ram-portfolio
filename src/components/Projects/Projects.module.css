@@ -1,7 +1,42 @@
 @import "../../vars.css";
 
+/*
+ * The platform showcase runs edge to edge. Measuring against the section
+ * itself (a size container) rather than the viewport keeps it exact beside the
+ * reserved scrollbar gutter, so there is never a sliver of horizontal scroll.
+ */
+.root {
+  container-type: inline-size;
+}
+
+.bleed {
+  width: 100cqw;
+  margin-inline: calc(50% - 50cqw);
+}
+
 .group + .group {
+  position: relative;
   margin-top: clamp(2.5rem, 1.9rem + 2.4vw, 3.75rem);
+}
+
+/*
+ * After the full-bleed platform showcase the personal projects get a clear
+ * break of their own: generous space and a hairline, so the heading and its
+ * rule never read as part of the Stack block above.
+ */
+.bleed + .group,
+.group:has(.bleed) + .group {
+  margin-top: clamp(5.5rem, 4rem + 6vw, 9rem);
+}
+
+.group:has(.bleed) + .group::before {
+  content: "";
+  position: absolute;
+  top: calc(clamp(5.5rem, 4rem + 6vw, 9rem) / -2);
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: var(--gradient-divider);
 }
 
 /* ============================================================
@@ -98,5 +133,17 @@
 @media (min-width: 1060px) {
   .projectGrid {
     grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+/* phones: a shorter break before the personal projects */
+@media (max-width: 760px) {
+  .bleed + .group,
+  .group:has(.bleed) + .group {
+    margin-top: 3.5rem;
+  }
+
+  .group:has(.bleed) + .group::before {
+    top: -1.75rem;
   }
 }

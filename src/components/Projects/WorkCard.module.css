@@ -87,6 +87,14 @@
 }
 
 /* ============================================================
+   Visual - the project's live scene leads the card
+   ============================================================ */
+.visual {
+  /* the frame carries its own shadow and border; keep a little air above the text */
+  margin-bottom: calc(var(--sp-2) * -1);
+}
+
+/* ============================================================
    Highlights
    ============================================================ */
 .highlights {

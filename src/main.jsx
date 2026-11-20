@@ -2,6 +2,7 @@ import React from "react";
 import ReactDOM from "react-dom/client";
 import App from "./App.jsx";
 import "./index.css";
+import "./palettes.css";
 
 import "@fontsource/outfit/latin-300.css";
 import "@fontsource/outfit/latin-400.css";

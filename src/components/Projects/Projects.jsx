@@ -3,7 +3,7 @@ import { ChevronDown } from "lucide-react";
 import { Section } from "../ui/Section";
 import { Button } from "../ui/Button";
 import { ProjectCard } from "./ProjectCard";
-import { WorkCard } from "./WorkCard";
+import { ProjectShowcase } from "./ProjectShowcase";
 import { work } from "../../data/work";
 import projects from "../../data/projects.json";
 import styles from "./Projects.module.css";
@@ -38,20 +38,18 @@ export const Projects = () => {
   return (
     <Section
       id="projects"
+      className={styles.root}
       index="03"
       label="Projects"
-      title="Things I've built."
-      caption="Platform work from my current role, alongside personal projects that are live and open to try."
+      title="Projects"
     >
       {work.length > 0 && (
         <div className={styles.group}>
           <GroupHeading kind="Professional" count={work.length}>
             Platform projects
           </GroupHeading>
-          <div className={styles.workGrid}>
-            {work.map((project, index) => (
-              <WorkCard key={project.id} project={project} delay={index * 100} />
-            ))}
+          <div className={styles.bleed}>
+            <ProjectShowcase items={work} />
           </div>
         </div>
       )}

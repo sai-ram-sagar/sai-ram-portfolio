@@ -1,0 +1,109 @@
+@import "../../vars.css";
+
+/*
+ * Small HTML overlays above the canvas. Like the scene itself they are fixed
+ * to the dark navy diorama, so their colours do not follow the site theme.
+ */
+.rail {
+  position: absolute;
+  top: 0.6rem;
+  left: 0.6rem;
+  z-index: 3;
+  display: flex;
+  gap: 0.25rem;
+  list-style: none;
+  pointer-events: none;
+}
+
+.step {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.18rem 0.5rem 0.18rem 0.24rem;
+  border-radius: var(--r-pill);
+  border: 1px solid var(--line-2);
+  background: var(--nav-glass);
+  font-family: var(--font-mono);
+  font-size: 0.56rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--color-text-dim);
+  transition:
+    color var(--dur-3) var(--e-out),
+    border-color var(--dur-3) var(--e-out),
+    background-color var(--dur-3) var(--e-out);
+}
+
+.num {
+  display: grid;
+  place-items: center;
+  width: 0.95rem;
+  height: 0.95rem;
+  border-radius: 50%;
+  background: var(--glass-3);
+  font-size: 0.56rem;
+  font-weight: 700;
+}
+
+.active {
+  color: var(--color-text-strong);
+  border-color: rgba(var(--accent-rgb), 0.65);
+  background: var(--panel-bg);
+}
+
+.active .num {
+  background: var(--accent);
+  color: var(--on-accent);
+}
+
+.note {
+  position: absolute;
+  right: 0.75rem;
+  bottom: 0.6rem;
+  z-index: 3;
+  font-family: var(--font-mono);
+  font-size: 0.56rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--color-text-dim);
+  pointer-events: none;
+}
+
+/* the name labels would crowd a narrow card; the numbers still tell the story */
+@media (max-width: 420px) {
+  .name {
+    display: none;
+  }
+
+  .step.active .name {
+    display: inline;
+  }
+}
+
+/* in the full-width showcase the rail sits top-right, clear of the title */
+.rail.right {
+  left: auto;
+  right: max(var(--page-pad), calc((100cqw - var(--page-max)) / 2 + var(--page-pad)));
+  top: clamp(1.25rem, 3svh, 2.25rem);
+}
+
+.noteWide {
+  right: max(var(--page-pad), calc((100cqw - var(--page-max)) / 2 + var(--page-pad)));
+  /* above the soft bottom edge of the scene, not inside it */
+  bottom: 4.5rem;
+}
+
+@media (max-width: 760px) {
+  .rail.right {
+    right: 0.6rem;
+    top: 0.6rem;
+  }
+
+  /* on phones the transcript panel sits bottom-left, so the note moves to the top */
+  .noteWide {
+    right: auto;
+    left: 0.75rem;
+    top: 0.75rem;
+    bottom: auto;
+  }
+}

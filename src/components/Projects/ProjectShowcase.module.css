@@ -1,0 +1,352 @@
+@import "../../vars.css";
+
+/*
+ * Full-height project showcases.
+ *
+ * The block sits on the selected theme and palette: its ground, copy and
+ * accents are the same tokens as the rest of the page, so choosing a palette
+ * or flipping light/dark recolours the showcase with everything else.
+ */
+.showcase {
+  --sc-ink: var(--color-text-strong);
+  --sc-text: var(--color-text);
+  --sc-muted: var(--color-text-muted);
+  --sc-gold: var(--accent);
+  --sc-gold-rgb: var(--accent-rgb);
+
+  /* the content column the rest of the page uses, measured against the full bleed */
+  --sc-gutter: max(var(--page-pad), calc((100cqw - var(--page-max)) / 2 + var(--page-pad)));
+
+  position: relative;
+}
+
+.project {
+  position: relative;
+  scroll-margin-top: var(--nav-h-compact);
+}
+
+.project + .project {
+  margin-top: clamp(0.5rem, 2vw, 1.5rem);
+}
+
+/* ============================================================
+   Stage - the scene is the main event, ~3/4 of the screen
+   ============================================================ */
+.stageArea {
+  position: relative;
+  /* the scene is the section: a full screen less the page header */
+  height: clamp(560px, calc(100svh - 62px), 960px);
+}
+
+/* ============================================================
+   Title block - floats over the scene, top left
+   ============================================================ */
+.titleBlock {
+  position: absolute;
+  z-index: 4;
+  /* clear of the soft top edge, so the copy never sits on the fade */
+  top: clamp(1.25rem, 3svh, 2.25rem);
+  left: var(--sc-gutter);
+  max-width: min(27rem, 40%);
+  padding: 0 0 var(--sp-3);
+  pointer-events: none;
+  transition: opacity var(--dur-4) var(--e-out);
+}
+
+/* soft shade behind the copy keeps it legible over busy parts of the scene */
+.titleBlock::before {
+  content: "";
+  position: absolute;
+  inset: -3rem -5rem -4rem -5rem;
+  z-index: -1;
+  background: radial-gradient(ellipse closest-side at 50% 50%, color-mix(in srgb, var(--color-bg) 80%, transparent), transparent);
+}
+
+.project[data-active="false"] .titleBlock {
+  opacity: 0.62;
+}
+
+.kicker {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-3);
+  margin-bottom: var(--sp-3);
+  font-family: var(--font-mono);
+  font-size: var(--fs-eyebrow);
+  letter-spacing: var(--tracking-eyebrow);
+  text-transform: uppercase;
+}
+
+.kickerIndex {
+  color: var(--sc-gold);
+  font-weight: 600;
+}
+
+.kickerOf {
+  color: var(--sc-muted);
+  font-weight: 400;
+}
+
+.kickerRule {
+  width: 2rem;
+  height: 1px;
+  background: rgba(var(--sc-gold-rgb), 0.45);
+}
+
+.status {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.2rem 0.55rem;
+  border-radius: var(--r-pill);
+  border: 1px solid rgba(var(--sc-gold-rgb), 0.3);
+  background: var(--glass-2);
+  color: var(--sc-gold);
+}
+
+.status::before {
+  content: "";
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: currentColor;
+}
+
+.title {
+  font-size: var(--fs-h2);
+  font-weight: 600;
+  line-height: 1.05;
+  letter-spacing: var(--tracking-tight);
+  color: var(--sc-ink);
+  text-wrap: balance;
+}
+
+.summary {
+  margin-top: var(--sp-4);
+  max-width: 26rem;
+  font-size: var(--fs-body);
+  line-height: var(--leading-body);
+  color: var(--sc-text);
+}
+
+/* ============================================================
+   Details - contributions, then stack, under the summary
+   ============================================================ */
+.details {
+  display: grid;
+  gap: var(--sp-5);
+  margin-top: var(--sp-5);
+  padding-top: var(--sp-5);
+  border-top: 1px solid rgba(var(--sc-gold-rgb), 0.22);
+}
+
+.label {
+  margin-bottom: var(--sp-2);
+  font-family: var(--font-mono);
+  font-size: var(--fs-eyebrow);
+  letter-spacing: var(--tracking-eyebrow);
+  text-transform: uppercase;
+  color: var(--sc-gold);
+}
+
+.list {
+  display: grid;
+  gap: var(--sp-3);
+  list-style: none;
+}
+
+.list li {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: var(--sp-3);
+  font-size: 0.84rem;
+  line-height: 1.5;
+  color: var(--sc-text);
+}
+
+.itemNum {
+  padding-top: 0.2em;
+  font-family: var(--font-mono);
+  font-size: var(--fs-eyebrow);
+  color: var(--sc-gold);
+  opacity: 0.8;
+}
+
+.stack {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.32rem;
+  list-style: none;
+}
+
+.tech {
+  padding: 0.26rem 0.58rem;
+  border-radius: var(--r-xs);
+  border: 1px solid rgba(var(--sc-gold-rgb), 0.22);
+  background: rgba(var(--sc-gold-rgb), 0.06);
+  font-family: var(--font-mono);
+  font-size: 0.62rem;
+  letter-spacing: 0.05em;
+  color: var(--sc-text);
+}
+
+/* ============================================================
+   Index - 01 DFR / 02 STT, riding the right edge
+   ============================================================ */
+.indexRail {
+  display: none;
+}
+
+.index {
+  list-style: none;
+}
+
+.indexLink {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.35rem 0.4rem;
+  font-family: var(--font-mono);
+  font-size: var(--fs-eyebrow);
+  letter-spacing: var(--tracking-eyebrow);
+  color: var(--sc-muted);
+  transition: color var(--dur-3) var(--e-out);
+}
+
+.indexNum {
+  position: relative;
+  padding-right: 0.7rem;
+}
+
+/* a marker that grows into a rule for the active project */
+.indexNum::after {
+  content: "";
+  position: absolute;
+  right: 0;
+  top: 50%;
+  width: 5px;
+  height: 1px;
+  background: currentColor;
+  transition: width var(--dur-3) var(--e-out);
+}
+
+.indexLabel {
+  opacity: 0;
+  transform: translateX(6px);
+  transition:
+    opacity var(--dur-3) var(--e-out),
+    transform var(--dur-3) var(--e-out);
+}
+
+.indexLink:hover,
+.indexLink:focus-visible,
+.indexActive {
+  color: var(--sc-gold);
+}
+
+.indexActive .indexNum::after {
+  width: 14px;
+}
+
+.indexActive .indexLabel,
+.indexLink:hover .indexLabel,
+.indexLink:focus-visible .indexLabel {
+  opacity: 1;
+  transform: none;
+}
+
+/* ============================================================
+   Breakpoints
+   ============================================================ */
+@media (min-width: 761px) {
+  /* the title, contributions and stack float over the scene: it must always be
+     tall enough to hold them, so they can never spill onto what follows */
+  .stageArea {
+    min-height: 50rem;
+  }
+}
+
+@media (min-width: 1000px) {
+  /* a sticky, zero-height rail: it follows the reader while a project is on screen */
+  .indexRail {
+    display: block;
+    position: sticky;
+    top: 46svh;
+    z-index: 6;
+    height: 0;
+  }
+
+  .index {
+    position: absolute;
+    right: clamp(0.5rem, 1.6vw, 1.5rem);
+    top: 0;
+    transform: translateY(-50%);
+    padding: 0.35rem 0.5rem;
+    border-radius: var(--r-md);
+    border: 1px solid rgba(var(--sc-gold-rgb), 0.22);
+    background: var(--nav-glass);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+  }
+}
+
+@media (max-width: 999px) {
+  .titleBlock {
+    max-width: min(27rem, 54%);
+  }
+}
+
+/* phones: copy sits above the scene instead of over it, on its own dark panel */
+@media (max-width: 760px) {
+  .project {
+    background: var(--color-bg);
+  }
+
+  .titleBlock {
+    padding-top: var(--sp-6);
+    position: relative;
+    top: auto;
+    left: auto;
+    max-width: none;
+    padding-inline: var(--page-pad);
+    padding-bottom: var(--sp-5);
+  }
+
+  .titleBlock::before {
+    display: none;
+  }
+
+  .project[data-active="false"] .titleBlock {
+    opacity: 1;
+  }
+
+  .title {
+    font-size: var(--fs-h3);
+  }
+
+  .summary {
+    max-width: none;
+    font-size: var(--fs-body-sm);
+  }
+
+  .stageArea {
+    /* the diorama is as wide as the screen, so its height follows the width;
+       the Speech-to-Text frame also holds the transcript panel along its foot */
+    height: clamp(250px, 76vw, 340px);
+    min-height: 0;
+  }
+
+  .project[data-scene="stt"] .stageArea {
+    height: clamp(300px, 90vw, 400px);
+  }
+
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .titleBlock,
+  .indexLink,
+  .indexLabel,
+  .indexNum::after {
+    transition: none;
+  }
+}

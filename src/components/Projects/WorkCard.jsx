@@ -1,15 +1,22 @@
 import { AudioLines, Navigation } from "lucide-react";
 import { SpotlightCard } from "../ui/SpotlightCard";
+import { DfrVisual } from "./DfrVisual";
+import { SttVisual } from "./SttVisual";
 import styles from "./WorkCard.module.css";
 
 const ICONS = { Navigation, AudioLines };
 
+/* projects that carry a live scene in their visual area, keyed by `scene` */
+const SCENES = { dfr: DfrVisual, stt: SttVisual };
+
 /**
- * Internal platform work: no public demo and no screenshot exists, so the
- * card leans on typography and a schematic rather than a stand-in image.
+ * Internal platform work: no public demo and no screenshot exists, so where a
+ * project has a live 3D scene it leads the card as the showcase, with the
+ * written detail underneath; the rest leans on typography.
  */
 export const WorkCard = ({ project, delay = 0 }) => {
   const Icon = ICONS[project.icon];
+  const Scene = SCENES[project.scene];
 
   return (
     <SpotlightCard
@@ -18,6 +25,12 @@ export const WorkCard = ({ project, delay = 0 }) => {
       data-reveal="scale"
       style={{ "--reveal-delay": `${delay}ms` }}
     >
+      {Scene && (
+        <div className={styles.visual}>
+          <Scene />
+        </div>
+      )}
+
       <header className={styles.head}>
         <div className={styles.headTop}>
           <span className={styles.icon}>
