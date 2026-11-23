@@ -1,0 +1,364 @@
+@import "../../vars.css";
+
+/*
+ * Spider-Man palette decorations. Everything here is hidden unless the
+ * Spider-Man palette is active, and sits above the page but below the modals,
+ * never catching a click.
+ */
+.root {
+  display: none;
+  position: fixed;
+  inset: 0;
+  z-index: 150;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+:global(html[data-palette="spiderman"]) .root {
+  display: block;
+}
+
+/* ---------- corner webs ---------- */
+.web {
+  position: absolute;
+  top: 0;
+  width: clamp(120px, 17vw, 250px);
+  height: auto;
+  color: var(--color-text-strong);
+  opacity: 0.3;
+  /* strongest in the corner, dissolving into the background towards the centre (a vignette) */
+  -webkit-mask-image: radial-gradient(
+    circle at 0 0,
+    #000 0%,
+    rgba(0, 0, 0, 0.7) 22%,
+    rgba(0, 0, 0, 0.3) 48%,
+    transparent 78%
+  );
+  mask-image: radial-gradient(
+    circle at 0 0,
+    #000 0%,
+    rgba(0, 0, 0, 0.7) 22%,
+    rgba(0, 0, 0, 0.3) 48%,
+    transparent 78%
+  );
+}
+
+.web path {
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 0.9;
+  stroke-linecap: round;
+  stroke-dasharray: 1;
+  stroke-dashoffset: 0;
+}
+
+.webLeft {
+  left: 0;
+}
+
+.webRight {
+  right: 0;
+  transform: scaleX(-1);
+}
+
+/* the webs spin themselves in when the palette is chosen */
+:global(html[data-palette="spiderman"]) .web path {
+  animation: spin-web 2.2s var(--e-out) both;
+}
+
+@keyframes spin-web {
+  from {
+    stroke-dashoffset: 1;
+  }
+}
+
+/* ---------- the spider on its thread ---------- */
+.dangler {
+  position: absolute;
+  top: 0;
+  right: clamp(1.2rem, 4.2vw, 4.5rem);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  --fig: clamp(72px, 6.4vw, 104px);
+  transform-origin: 50% 0;
+  animation: drop 20s ease-in-out 5s 1 both;
+}
+
+.thread {
+  display: block;
+  width: calc(var(--fig) * 0.0468);
+  height: 46vh;
+  /* the web from the artwork, repeated upwards (each repeat is mirrored, so it joins up) */
+  background-repeat: repeat-y;
+  background-position: 50% 100%;
+  background-size: 100% auto;
+  filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.3));
+}
+
+/* Spider-Man hanging upside down at the end of the web (the supplied artwork, in two layers) */
+.figure {
+  position: relative;
+  margin-top: -1px;
+  width: var(--fig);
+  transform-origin: 50% 0;
+  animation: dangle 3.2s ease-in-out infinite;
+  filter: drop-shadow(0 2px 5px rgba(0, 0, 0, 0.35));
+}
+
+.cutout {
+  position: relative;
+  transform-style: preserve-3d;
+}
+
+/* he can be clicked while he is on screen */
+.figure {
+  pointer-events: auto;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* until his first click, a red glow around his outline pulses to say "click me" */
+.beckon {
+  animation:
+    dangle 3.2s ease-in-out infinite,
+    beckon 1.8s ease-in-out 7.5s infinite;
+}
+
+@keyframes beckon {
+  0%,
+  100% {
+    filter: drop-shadow(0 2px 5px rgba(0, 0, 0, 0.35)) drop-shadow(0 0 0 rgba(255, 59, 68, 0));
+  }
+  50% {
+    filter: drop-shadow(0 2px 5px rgba(0, 0, 0, 0.35)) drop-shadow(0 0 6px rgba(255, 59, 68, 0.6))
+      drop-shadow(0 0 13px rgba(255, 59, 68, 0.3));
+  }
+}
+
+/* what he says when clicked */
+.say {
+  position: absolute;
+  right: 74%;
+  top: 74%;
+  z-index: 3;
+  padding: 0.25rem 0.65rem;
+  border-radius: 10px;
+  background: var(--color-text-strong);
+  color: var(--color-bg);
+  font-family: var(--font-display);
+  font-size: 0.82rem;
+  font-weight: 700;
+  line-height: 1.2;
+  white-space: nowrap;
+  transform-origin: 100% 60%;
+  animation: say-pop 0.3s cubic-bezier(0.2, 1.4, 0.4, 1) both;
+}
+
+.say::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  right: -4px;
+  width: 8px;
+  height: 8px;
+  margin-top: -4px;
+  transform: rotate(45deg);
+  background: inherit;
+  border-radius: 2px;
+}
+
+@keyframes say-pop {
+  from {
+    opacity: 0;
+    transform: scale(0.6);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.bodyImg {
+  position: relative;
+  z-index: 1;
+  display: block;
+  width: 100%;
+  height: auto;
+  user-select: none;
+}
+
+/*
+ * The glove (forearm and hand) is cut along the wrist cuff and sits in front of the
+ * body, exactly where it is in the artwork. It swings from the wrist, so the cuff is
+ * the joint and no cut shows. The body keeps a copy of the cuff outline underneath.
+ */
+.armImg {
+  position: absolute;
+  z-index: 2;
+  left: 67.84%;
+  top: 69.01%;
+  width: 24.56%;
+  height: auto;
+  transform-origin: 75.3% 8.6%;
+  user-select: none;
+  animation: wave 20s ease-in-out 5s 1 both;
+}
+
+/* "Hi!" - shown only while he is lowered and waving */
+.bubble {
+  position: absolute;
+  right: 74%;
+  top: 74%;
+  padding: 0.2rem 0.55rem;
+  border-radius: 10px;
+  background: var(--color-text-strong);
+  color: var(--color-bg);
+  font-family: var(--font-display);
+  font-size: 0.82rem;
+  font-weight: 700;
+  line-height: 1.2;
+  white-space: nowrap;
+  opacity: 0;
+  transform-origin: 100% 60%;
+  animation: bubble 20s ease-in-out 5s 1 both;
+}
+
+.bubble::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  right: -4px;
+  width: 8px;
+  height: 8px;
+  margin-top: -4px;
+  transform: rotate(45deg);
+  background: inherit;
+  border-radius: 2px;
+}
+
+/* rest above the screen, lower itself for a while, wait, then climb back up */
+@keyframes drop {
+  0%,
+  5% {
+    transform: translateY(-110%);
+  }
+  15%,
+  90% {
+    transform: translateY(-28vh);
+  }
+  100% {
+    transform: translateY(-110%);
+  }
+}
+
+@keyframes wave {
+  0% {
+    transform: rotate(0deg);
+  }
+  16% {
+    transform: rotate(0deg);
+  }
+  18% {
+    transform: rotate(-18deg);
+  }
+  20% {
+    transform: rotate(-3deg);
+  }
+  22% {
+    transform: rotate(-18deg);
+  }
+  24% {
+    transform: rotate(-3deg);
+  }
+  26% {
+    transform: rotate(-18deg);
+  }
+  28% {
+    transform: rotate(-3deg);
+  }
+  30% {
+    transform: rotate(0deg);
+  }
+  56% {
+    transform: rotate(0deg);
+  }
+  58% {
+    transform: rotate(-18deg);
+  }
+  60% {
+    transform: rotate(-3deg);
+  }
+  62% {
+    transform: rotate(-18deg);
+  }
+  64% {
+    transform: rotate(-3deg);
+  }
+  66% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(0deg);
+  }
+}
+
+@keyframes bubble {
+  0%,
+  15% {
+    opacity: 0;
+    transform: scale(0.6);
+  }
+  18%,
+  38% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  41%,
+  100% {
+    opacity: 0;
+    transform: scale(0.6);
+  }
+}
+
+@keyframes dangle {
+  0%,
+  100% {
+    transform: rotate(-3deg);
+  }
+  50% {
+    transform: rotate(3deg);
+  }
+}
+
+/* ---------- spider-sense: the active nav link tingles ---------- */
+:global(html[data-palette="spiderman"]) :global(header nav a[aria-current="true"]) {
+  animation: tingle 2.8s ease-in-out infinite;
+}
+
+@keyframes tingle {
+  0%,
+  100% {
+    filter: drop-shadow(0 0 0 rgba(var(--accent-rgb), 0));
+  }
+  50% {
+    filter: drop-shadow(0 0 7px rgba(var(--accent-rgb), 0.85));
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .dangler {
+    display: none;
+  }
+
+  .armImg,
+  .bubble,
+  .beckon {
+    animation: none;
+  }
+
+  :global(html[data-palette="spiderman"]) .web path,
+  :global(html[data-palette="spiderman"]) :global(header nav a[aria-current="true"]) {
+    animation: none;
+  }
+}

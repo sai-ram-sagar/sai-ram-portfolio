@@ -391,3 +391,24 @@
     transform: rotate(-12deg);
   }
 }
+
+/* four to a row: a more compact folder - shorter capture, tighter pocket */
+@media (min-width: 1200px) {
+  .folder {
+    --sheet-h: 148px;
+    --tuck: 58px;
+  }
+
+  .front {
+    padding: 0.95rem 0.9rem 0.8rem;
+  }
+
+  .title {
+    font-size: 1rem;
+  }
+
+  .description {
+    font-size: 0.82rem;
+    line-height: 1.5;
+  }
+}

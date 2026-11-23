@@ -247,7 +247,9 @@
   /* every value scaled to 20% of its previous size: 5.5/3.4/7.5/9.5 */
   --section-gap: clamp(1.1rem, 0.68rem + 1.5vw, 1.9rem);
   --nav-h: 76px;
-  --nav-h-compact: 62px;
+  /* the bar no longer shrinks on scroll; this stays as an alias so every offset that
+     clears the header keeps using the one height */
+  --nav-h-compact: var(--nav-h);
 
   /* ---------------------------------------------------------
      Radii

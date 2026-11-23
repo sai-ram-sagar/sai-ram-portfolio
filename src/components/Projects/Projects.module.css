@@ -26,13 +26,13 @@
  */
 .bleed + .group,
 .group:has(.bleed) + .group {
-  margin-top: clamp(5.5rem, 4rem + 6vw, 9rem);
+  margin-top: clamp(2.75rem, 1.75rem + 3vw, 4.5rem);
 }
 
 .group:has(.bleed) + .group::before {
   content: "";
   position: absolute;
-  top: calc(clamp(5.5rem, 4rem + 6vw, 9rem) / -2);
+  top: calc(clamp(2.75rem, 1.75rem + 3vw, 4.5rem) / -2);
   left: 0;
   right: 0;
   height: 1px;
@@ -68,6 +68,9 @@
 
 .groupText {
   flex-shrink: 0;
+  /* the font's line box sits low around its letters; lift it so the rule runs through the middle of the words */
+  position: relative;
+  top: -2px;
 }
 
 .groupRule {
@@ -75,6 +78,11 @@
   height: 1px;
   min-width: 1rem;
   background: linear-gradient(90deg, var(--line-2), transparent);
+}
+
+/* the heading sits in the middle of its line: a rule runs out from each side, fading away from the text */
+.groupRuleLead {
+  background: linear-gradient(270deg, var(--line-2), transparent);
 }
 
 .groupCount {
@@ -133,6 +141,14 @@
 @media (min-width: 1060px) {
   .projectGrid {
     grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+/* wide screens: four to a row, so the eight projects sit in two tidy rows */
+@media (min-width: 1200px) {
+  .projectGrid {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: var(--sp-3);
   }
 }
 

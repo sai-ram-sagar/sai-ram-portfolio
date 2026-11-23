@@ -191,8 +191,8 @@
   display: grid;
   grid-template-columns: auto minmax(0, 1fr) auto;
   align-items: start;
-  gap: var(--sp-4);
-  padding: var(--pad-card);
+  gap: var(--sp-3);
+  padding: var(--sp-3) var(--sp-4);
 }
 
 .disciplineIcon {
@@ -217,7 +217,7 @@
 .disciplineTitle {
   font-size: var(--fs-h4);
   font-weight: 500;
-  margin-bottom: 0.35rem;
+  margin-bottom: 0.2rem;
 }
 
 .disciplineText {

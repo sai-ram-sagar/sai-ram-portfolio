@@ -7,41 +7,52 @@ import { phaseAt } from "./phases";
  * function of the cycle time, so the loop closes without a reset. All of it is
  * simulated - nothing here is connected to real emergency services.
  *
- *    0.0 -  2.0   the city wakes up
- *    2.0 -  9.6   CALL      a citizen dials 112; the voice call reaches the calltaker
- *    5.0 -  8.2   LOCATE    the CAD screen places the incident on the GIS map
- *    6.4 - 21.0   the incident syncs to the dispatch centre
- *    8.2 - 11.4   DISPATCH  the dispatcher assigns the nearest unit and the drone
- *   11.4 - 22.0   RESPOND   police units drive to the incident, the drone flies its route
- *   22.0 - 28.8   resolved: units and drone return to base
+ *    2.0 -  3.4   a citizen dials 112; the call is answered in the control room
+ *    3.4 - 12.6   CALL      the calltaker and the citizen talk; the incident is
+ *                           located on the GIS map while they speak
+ *    9.4 - 15.4   MATCH     the control room compares both police stations and
+ *                           both hospitals and picks the nearest of each
+ *   12.9 - 19.0   DISPATCH  the nearest station's cars and drone are sent out; the
+ *                           nearest hospital's ambulance follows
+ *   19.0 - 26.0   RESPOND   police secure the scene, the ambulance loads the citizen
+ *   24.4 - 40.0   RETURN    the ambulance takes the citizen to hospital; cars and
+ *                           drone go back to their station
  */
 
-export const CYCLE = 30;
-/* a still frame for visitors who prefer reduced motion: everything in motion */
-export const REDUCED_AT = 15.2;
+export const CYCLE = 40;
+/* a still frame for visitors who prefer reduced motion: police on scene, ambulance loading */
+export const REDUCED_AT = 22.9;
 
-/* ---- places (x, z on the shared terrain; y is up) ---- */
-export const INCIDENT = new Vector3(2.4, 0.05, 0.6);
-export const CITIZEN = { x: 2.4, z: 0.6 };
-export const CALLTAKER = { x: -3.15, z: 2.8 };
-export const DISPATCH = { x: -4.95, z: 2.8 };
-export const DISPATCHER = { x: -4.55, z: 1.6 };
-export const ROOF = new Vector3(DISPATCH.x, 0.95, DISPATCH.z);
+/* ---- places (x, z on the city; y is up) ----
+ * The control room is at the front-left corner. Police station 1 and hospital 1
+ * are the nearest to the incident; police station 2 and hospital 2 are further. */
+export const INCIDENT = new Vector3(0.9, 0.05, -1.2);
+export const CITIZEN = { x: 0.9, z: -1.2 };
+export const CALLTAKER = { x: -3.2, z: 2.85 };
+export const DISPATCH = { x: -4.8, z: 2.75 }; /* the control room building */
+export const DISPATCHER = { x: -4.1, z: 2.1 };
+export const POLICE_1 = { x: -1.95, z: -2.55 }; /* near */
+export const POLICE_2 = { x: 4.2, z: 2.25 }; /* far */
+export const HOSPITAL_1 = { x: 0.95, z: 2.55 }; /* near */
+export const HOSPITAL_2 = { x: -4.7, z: -2.2 }; /* far */
+export const ROOF = new Vector3(POLICE_1.x - 0.2, 0.95, POLICE_1.z - 0.02); /* the drone's pad, on police station 1 */
 
-/* ---- roads the patrol cars follow (they match the shared city's road grid) ---- */
-export const PATH_A = [
-  [-5.1, 0.6],
-  [1.7, 0.6],
-];
-/* the second unit takes the northern loop and comes in from the east */
-export const PATH_B = [
-  [-5.5, 0.6],
-  [1.0, 0.6],
-  [1.0, -1.8],
-  [3.8, -1.8],
-  [3.8, 0.6],
-  [3.1, 0.6],
-];
+/* where vehicles wait, in front of their building (x, z) */
+export const PARK = {
+  car1: [POLICE_1.x - 0.4, POLICE_1.z + 0.8],
+  car2: [POLICE_1.x + 0.4, POLICE_1.z + 0.8],
+  amb: [HOSPITAL_1.x + 0.4, HOSPITAL_1.z + 0.55],
+  far1: [POLICE_2.x - 0.4, POLICE_2.z + 0.8],
+  far2: [POLICE_2.x + 0.4, POLICE_2.z + 0.8],
+  ambFar: [HOSPITAL_2.x + 0.55, HOSPITAL_2.z + 0.75],
+};
+
+/* ---- roads the vehicles follow (they match the city's road grid) ---- */
+/* both police cars come out of station 1 onto the cross street and drive to the scene from the west */
+export const PATH_A = [PARK.car1, [PARK.car1[0], -1.2], [0.3, -1.2]];
+export const PATH_B = [PARK.car2, [PARK.car2[0], -1.2], [-0.1, -1.2]];
+/* the ambulance leaves hospital 1 eastwards, takes the east street north and arrives from the east */
+export const PATH_AMB = [PARK.amb, [PARK.amb[0], 3.1], [2.6, 3.1], [2.6, -1.2], [1.35, -1.2]];
 
 const lengthsOf = (path) => {
   const cum = [0];
@@ -52,6 +63,7 @@ const lengthsOf = (path) => {
 };
 const CUM_A = lengthsOf(PATH_A);
 const CUM_B = lengthsOf(PATH_B);
+const CUM_AMB = lengthsOf(PATH_AMB);
 
 /** Position and heading along a polyline at fraction u (0..1). */
 const along = (path, cum, u, out) => {
@@ -67,30 +79,32 @@ const along = (path, cum, u, out) => {
   return out;
 };
 
-/* a car's drive: out along the path, wait on scene, come back the same way */
-const drive = (path, cum, leave, arrive, back, home, out) => {
-  const t = out.t;
+/* a vehicle's trip: out along the path, wait on scene, come back the same way */
+const drive = (path, cum, t, leave, arrive, back, home, out) => {
   let u = 0;
   if (t >= leave && t < arrive) u = easeInOutCubic((t - leave) / (arrive - leave));
   else if (t >= arrive && t < back) u = 1;
   else if (t >= back && t < home) u = 1 - easeInOutCubic((t - back) / (home - back));
   along(path, cum, u, out);
-  /* driving back, the car faces the other way */
+  /* driving back, the vehicle faces the other way */
   if (t >= back && t < home) out.heading += Math.PI;
   out.moving = (t >= leave && t < arrive) || (t >= back && t < home) ? 1 : 0;
+  /* lights run for the whole trip, from leaving to getting home */
+  out.lights = t >= leave && t < home ? 1 : 0;
   return out;
 };
 
-/* ---- drone route: roof -> over the city -> loiter above the incident -> back ---- */
+/* ---- drone route: station roof -> over the city -> loiter above the incident -> back ---- */
 const ROUTE = [
   new Vector3(ROOF.x, 1.0, ROOF.z),
-  new Vector3(-3.4, 1.7, 1.7),
-  new Vector3(-1.4, 1.95, 1.1),
-  new Vector3(0.4, 1.95, 0.5),
-  new Vector3(1.7, 1.8, 0.5),
+  new Vector3(-1.4, 1.6, -2.0),
+  new Vector3(-0.5, 1.8, -1.8),
+  new Vector3(0.3, 1.75, -1.5),
   new Vector3(INCIDENT.x, 1.55, INCIDENT.z),
 ];
 const LOITER_R = 0.7;
+
+const parked = ([x, z], heading) => ({ x, z, heading, moving: 0, lights: 0 });
 
 export const createSample = () => ({
   time: 0,
@@ -99,25 +113,46 @@ export const createSample = () => ({
   /* link activity, 0..1 */
   voice: 0,
   sync: 0,
+  candP1: 0,
+  candP2: 0,
+  candH1: 0,
+  candH2: 0,
   assignA: 0,
   assignB: 0,
   assignDrone: 0,
-  /* incident */
-  incident: 0, /* marker scale-in */
+  assignAmb: 0,
+  /* incident and citizen */
+  incident: 0,
   resolved: 0,
-  ping: 0, /* GIS ping progress, restarts */
-  /* labels */
+  ping: 0,
+  citizenVis: 1,
+  /* labels and speech bubbles */
   tagCall: 0,
-  tagIncident: 0,
-  tagAssign: 0,
+  tagLoc: 0,
   tagScene: 0,
-  /* people and screens */
+  tagMedic: 0,
+  tagBoard: 0,
+  tagAdmit: 0,
+  tagP1: 0,
+  tagP2: 0,
+  tagH1: 0,
+  tagH2: 0,
+  q1: 0,
+  q2: 0,
+  q3: 0,
+  q4: 0,
+  /* people and buildings */
   ringing: 0,
   calltakerBusy: 0,
   dispatchBusy: 0,
+  admit: 0,
   /* vehicles */
-  carA: { x: PATH_A[0][0], z: PATH_A[0][1], heading: Math.PI / 2, moving: 0, t: 0 },
-  carB: { x: PATH_B[0][0], z: PATH_B[0][1], heading: Math.PI / 2, moving: 0, t: 0 },
+  carA: parked(PARK.car1, 0),
+  carB: parked(PARK.car2, 0),
+  amb: parked(PARK.amb, 0),
+  far1: parked(PARK.far1, 0),
+  far2: parked(PARK.far2, 0),
+  ambFar: parked(PARK.ambFar, 0),
   drone: { x: ROOF.x, y: ROOF.y, z: ROOF.z, heading: 0, spin: 0, beam: 0 },
 });
 
@@ -130,45 +165,68 @@ export const sampleInto = (out, time) => {
   out.t = t;
   out.phase = phaseAt(t);
 
-  /* links */
-  out.voice = bump(t, 2.2, 2.8, 9.2, 9.8);
-  out.sync = bump(t, 6.4, 7.0, 21.0, 22.0);
-  out.assignA = bump(t, 8.6, 9.1, 17.0, 18.0);
-  out.assignB = bump(t, 9.4, 9.9, 20.0, 21.0);
-  out.assignDrone = bump(t, 10.2, 10.7, 21.0, 22.0);
+  /* the call: two-way voice for as long as they talk */
+  out.voice = bump(t, 3.0, 3.5, 13.0, 13.8);
+  out.ringing = bump(t, 2.0, 2.4, 3.0, 3.4);
+  out.calltakerBusy = bump(t, 3.2, 3.8, 33.0, 34.0);
 
-  /* incident marker: appears once the call is located, clears when resolved */
-  out.incident = smoothstep(5.0, 5.8, t) * (1 - smoothstep(21.4, 22.4, t));
-  out.resolved = smoothstep(21.0, 21.8, t) * (1 - smoothstep(23.0, 24.0, t));
-  out.ping = t >= 5.0 ? ((t - 5.0) * 0.55) % 1 : 1;
+  /* the conversation, as four short bubbles that trade places */
+  out.q1 = bump(t, 3.4, 3.8, 5.3, 5.7); /* calltaker: what's your emergency */
+  out.q2 = bump(t, 5.8, 6.2, 7.8, 8.2); /* citizen: accident near ... */
+  out.q3 = bump(t, 8.3, 8.7, 10.0, 10.4); /* calltaker: anyone injured */
+  out.q4 = bump(t, 10.5, 10.9, 12.4, 12.9); /* citizen: yes, need an ambulance */
 
-  out.tagCall = bump(t, 2.4, 3.0, 5.0, 5.8);
-  out.tagIncident = bump(t, 5.6, 6.2, 12.0, 13.0);
-  out.tagAssign = bump(t, 8.8, 9.3, 12.4, 13.2);
-  out.tagScene = bump(t, 16.4, 17.0, 21.0, 21.8);
+  /* the incident is placed on the GIS map while the citizen describes it */
+  out.incident = smoothstep(6.4, 7.2, t) * (1 - smoothstep(29.5, 31.0, t));
+  out.ping = t >= 6.4 ? ((t - 6.4) * 0.55) % 1 : 1;
+  out.resolved = smoothstep(24.4, 25.4, t) * (1 - smoothstep(29.5, 31.0, t));
+  out.tagCall = bump(t, 2.3, 2.8, 3.3, 3.8);
+  out.tagLoc = bump(t, 6.8, 7.4, 9.0, 9.8);
 
-  out.ringing = bump(t, 2.0, 2.4, 4.2, 4.6);
-  out.calltakerBusy = bump(t, 4.2, 4.8, 9.6, 10.4);
-  out.dispatchBusy = bump(t, 6.6, 7.2, 21.0, 22.0);
+  /* the control room hears it, and compares: police stations first, hospitals once an ambulance is asked for */
+  out.sync = bump(t, 7.0, 7.6, 32.0, 33.2);
+  out.dispatchBusy = bump(t, 7.2, 7.8, 33.0, 34.0);
+  out.candP1 = bump(t, 9.4, 9.9, 12.9, 13.4);
+  out.candP2 = 0.45 * bump(t, 9.4, 9.9, 12.9, 13.4);
+  out.tagP1 = bump(t, 9.8, 10.4, 13.4, 14.2);
+  out.tagP2 = bump(t, 10.2, 10.8, 13.4, 14.2);
+  out.tagMedic = bump(t, 12.2, 12.8, 14.8, 15.6);
+  out.candH1 = bump(t, 12.6, 13.1, 14.8, 15.3);
+  out.candH2 = 0.45 * bump(t, 12.6, 13.1, 14.8, 15.3);
+  out.tagH1 = bump(t, 13.0, 13.6, 15.6, 16.4);
+  out.tagH2 = bump(t, 13.4, 14.0, 15.6, 16.4);
 
-  /* vehicles */
-  out.carA.t = t;
-  drive(PATH_A, CUM_A, 9.4, 16.0, 22.4, 28.4, out.carA);
-  out.carB.t = t;
-  drive(PATH_B, CUM_B, 10.4, 19.0, 22.8, 29.0, out.carB);
+  /* orders go out to the chosen units */
+  out.assignA = bump(t, 12.9, 13.4, 25.2, 26.2);
+  out.assignB = bump(t, 13.6, 14.1, 25.8, 26.8);
+  out.assignDrone = bump(t, 14.2, 14.7, 26.2, 27.2);
+  out.assignAmb = bump(t, 14.8, 15.3, 30.2, 31.2);
+
+  /* on scene, loading the patient, admitted */
+  out.tagScene = bump(t, 19.4, 20.0, 24.0, 24.8);
+  out.tagBoard = bump(t, 23.0, 23.6, 25.6, 26.4);
+  out.tagAdmit = bump(t, 31.0, 31.6, 34.5, 35.5);
+  out.admit = bump(t, 30.8, 31.4, 33.5, 35.0);
+
+  /* the citizen boards the ambulance, and is back on the street for the next cycle */
+  out.citizenVis = t < 30 ? 1 - smoothstep(22.8, 23.8, t) : smoothstep(36.8, 38.2, t);
+
+  /* vehicles: the cars from station 1 and the ambulance from hospital 1; station 2 and hospital 2 stay parked */
+  drive(PATH_A, CUM_A, t, 14.0, 18.6, 25.6, 33.0, out.carA);
+  drive(PATH_B, CUM_B, t, 14.8, 19.4, 26.4, 33.8, out.carB);
+  drive(PATH_AMB, CUM_AMB, t, 15.4, 22.4, 24.4, 31.0, out.amb);
 
   /* drone */
   const d = out.drone;
-  /* 0 on the roof pad, 1 in the air: it climbs, flies, loiters, and settles back down */
-  const air = smoothstep(10.6, 11.8, t) * (1 - smoothstep(28.2, 29.4, t));
-  d.spin = smoothstep(10.2, 10.8, t) * (1 - smoothstep(29.2, 29.7, t));
+  const air = smoothstep(14.4, 15.6, t) * (1 - smoothstep(33.0, 34.4, t));
+  d.spin = smoothstep(14.0, 14.6, t) * (1 - smoothstep(34.0, 34.6, t));
   let u = 0;
   let loiter = 0;
-  if (t >= 11.8 && t < 17.4) u = easeInOutCubic((t - 11.8) / 5.6);
-  else if (t >= 17.4 && t < 22.2) {
+  if (t >= 15.6 && t < 21.2) u = easeInOutCubic((t - 15.6) / 5.6);
+  else if (t >= 21.2 && t < 26.0) {
     u = 1;
-    loiter = (t - 17.4) / 4.8;
-  } else if (t >= 22.2 && t < 28.0) u = 1 - easeInOutCubic((t - 22.2) / 5.8);
+    loiter = (t - 21.2) / 4.8;
+  } else if (t >= 26.0 && t < 33.0) u = 1 - easeInOutCubic((t - 26.0) / 7.0);
   const f = u * (ROUTE.length - 1);
   const i = Math.min(ROUTE.length - 2, Math.floor(f));
   tmp.copy(ROUTE[i]).lerp(ROUTE[i + 1], f - i);
@@ -182,9 +240,9 @@ export const sampleInto = (out, time) => {
     d.z += Math.cos(a) * LOITER_R * k;
   }
   d.y = lerp(ROOF.y + 0.05, routeY, air);
-  /* it faces the incident once it is on its way */
+  /* it faces the incident while it is out */
   d.heading =
-    Math.atan2(INCIDENT.x - d.x, INCIDENT.z - d.z) * smoothstep(12.5, 14.0, t) * (1 - smoothstep(23.0, 24.0, t));
-  d.beam = bump(t, 17.0, 17.8, 21.6, 22.4);
+    Math.atan2(INCIDENT.x - d.x, INCIDENT.z - d.z) * smoothstep(16.0, 17.5, t) * (1 - smoothstep(26.6, 27.6, t));
+  d.beam = bump(t, 21.8, 22.6, 25.2, 26.0);
   return out;
 };

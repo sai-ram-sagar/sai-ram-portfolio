@@ -140,11 +140,16 @@
   font-size: var(--fs-h1);
   font-weight: 600;
   line-height: 0.96;
+  /* "Hi, I'm" and the name share one line, sitting on a common baseline
+     (they wrap onto two lines only if the column is too narrow) */
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  column-gap: 0.14em;
 }
 
 .greeting {
   display: block;
-  margin-bottom: var(--sp-2);
   font-size: 0.4em;
   font-weight: 300;
   letter-spacing: var(--tracking-snug);
@@ -517,6 +522,8 @@
   justify-self: center;
   width: min(348px, 76vw);
   aspect-ratio: 1;
+  /* depth for the cursor tilt on the frame inside */
+  perspective: 900px;
 }
 
 .portraitFrame {
@@ -525,6 +532,27 @@
   height: 100%;
   display: grid;
   place-items: center;
+  /* a slow, barely-there float; it uses the independent `translate` property so it
+     never collides with the entrance animation's transform */
+  animation: portraitFloat 8s ease-in-out 1.6s infinite;
+  /*
+   * Lean towards the cursor: rotate about an axis in the screen plane, by an
+   * angle that grows with how far the cursor is (--tilt-x / --tilt-y, -1..1).
+   * The independent `rotate` property leaves the float and entrance alone.
+   */
+  rotate: calc(var(--tilt-y, 0) * -1) var(--tilt-x, 0) 0
+    calc(min(hypot(var(--tilt-x, 0), var(--tilt-y, 0)), 1) * 8deg);
+  transition: rotate 0.5s var(--e-out);
+}
+
+@keyframes portraitFloat {
+  0%,
+  100% {
+    translate: 0 0;
+  }
+  50% {
+    translate: 0 -7px;
+  }
 }
 
 /* matches the portrait's circle so the frame is never empty */
@@ -561,6 +589,65 @@
   to {
     opacity: 1;
     transform: none;
+  }
+}
+
+/* a soft band of light that sweeps across the photo every few seconds */
+.shine {
+  position: absolute;
+  z-index: 4;
+  width: 86%;
+  height: 86%;
+  border-radius: 50%;
+  overflow: hidden;
+  pointer-events: none;
+  /* the sweep itself: a wide diagonal highlight, parked off to the left until its turn */
+  background: linear-gradient(
+      115deg,
+      transparent 36%,
+      rgba(255, 255, 255, 0.5) 47%,
+      rgba(255, 255, 255, 0.16) 54%,
+      transparent 64%
+    )
+    140% 0 / 280% 100% no-repeat;
+  animation: shineSweep 7.5s ease-in-out 3.2s infinite;
+}
+
+@keyframes shineSweep {
+  0% {
+    background-position: 140% 0;
+  }
+  22%,
+  100% {
+    background-position: -140% 0;
+  }
+}
+
+/* two faint rings spreading out from the photo's edge, out of step with each other */
+.ripple {
+  position: absolute;
+  z-index: 0;
+  width: 86%;
+  height: 86%;
+  border-radius: 50%;
+  border: 1.5px solid rgba(var(--accent-rgb), 0.85);
+  opacity: 0;
+  pointer-events: none;
+  animation: rippleOut 6s cubic-bezier(0.2, 0.6, 0.3, 1) 2s infinite;
+}
+
+.rippleLate {
+  animation-delay: 5s;
+}
+
+@keyframes rippleOut {
+  0% {
+    opacity: 0.8;
+    scale: 1;
+  }
+  100% {
+    opacity: 0;
+    scale: 1.4;
   }
 }
 
@@ -618,6 +705,14 @@
     linear-gradient(#000 0 0) content-box,
     linear-gradient(#000 0 0);
   mask-composite: exclude;
+  /* the ring's colours drift round the photo, against the orbiting arc */
+  animation: ringDrift 36s linear infinite reverse;
+}
+
+@keyframes ringDrift {
+  to {
+    rotate: 360deg;
+  }
 }
 
 .ringGlow {
@@ -627,6 +722,20 @@
   border-radius: 50%;
   background: radial-gradient(circle, rgba(var(--accent-rgb), 0.26), transparent 66%);
   filter: blur(40px);
+  /* the glow breathes: slowly swelling and easing back */
+  animation: glowBreath 6s ease-in-out infinite;
+}
+
+@keyframes glowBreath {
+  0%,
+  100% {
+    opacity: 0.65;
+    scale: 0.94;
+  }
+  50% {
+    opacity: 1;
+    scale: 1.08;
+  }
 }
 
 .tick {
@@ -634,6 +743,24 @@
   width: 20px;
   height: 20px;
   border: 1px solid rgba(var(--accent-rgb), 0.45);
+}
+
+.tick {
+  animation: tickPulse 5s ease-in-out infinite;
+}
+
+.tickBR {
+  animation-delay: -2.5s;
+}
+
+@keyframes tickPulse {
+  0%,
+  100% {
+    opacity: 0.45;
+  }
+  50% {
+    opacity: 1;
+  }
 }
 
 .tickTL {
@@ -752,8 +879,22 @@
 @media (prefers-reduced-motion: reduce) {
   .orbit,
   .scrollDot,
-  .name {
+  .name,
+  .portraitFrame,
+  .ringGlow,
+  .ring,
+  .shine,
+  .ripple,
+  .tick {
     animation: none;
+  }
+
+  .portraitFrame {
+    rotate: none;
+  }
+
+  .ripple {
+    display: none;
   }
 
   .name {

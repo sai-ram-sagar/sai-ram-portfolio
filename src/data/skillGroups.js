@@ -63,7 +63,7 @@ export const skillGroups = [
     items: [
       { name: "Speech-to-Text (STT)" },
       { name: "Voice Activity Detection (VAD)" },
-      { name: "8 kHz–16 kHz Resampling" },
+      { name: "8 kHz-16 kHz Resampling" },
       { name: "Buffering" },
       { name: "Speech Segmentation" },
     ],

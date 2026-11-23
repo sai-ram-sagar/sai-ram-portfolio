@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { ArrowDown, ArrowUpRight, FileText, Mail, MapPin } from "lucide-react";
 import { getImageUrl } from "../../utils";
 import { usePointerSpotlight } from "../../hooks/usePointerSpotlight";
@@ -19,6 +19,42 @@ export const Hero = () => {
   const { ref, onPointerMove } = usePointerSpotlight();
   const { ready: portraitReady, imageProps } = useImageReady();
   const [resumeOpen, setResumeOpen] = useState(false);
+  const tiltRef = useRef(null);
+
+  /*
+   * The photo leans towards the cursor, like a card in 3D. Only a mouse does
+   * this (touch has no hover), and not for visitors who prefer reduced motion.
+   * It writes two custom properties (-1..1) once per frame; the CSS does the rest.
+   */
+  useEffect(() => {
+    const node = tiltRef.current;
+    if (!node || window.matchMedia("(prefers-reduced-motion: reduce)").matches) return undefined;
+    let frame = 0;
+    const set = (x, y) => {
+      node.style.setProperty("--tilt-x", x.toFixed(3));
+      node.style.setProperty("--tilt-y", y.toFixed(3));
+    };
+    const onMove = (event) => {
+      if (event.pointerType !== "mouse" || frame) return;
+      const { clientX, clientY } = event;
+      frame = requestAnimationFrame(() => {
+        frame = 0;
+        const r = node.getBoundingClientRect();
+        /* measured from the photo's centre, over about a screen's width, then clamped */
+        const x = Math.max(-1, Math.min(1, (clientX - (r.left + r.width / 2)) / (window.innerWidth * 0.45)));
+        const y = Math.max(-1, Math.min(1, (clientY - (r.top + r.height / 2)) / (window.innerHeight * 0.45)));
+        set(x, y);
+      });
+    };
+    const onLeave = () => set(0, 0);
+    window.addEventListener("pointermove", onMove, { passive: true });
+    document.documentElement.addEventListener("pointerleave", onLeave);
+    return () => {
+      window.removeEventListener("pointermove", onMove);
+      document.documentElement.removeEventListener("pointerleave", onLeave);
+      cancelAnimationFrame(frame);
+    };
+  }, []);
 
   return (
     <section className={styles.hero} id="top" ref={ref} onPointerMove={onPointerMove}>
@@ -100,7 +136,9 @@ export const Hero = () => {
         </div>
 
         <div className={styles.portraitWrap} style={{ "--enter-delay": "300ms" }}>
-          <div className={styles.portraitFrame}>
+          <div className={styles.portraitFrame} ref={tiltRef}>
+            <span className={styles.ripple} aria-hidden="true" />
+            <span className={`${styles.ripple} ${styles.rippleLate}`} aria-hidden="true" />
             <span className={styles.orbit} aria-hidden="true" />
             <span className={styles.ring} aria-hidden="true" />
             <span className={styles.ringGlow} aria-hidden="true" />
@@ -116,6 +154,7 @@ export const Hero = () => {
               decoding="async"
               {...imageProps}
             />
+            <span className={styles.shine} aria-hidden="true" />
           </div>
           <span className={`${styles.tick} ${styles.tickTL}`} aria-hidden="true" />
           <span className={`${styles.tick} ${styles.tickBR}`} aria-hidden="true" />

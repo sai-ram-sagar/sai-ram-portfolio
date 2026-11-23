@@ -7,13 +7,13 @@ export const work = [
   {
     id: "dfr",
     short: "DFR",
-    title: "Drone as First Responder (DFR)",
+    title: "Drone as First Responder",
     status: "In progress",
     summary:
       "A mission-planning system that lets operators create, configure and reuse predefined drone flight missions.",
     highlights: [
-      "Implemented a Flight Hub interface for ordered routing through unlimited waypoints - bounded in practice by drone battery endurance - with add, edit, delete and reposition actions and live path rendering.",
-      "Contributing to design discussions on mission planning, drone assignment, dispatch integration and geospatial visualisation.",
+      "Built the Flight Hub: ordered routes through any number of waypoints (limited only by battery), with add, edit, delete, reposition and live path drawing.",
+      "Helping shape mission planning, drone assignment, dispatch integration and map visualisation.",
     ],
     stack: ["React.js", "Node.js", "Express.js", "REST APIs", "Leaflet", "Geospatial Data"],
     icon: "Navigation",
@@ -27,10 +27,9 @@ export const work = [
     summary:
       "A live bridge between the PBX and the STT server: call audio streams in, and transcription and translation stream back to the agent's screen.",
     highlights: [
-      "Built the Node.js bridge that receives the live call stream, applies noise cancellation, and upsamples or downsamples it (8 kHz → 16 kHz and others) to suit the chosen STT model.",
-      "Streams the audio to the STT server in 200 ms chunks over a persistent WebSocket, while transcription and translation come back continuously during the call.",
-      "Relays each transcript and translation from the bridge to the agent UI through Pusher, so the agent reads them live as the call goes on.",
-      "Implemented independent VAD processing for agent and citizen audio streams with configurable speech and silence thresholds, plus buffering, speech segmentation, error handling and observability at each stage.",
+      "Built the Node.js bridge that takes the live call stream, cancels noise and resamples it (e.g. 8 → 16 kHz) for the chosen STT model.",
+      "Pushes transcripts and translations to the agent's screen through Pusher, live during the call.",
+      "Added separate voice detection for agent and citizen audio, with configurable thresholds, buffering, segmentation, error handling and observability.",
     ],
     stack: ["Node.js", "WebSocket", "STT", "VAD", "Pusher", "Audio Processing"],
     icon: "AudioLines",
@@ -39,14 +38,14 @@ export const work = [
   {
     id: "erss",
     short: "ERSS",
-    title: "Emergency Response Support System (ERSS) - Dial 112",
+    title: "Emergency Response Support System",
     status: "Shipped",
     summary:
       "A comprehensive emergency response platform integrating Computer-Aided Dispatch (CAD), GIS-based location management, real-time call handling, incident tracking and resource dispatch workflows.",
     highlights: [
-      "Built the real-time CAD workflows in React.js for SOS alerts, emergency calls, service assignment and live incident data, used by up to 50 dispatch operators.",
-      "Built live vehicle tracking and police-station geofencing on Leaflet across 700+ stations statewide, keeping 100-200 concurrently active complaints visible.",
-      "Implemented Pusher/WebSocket event flows that removed page refreshes for alerts, vehicle positions and live transcripts during active incidents.",
+      "Built real-time CAD workflows in React.js for SOS alerts, calls, assignment and live incidents, used by up to 50 operators.",
+      "Built live vehicle tracking and station geofencing on Leaflet across 700+ stations, keeping 100-200 active complaints on screen.",
+      "Added Pusher/WebSocket event flows so alerts, vehicle positions and transcripts update live, with no page refresh.",
     ],
     stack: ["React.js", "Node.js", "Leaflet", "WebSocket", "Pusher", "GIS"],
     icon: "Navigation",

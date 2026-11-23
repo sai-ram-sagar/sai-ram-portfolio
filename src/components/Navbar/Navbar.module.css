@@ -3,8 +3,9 @@
 /* ============================================================
    Bar
 
-   Transparent over the hero, then condensing into a blurred
-   glass bar once the page moves. The scrolled state comes from
+   Transparent over the hero, then turning into a blurred
+   glass bar once the page moves. It is always the same height and
+   never shifts - only its background changes. The scrolled state comes from
    [data-scrolled] on <html> (set by usePageScroll), so the nav
    adds no scroll listener of its own.
    ============================================================ */
@@ -38,11 +39,6 @@
   align-items: center;
   justify-content: space-between;
   gap: var(--sp-4);
-  transition: height var(--dur-3) var(--e-out);
-}
-
-:global(html[data-scrolled]) .nav {
-  height: var(--nav-h-compact);
 }
 
 /* ============================================================
@@ -70,6 +66,100 @@
   transform-origin: left center;
   background: linear-gradient(90deg, var(--accent), var(--accent-2));
   box-shadow: 0 0 12px rgba(var(--accent-rgb), 0.6);
+}
+
+/* ------------------------------------------------------------
+   Spider-Man palette: the bar thickens into a thread of web, and a spider
+   crawls along its leading edge as the page scrolls
+   ------------------------------------------------------------ */
+.crawler {
+  display: none;
+  position: absolute;
+  bottom: -9px;
+  left: clamp(13px, calc(var(--scroll-progress, 0) * 100%), calc(100% - 13px));
+  width: 28px;
+  height: 22px;
+  margin-left: -14px;
+  pointer-events: none;
+  opacity: 0;
+  filter: drop-shadow(0 0 6px rgba(var(--accent-rgb), 0.6));
+  transition: opacity var(--dur-3) var(--e-out);
+}
+
+:global(html[data-palette="spiderman"][data-scrolled]) .crawler {
+  display: block;
+  opacity: 1;
+}
+
+:global(html[data-palette="spiderman"]) .progress {
+  height: 3px;
+}
+
+.crawler svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+
+.abdomen {
+  fill: var(--accent);
+}
+
+.head {
+  fill: var(--accent-2);
+}
+
+.eye {
+  fill: #fff;
+}
+
+.mark {
+  fill: none;
+  stroke: var(--color-bg);
+  stroke-width: 1;
+  stroke-linecap: round;
+  opacity: 0.75;
+}
+
+.leg {
+  fill: none;
+  stroke: var(--color-text-strong);
+  stroke-width: 1.15;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+/* legs paddle in alternating pairs, but only while the page is scrolling */
+.crawler[data-moving] .leg {
+  animation: crawl 0.28s ease-in-out infinite;
+}
+
+.crawler[data-moving] svg {
+  animation: bob 0.28s ease-in-out infinite;
+}
+
+@keyframes crawl {
+  0%,
+  100% {
+    transform: rotate(-16deg);
+  }
+  50% {
+    transform: rotate(16deg);
+  }
+}
+
+@keyframes bob {
+  50% {
+    transform: translateY(-0.6px);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .crawler[data-moving] .leg,
+  .crawler[data-moving] svg {
+    animation: none;
+  }
 }
 
 /* ============================================================
@@ -191,7 +281,75 @@
 /* ============================================================
    Actions
    ============================================================ */
+.balance {
+  flex: 1;
+  display: flex;
+  align-items: center;
+}
+
+/* "Open to work": a small availability pill with a live dot, linking to Contact */
+.available {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.38rem 0.8rem 0.38rem 0.65rem;
+  border-radius: var(--r-pill);
+  border: 1px solid var(--line-2);
+  background: var(--glass-1);
+  font-family: var(--font-mono);
+  font-size: var(--fs-eyebrow);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  color: var(--color-text);
+  transition:
+    border-color var(--dur-2) var(--e-out),
+    background-color var(--dur-2) var(--e-out),
+    color var(--dur-2) var(--e-out);
+}
+
+.available:hover,
+.available:focus-visible {
+  color: var(--color-text-strong);
+  border-color: rgba(94, 224, 160, 0.55);
+  background: var(--glass-2);
+}
+
+.availableDot {
+  position: relative;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #5ee0a0;
+  box-shadow: 0 0 0 0 rgba(94, 224, 160, 0.6);
+  animation: availablePulse 2.2s ease-out infinite;
+}
+
+@keyframes availablePulse {
+  70% {
+    box-shadow: 0 0 0 7px rgba(94, 224, 160, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(94, 224, 160, 0);
+  }
+}
+
+@media (max-width: 420px) {
+  .available {
+    padding-inline: 0.55rem;
+    letter-spacing: 0.06em;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .availableDot {
+    animation: none;
+  }
+}
+
 .actions {
+  flex: 1;
+  justify-content: flex-end;
   display: flex;
   align-items: center;
   gap: var(--sp-2);

@@ -18,6 +18,7 @@ export const About = () => (
     id="about"
     index="01"
     label="About"
+    oneLineTitle
     title="Software for the moments that can't wait."
     caption="I build web apps where every second counts - live dashboards, maps that move, and audio that becomes text as people speak."
   >

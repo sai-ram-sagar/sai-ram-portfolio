@@ -20,9 +20,9 @@ export const createCadScreen = () => {
   let lastKey = "";
 
   const paint = ({ t }) => {
-    const stage = t >= 22.4 || t < 2.0 ? 0 : t < 5.2 ? 1 : 2;
+    const stage = t >= 34 || t < 2.0 ? 0 : t < 3.4 ? 1 : t < 6.4 ? 3 : 2;
     const blink = Math.floor(t * 2) % 2;
-    const key = `${stage}|${blink}|${stage === 2 ? Math.floor((t - 5.2) * 2) : 0}`;
+    const key = `${stage}|${blink}|${stage === 2 ? Math.floor((t - 6.4) * 2) : 0}`;
     if (key === lastKey) return;
     lastKey = key;
 
@@ -39,6 +39,16 @@ export const createCadScreen = () => {
       ctx.fillStyle = "rgba(160, 200, 235, 0.6)";
       ctx.font = `600 16px ${FONT}`;
       ctx.fillText("STANDBY", 10, 100);
+      return;
+    }
+
+    if (stage === 3) {
+      ctx.fillStyle = "rgba(90, 242, 160, 0.9)";
+      ctx.font = `700 24px ${FONT}`;
+      ctx.fillText("ON CALL · 112", 14, 96);
+      ctx.fillStyle = "rgba(160, 200, 235, 0.8)";
+      ctx.font = `500 12px ${FONT}`;
+      ctx.fillText("LOCATING CALLER…", 14, 124);
       return;
     }
 
@@ -75,7 +85,7 @@ export const createCadScreen = () => {
     ctx.lineTo(236, H);
     ctx.stroke();
 
-    const pulse = 8 + ((Math.floor((t - 5.2) * 2) % 4) * 5);
+    const pulse = 8 + ((Math.floor((t - 6.4) * 2) % 4) * 5);
     ctx.strokeStyle = "rgba(255, 70, 80, 0.7)";
     ctx.lineWidth = 2;
     ctx.beginPath();

@@ -23,6 +23,7 @@ export const Section = ({
   divider = true,
   split = false,
   headerExtra,
+  oneLineTitle = false,
   className = "",
 }) => (
   <section id={id} className={`${styles.section} ${className}`} aria-labelledby={`${id}-title`}>
@@ -40,7 +41,11 @@ export const Section = ({
           <span className={styles.eyebrowLabel}>{label}</span>
         </p>
 
-        <h2 id={`${id}-title`} className={styles.title} data-reveal="mask">
+        <h2
+          id={`${id}-title`}
+          className={`${styles.title} ${oneLineTitle ? styles.titleOneLine : ""}`}
+          data-reveal="mask"
+        >
           <span>{title}</span>
         </h2>
 

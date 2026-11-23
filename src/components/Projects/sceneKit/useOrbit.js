@@ -9,18 +9,18 @@ import { smoothstep } from "./math";
  * scene's composition is the resting state and every limit is symmetric:
  *   - sideways: a little over a third of a turn each way, so the scene can be
  *     seen from either end but never from "behind" its labels and screens
- *   - up/down: from a low three-quarter view to a steep one, never below the
- *     floor and never straight down
+ *   - tilt: fixed. The scene only turns round; it keeps its inclined angle and
+ *     never rises towards a top-down view
  *
  * Scrolling is never hijacked: the mouse wheel is not touched, and on touch
  * screens `touch-action: pan-y` leaves vertical swipes to the page, so only a
  * sideways drag turns the scene.
  */
 const MAX_AZ = 1.9; /* radians either way, ~109 deg */
-const MIN_EL = -0.28;
-const MAX_EL = 0.55;
+/* the tilt is fixed: the scenes turn round, but never rise towards a top-down view */
+const MIN_EL = 0;
+const MAX_EL = 0;
 const AZ_PER_PX = 0.006;
-const EL_PER_PX = 0.004;
 const MAX_SPEED = 6; /* rad/s, caps a flick */
 
 const clamp = (x, lo, hi) => Math.min(hi, Math.max(lo, x));
@@ -79,7 +79,6 @@ export const useOrbit = ({ reduced = false } = {}) => {
     const move = (event) => {
       if (!s.dragging || event.pointerId !== s.id) return;
       const dx = event.clientX - s.x;
-      const dy = event.clientY - s.y;
       const now = performance.now();
       const dt = Math.max(0.001, (now - s.at) / 1000);
       s.x = event.clientX;
@@ -88,7 +87,7 @@ export const useOrbit = ({ reduced = false } = {}) => {
 
       /* dragging right swings the scene right, i.e. the camera round to the left */
       const dAz = -dx * AZ_PER_PX;
-      const dEl = s.touch ? 0 : dy * EL_PER_PX;
+      const dEl = 0; /* vertical drags do not tilt the scene */
       s.tAz = clamp(s.tAz + dAz, -MAX_AZ, MAX_AZ);
       s.tEl = clamp(s.tEl + dEl, MIN_EL, MAX_EL);
       s.vAz = clamp(s.vAz * 0.4 + (dAz / dt) * 0.6, -MAX_SPEED, MAX_SPEED);

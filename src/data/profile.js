@@ -7,7 +7,7 @@
 
 export const profile = {
   firstName: "Sai Ram",
-  fullName: "Sai Ram Sagar",
+  fullName: "Sai Ram",
   role: "Software Developer",
   specialism: "Real-Time & Geospatial Web Applications",
   stackLine: "React.js / Node.js",
@@ -27,9 +27,9 @@ export const profile = {
    * kept in. Written so a recruiter and an engineer both get something from it.
    */
   summary:
-    "I'm a software developer who builds web applications that react the moment something happens. My work powers public-safety software for Telangana Police: the screens dispatchers use to handle emergency calls, live maps of police vehicles, and a system that turns phone calls into text while the caller is still speaking.",
+    "I'm a software developer building real-time web apps for Telangana Police: dispatcher screens for emergency calls, live vehicle maps, and a system that turns phone calls into text as the caller speaks.",
   summaryDetail:
-    "Most of my time is spent on the frontend in React.js, building interfaces that update live over WebSocket and Pusher instead of waiting for a page refresh. I also work on the backend in Node.js and Express, and on maps with Leaflet - drawing station boundaries, tracking vehicles and planning drone routes.",
+    "I work mostly in React.js, with Node.js and Express on the backend and Leaflet for maps.",
 
   /* every project from the resume, in plain language */
   workedOn: [
@@ -61,7 +61,7 @@ export const profile = {
     },
   ],
 
-  focus: ["React.js", "Node.js", "Real-Time Systems", "Leaflet", "Speech-to-Text"],
+  focus: ["React.js", "Node.js", "Express.js", "Real-Time Systems", "WebSocket", "Pusher", "Leaflet", "Speech-to-Text"],
 };
 
 export const disciplines = [
@@ -69,19 +69,19 @@ export const disciplines = [
     icon: "MonitorSmartphone",
     title: "Real-time frontend",
     description:
-      "React.js screens that change the instant the data does. New alerts, calls and incident updates arrive over WebSocket and Pusher, so nobody has to hit refresh.",
+      "React.js screens that update live over WebSocket and Pusher, with no refresh needed.",
   },
   {
     icon: "Map",
     title: "Maps & geospatial",
     description:
-      "Leaflet maps for vehicle tracking, station boundaries and drone route planning, kept fast with zoom-based rendering and cached map tiles.",
+      "Leaflet maps for vehicle tracking, station boundaries and drone routes.",
   },
   {
     icon: "AudioLines",
     title: "Streaming backend",
     description:
-      "Node.js and Express services that move data as it happens, including a pipeline that turns live phone audio into on-screen text in under a second.",
+      "Node.js and Express services, including a pipeline that turns live phone audio into text in under a second.",
   },
 ];
 

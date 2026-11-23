@@ -32,9 +32,12 @@ const Person = ({ color, scale = 1, headset = false, y = 0 }) => (
 export const Citizen = ({ sim }) => {
   const rings = useRef([]);
   const phone = useRef();
+  const body = useRef();
   useFrame(() => {
-    const { time, ringing, voice, incident } = sim.current;
-    const live = Math.max(ringing, voice);
+    const { time, ringing, voice, incident, citizenVis } = sim.current;
+    body.current.scale.setScalar(1.4 * Math.max(0.001, citizenVis));
+    body.current.visible = citizenVis > 0.01;
+    const live = Math.max(ringing, voice) * (citizenVis > 0.5 ? 1 : 0);
     phone.current.material.emissiveIntensity = 0.4 + live * 2.4 + 0.6 * Math.sin(time * 14) * ringing;
     rings.current.forEach((ring, i) => {
       if (!ring) return;
@@ -44,7 +47,7 @@ export const Citizen = ({ sim }) => {
     });
   });
   return (
-    <group position={[CITIZEN.x + 0.2, 0.05, CITIZEN.z]} scale={1.4}>
+    <group position={[CITIZEN.x + 0.2, 0.05, CITIZEN.z]} ref={body}>
       <Person color="#c0463c" />
       {/* phone raised to the ear */}
       <mesh ref={phone} position={[0.05, 0.27, 0.04]} castShadow>
@@ -123,14 +126,12 @@ export const CalltakerDesk = ({ sim, screen }) => {
   );
 };
 
-/** The central dispatch centre: a glass-fronted operations building with a drone pad on its roof. */
+/** The control room: a glass-fronted operations building where 112 calls are taken and units dispatched. */
 export const DispatchCentre = ({ sim }) => {
   const group = useRef();
   const windows = useRef();
   const dish = useRef();
   const beacon = useRef();
-  const padTexture = useMemo(() => createPadTexture(), []);
-  useEffect(() => () => padTexture.dispose(), [padTexture]);
   useFrame((_, delta) => {
     const { time, dispatchBusy } = sim.current;
     group.current.scale.y = Math.max(0.001, easeOutBack((time - 0.65) / 0.9));
@@ -156,11 +157,6 @@ export const DispatchCentre = ({ sim }) => {
       <mesh position={[0.5, 0.42, 0.25]} rotation={[0, Math.PI / 2, 0]}>
         <boxGeometry args={[0.5, 0.4, 0.01]} />
         <meshStandardMaterial color="#10202f" emissive="#3aa8d8" emissiveIntensity={0.8} roughness={0.3} />
-      </mesh>
-      {/* the roof pad the drone launches from */}
-      <mesh position={[0, 0.884, 0.05]} rotation={[-Math.PI / 2, 0, 0]}>
-        <circleGeometry args={[0.36, 36]} />
-        <meshStandardMaterial map={padTexture} roughness={0.8} />
       </mesh>
       {/* antenna and dish */}
       <mesh position={[-0.42, 1.2, -0.3]} castShadow>
@@ -286,6 +282,147 @@ export const IncidentMarker = ({ sim }) => {
       <mesh ref={gis} position={[0, 0.03, 0]} rotation={[-Math.PI / 2, 0, 0]}>
         <ringGeometry args={[0.46, 0.5, 6]} />
         <meshBasicMaterial transparent opacity={0} side={DoubleSide} depthWrite={false} blending={AdditiveBlending} toneMapped={false} />
+      </mesh>
+    </group>
+  );
+};
+
+/**
+ * A police station: a low station house with garage bays, a rotating beacon and
+ * a parking apron in front. Station 1 (the near one) also carries the drone's
+ * pad on its roof and its beacon speeds up while its units are out.
+ */
+export const PoliceStation = ({ sim, at, pad = false, active = false }) => {
+  const group = useRef();
+  const beacon = useRef();
+  const lamp = useRef();
+  const padTexture = useMemo(() => createPadTexture(), []);
+  useEffect(() => () => padTexture.dispose(), [padTexture]);
+  useFrame((_, delta) => {
+    const { time, t } = sim.current;
+    group.current.scale.y = Math.max(0.001, easeOutBack((time - 0.7) / 0.9));
+    const out = active && t > 14.0 && t < 33.8;
+    beacon.current.rotation.y += Math.min(delta, 0.05) * (out ? 6 : 1.2);
+    lamp.current.material.opacity = out ? 0.5 + 0.3 * Math.sin(time * 9) : 0.35;
+  });
+  return (
+    <group position={[at.x, 0.035, at.z]} ref={group}>
+      <mesh position={[0, 0.4, 0]} castShadow receiveShadow>
+        <boxGeometry args={[1.5, 0.8, 0.85]} />
+        <meshStandardMaterial color="#9fb0c8" roughness={0.6} metalness={0.15} />
+      </mesh>
+      <mesh position={[0, 0.84, 0]} castShadow>
+        <boxGeometry args={[1.58, 0.07, 0.93]} />
+        <meshStandardMaterial color="#1f3f86" roughness={0.6} />
+      </mesh>
+      <mesh position={[0, 0.7, 0.432]}>
+        <boxGeometry args={[1.52, 0.1, 0.012]} />
+        <meshStandardMaterial color="#1f3f86" roughness={0.6} />
+      </mesh>
+      {[-0.42, 0.14].map((x) => (
+        <mesh key={x} position={[x, 0.22, 0.432]}>
+          <boxGeometry args={[0.46, 0.4, 0.012]} />
+          <meshStandardMaterial color="#0b1220" roughness={0.8} />
+        </mesh>
+      ))}
+      <mesh position={[0.56, 0.24, 0.432]}>
+        <boxGeometry args={[0.22, 0.44, 0.012]} />
+        <meshStandardMaterial color="#10202f" emissive="#3aa8d8" emissiveIntensity={0.8} />
+      </mesh>
+      {pad && (
+        <mesh position={[-0.2, 0.879, -0.02]} rotation={[-Math.PI / 2, 0, 0]}>
+          <circleGeometry args={[0.34, 36]} />
+          <meshStandardMaterial map={padTexture} roughness={0.8} />
+        </mesh>
+      )}
+      <mesh position={[0.55, 0.98, -0.2]}>
+        <cylinderGeometry args={[0.012, 0.018, 0.2, 6]} />
+        <meshStandardMaterial color="#9aa2af" metalness={0.7} />
+      </mesh>
+      <group position={[0.55, 1.1, -0.2]} ref={beacon}>
+        <mesh>
+          <boxGeometry args={[0.1, 0.05, 0.05]} />
+          <meshStandardMaterial color="#10141c" />
+        </mesh>
+        <mesh position={[0.05, 0, 0]}>
+          <sphereGeometry args={[0.03, 8, 8]} />
+          <meshBasicMaterial color="#ff2a38" toneMapped={false} />
+        </mesh>
+        <mesh position={[-0.05, 0, 0]}>
+          <sphereGeometry args={[0.03, 8, 8]} />
+          <meshBasicMaterial color="#2a6cff" toneMapped={false} />
+        </mesh>
+      </group>
+      <mesh ref={lamp} position={[0.55, 1.1, -0.2]}>
+        <sphereGeometry args={[0.1, 12, 12]} />
+        <meshBasicMaterial color="#8fb4ff" transparent opacity={0.4} toneMapped={false} />
+      </mesh>
+      <mesh position={[0, 0.003, 0.8]} receiveShadow>
+        <boxGeometry args={[1.9, 0.012, 0.55]} />
+        <meshStandardMaterial color="#262b35" roughness={0.9} />
+      </mesh>
+    </group>
+  );
+};
+
+/**
+ * A hospital: a pale multi-storey block with a red cross, an ambulance bay on
+ * the front and a parking apron. Hospital 1 (the near one) glows green when the
+ * patient is admitted.
+ */
+export const Hospital = ({ sim, at, active = false }) => {
+  const group = useRef();
+  const cross = useRef();
+  const halo = useRef();
+  useFrame(() => {
+    const { time, admit } = sim.current;
+    group.current.scale.y = Math.max(0.001, easeOutBack((time - 0.75) / 0.9));
+    cross.current.material.emissiveIntensity = 0.6 + 0.3 * Math.sin(time * 2.4) + (active ? admit * 1.6 : 0);
+    halo.current.material.opacity = active ? admit * 0.7 : 0;
+    halo.current.scale.setScalar(0.6 + admit * 0.6);
+  });
+  return (
+    <group position={[at.x, 0.035, at.z]} ref={group}>
+      <mesh position={[0, 0.5, 0]} castShadow receiveShadow>
+        <boxGeometry args={[1.5, 1.0, 0.85]} />
+        <meshStandardMaterial color="#e6eaf0" roughness={0.6} metalness={0.05} />
+      </mesh>
+      <mesh position={[0.5, 0.75, -0.1]} castShadow>
+        <boxGeometry args={[0.5, 1.5, 0.6]} />
+        <meshStandardMaterial color="#d9dee6" roughness={0.6} />
+      </mesh>
+      <mesh position={[0, 1.02, 0]} castShadow>
+        <boxGeometry args={[1.56, 0.06, 0.9]} />
+        <meshStandardMaterial color="#8c97aa" roughness={0.7} />
+      </mesh>
+      {/* rows of windows on the front */}
+      {[0.3, 0.62, 0.9].map((y) => (
+        <mesh key={y} position={[-0.2, y, 0.432]}>
+          <boxGeometry args={[1.0, 0.1, 0.012]} />
+          <meshStandardMaterial color="#10202f" emissive="#3aa8d8" emissiveIntensity={0.5} />
+        </mesh>
+      ))}
+      {/* ambulance bay */}
+      <mesh position={[0.5, 0.17, 0.432]}>
+        <boxGeometry args={[0.36, 0.3, 0.012]} />
+        <meshStandardMaterial color="#0b1220" roughness={0.8} />
+      </mesh>
+      {/* the red cross, up on the tower */}
+      <mesh ref={cross} position={[0.5, 1.3, 0.202]}>
+        <boxGeometry args={[0.3, 0.09, 0.012]} />
+        <meshStandardMaterial color="#d8242e" emissive="#ff3a3a" emissiveIntensity={0.6} />
+      </mesh>
+      <mesh position={[0.5, 1.3, 0.202]}>
+        <boxGeometry args={[0.09, 0.3, 0.012]} />
+        <meshStandardMaterial color="#d8242e" emissive="#ff3a3a" emissiveIntensity={0.6} />
+      </mesh>
+      <mesh ref={halo} position={[0.5, 0.02, 0.9]} rotation={[-Math.PI / 2, 0, 0]}>
+        <ringGeometry args={[0.5, 0.56, 40]} />
+        <meshBasicMaterial color="#7dffc4" transparent opacity={0} depthWrite={false} blending={AdditiveBlending} toneMapped={false} side={DoubleSide} />
+      </mesh>
+      <mesh position={[0, 0.003, 0.8]} receiveShadow>
+        <boxGeometry args={[1.9, 0.012, 0.55]} />
+        <meshStandardMaterial color="#262b35" roughness={0.9} />
       </mesh>
     </group>
   );

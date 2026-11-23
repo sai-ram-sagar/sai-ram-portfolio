@@ -76,7 +76,7 @@ const Rig = ({ sim, immersive, reduced }) => {
        diorama is eased down and to the right, into the clear part of the frame. */
     const framed = immersive && size.width > 760;
     camera.zoom = (framed ? Math.min((size.width * 0.6) / 14.2, size.height / 10.2) : fit) * lerp(0.8, 1, intro);
-    if (framed) camera.setViewOffset(size.width, size.height, -size.width * 0.2, size.height * 0.1, size.width, size.height);
+    if (framed) camera.setViewOffset(size.width, size.height, -size.width * 0.2, size.height * 0.03, size.width, size.height);
     else camera.clearViewOffset();
 
     /* idle sway and pointer parallax drift around wherever the visitor left the view */

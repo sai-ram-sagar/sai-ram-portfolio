@@ -16,7 +16,7 @@ export const ErssVisual = ({ immersive = false }) => {
   return (
     <SceneStage
       Scene={Scene}
-      label="Animated 3D miniature of an emergency response: a citizen dials 112, the call reaches a calltaker, the incident appears on the GIS city map, a dispatcher assigns police vehicles and a drone, and they head to the scene. Simulated data."
+      label="Animated 3D miniature of an emergency response: a citizen dials 112 and talks to a calltaker in the control room, the incident is placed on the GIS city map, the nearest police station and hospital are picked, police cars, a drone and an ambulance are sent, the ambulance takes the citizen to hospital, and the police units return to their station. Simulated data."
       immersive={immersive}
       onPhase={setPhase}
     >

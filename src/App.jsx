@@ -9,6 +9,8 @@ import { Skills } from "./components/Skills/Skills";
 import { Education } from "./components/Education/Education";
 import { Contact } from "./components/Contact/Contact";
 import { Footer } from "./components/Footer/Footer";
+import { SpiderDecor } from "./components/ui/SpiderDecor";
+import { NameIntro } from "./components/ui/NameIntro";
 import { useScrollReveal } from "./hooks/useScrollReveal";
 import { usePageScroll } from "./hooks/usePageScroll";
 
@@ -22,6 +24,8 @@ function App() {
         Skip to content
       </a>
       <Background />
+      <SpiderDecor />
+      <NameIntro />
       <Navbar />
       <main className={styles.main}>
         <Hero />

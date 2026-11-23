@@ -117,7 +117,7 @@
 .hintWide {
   left: auto;
   right: max(var(--page-pad), calc((100cqw - var(--page-max)) / 2 + var(--page-pad)));
-  bottom: 6.2rem;
+  bottom: 2.8rem;
 }
 
 .hintTouch {

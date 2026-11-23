@@ -90,7 +90,7 @@ export const ResumeModal = ({ onClose }) => {
             <img
               className={`${styles.image} ${ready ? styles.imageReady : ""}`}
               src={resumePreview}
-              alt="Resume of Sai Ram Sagar, Software Developer"
+              alt="Resume of Sai Ram, Software Developer"
               width="1700"
               height="2200"
               {...imageProps}

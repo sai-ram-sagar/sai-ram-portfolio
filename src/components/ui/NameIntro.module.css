@@ -1,0 +1,90 @@
+@import "../../vars.css";
+
+/*
+ * The opening animation (see NameIntro.jsx). It sits above the page and the
+ * header but below the modals, never catches a click, and its screen takes the
+ * colour of whichever theme is active.
+ */
+/* ---------- the intro, when the palette is picked or the page opens with it ---------- */
+.intro {
+  position: fixed;
+  z-index: 150;
+  pointer-events: none;
+  inset: 0;
+  inset: 0;
+  background: var(--color-bg);
+  opacity: 0;
+  visibility: hidden;
+}
+
+/* the text block is laid out exactly over the page's own role + heading (set from script),
+   styled as a copy of them, then moved to the screen centre and back by the script's animation;
+   it sits above the black screen */
+.introText {
+  position: fixed;
+  z-index: 151;
+  pointer-events: none;
+  opacity: 0;
+  transform-origin: 50% 50%;
+  will-change: transform, opacity;
+}
+
+.introRole {
+  position: absolute;
+  white-space: nowrap;
+}
+
+.introLine {
+  position: absolute;
+  display: block;
+  white-space: nowrap;
+  overflow: visible;
+}
+
+/*
+ * 1. the screen goes black; the role and name appear in the middle
+ * 2. they hold a moment
+ * 3. the black fades away while they glide to their places in the page
+ */
+.go {
+  visibility: visible;
+  animation: intro-screen 3.3s ease-out both;
+}
+
+/* page opened with the palette chosen: already black from the first frame, no flash of the page */
+.fromBlack {
+  animation-name: intro-screen-load;
+}
+
+@keyframes intro-screen {
+  0% {
+    opacity: 0;
+  }
+  12%,
+  27% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+    visibility: hidden;
+  }
+}
+
+@keyframes intro-screen-load {
+  0%,
+  27% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+    visibility: hidden;
+  }
+}
+
+
+@media (prefers-reduced-motion: reduce) {
+  .intro,
+  .introText {
+    display: none;
+  }
+}

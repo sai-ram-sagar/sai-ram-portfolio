@@ -87,7 +87,7 @@
   },
   {
     "title": "Covid19 Dashboard",
-    "featured": false,
+    "featured": true,
     "imageSrc": "projects/project3.png",
     "description": "Developed a responsive web app to provide real-time COVID-19 statistics of India, featuring data visualization and state-specific details.",
     "skills": [
@@ -102,7 +102,7 @@
   },
   {
     "title": "Memory game",
-    "featured": false,
+    "featured": true,
     "imageSrc": "projects/project4.png",
     "description": "Developed a fun and interactive memory game featuring emojis, challenging players to avoid selecting the same image twice.",
     "skills": [

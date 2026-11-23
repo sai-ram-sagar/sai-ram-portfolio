@@ -11,11 +11,11 @@ const WHEELS = [
 ];
 
 /**
- * A police patrol car. It follows the road path it is given, and its light bar
- * flashes red and blue while it is moving or on scene. The car is modelled
- * facing +z; heading turns it onto the road.
+ * A police patrol car. It follows the state it is given (`car` is a key of the
+ * sample, or `fixed` for one that just sits parked), and its light bar flashes
+ * red and blue while it is out. The car is modelled facing +z.
  */
-export const PoliceCar = ({ sim, car }) => {
+export const PoliceCar = ({ sim, car, fixed }) => {
   const group = useRef();
   const red = useRef();
   const blue = useRef();
@@ -23,15 +23,13 @@ export const PoliceCar = ({ sim, car }) => {
   const glowB = useRef();
   const glowMap = getGlowTexture();
   useFrame(() => {
-    const { time, t } = sim.current;
-    const state = sim.current[car];
+    const { time } = sim.current;
+    const state = fixed ?? sim.current[car];
     group.current.position.set(state.x, 0.05, state.z);
     group.current.rotation.y = state.heading;
-    /* lights run while it is out of base: moving or waiting on scene */
-    const out = t > 9.4 && t < 28.5 ? 1 : 0;
     const flash = Math.floor(time * 6) % 2;
-    const r = out * (flash ? 1 : 0.15);
-    const b = out * (flash ? 0.15 : 1);
+    const r = state.lights * (flash ? 1 : 0.15);
+    const b = state.lights * (flash ? 0.15 : 1);
     red.current.material.emissiveIntensity = 0.3 + r * 3;
     blue.current.material.emissiveIntensity = 0.3 + b * 3;
     glowR.current.material.opacity = r * 0.8;
@@ -43,7 +41,6 @@ export const PoliceCar = ({ sim, car }) => {
         <boxGeometry args={[0.18, 0.07, 0.36]} />
         <meshStandardMaterial color="#e6e9ee" roughness={0.45} metalness={0.3} />
       </mesh>
-      {/* dark lower half and doors give it the livery look */}
       <mesh position={[0, 0.07, 0]}>
         <boxGeometry args={[0.185, 0.034, 0.37]} />
         <meshStandardMaterial color="#1b3a7a" roughness={0.5} metalness={0.3} />
@@ -52,7 +49,6 @@ export const PoliceCar = ({ sim, car }) => {
         <boxGeometry args={[0.15, 0.06, 0.19]} />
         <meshStandardMaterial color="#1a2438" roughness={0.3} metalness={0.5} />
       </mesh>
-      {/* light bar */}
       <mesh ref={red} position={[-0.04, 0.188, -0.01]}>
         <boxGeometry args={[0.07, 0.02, 0.04]} />
         <meshStandardMaterial color="#400a0e" emissive="#ff2a38" emissiveIntensity={0.3} />
@@ -67,7 +63,6 @@ export const PoliceCar = ({ sim, car }) => {
       <sprite ref={glowB} position={[0.05, 0.2, -0.01]} scale={[0.34, 0.34, 1]}>
         <spriteMaterial map={glowMap} color="#2a6cff" transparent opacity={0} depthWrite={false} blending={AdditiveBlending} toneMapped={false} />
       </sprite>
-      {/* headlights */}
       {[-0.06, 0.06].map((x) => (
         <mesh key={x} position={[x, 0.09, 0.182]}>
           <boxGeometry args={[0.04, 0.02, 0.006]} />
@@ -76,6 +71,69 @@ export const PoliceCar = ({ sim, car }) => {
       ))}
       {WHEELS.map((w) => (
         <mesh key={w.join()} position={w} rotation={[0, 0, Math.PI / 2]}>
+          <cylinderGeometry args={[0.04, 0.04, 0.03, 12]} />
+          <meshStandardMaterial color="#0c0f16" roughness={0.9} />
+        </mesh>
+      ))}
+    </group>
+  );
+};
+
+/** An ambulance: white body with a red stripe and cross, and a flashing light bar while it is out. */
+export const Ambulance = ({ sim, car, fixed }) => {
+  const group = useRef();
+  const bar = useRef();
+  const glow = useRef();
+  const glowMap = getGlowTexture();
+  useFrame(() => {
+    const { time } = sim.current;
+    const state = fixed ?? sim.current[car];
+    group.current.position.set(state.x, 0.05, state.z);
+    group.current.rotation.y = state.heading;
+    const flash = Math.floor(time * 5) % 2;
+    const on = state.lights * (flash ? 1 : 0.2);
+    bar.current.material.emissiveIntensity = 0.3 + on * 3;
+    glow.current.material.opacity = on * 0.8;
+  });
+  return (
+    <group ref={group}>
+      <mesh position={[0, 0.115, -0.03]} castShadow receiveShadow>
+        <boxGeometry args={[0.2, 0.13, 0.36]} />
+        <meshStandardMaterial color="#f2f4f7" roughness={0.45} metalness={0.2} />
+      </mesh>
+      <mesh position={[0, 0.095, 0.17]} castShadow>
+        <boxGeometry args={[0.2, 0.09, 0.1]} />
+        <meshStandardMaterial color="#e4e8ee" roughness={0.45} metalness={0.2} />
+      </mesh>
+      <mesh position={[0, 0.12, 0.222]}>
+        <boxGeometry args={[0.16, 0.04, 0.006]} />
+        <meshStandardMaterial color="#10202f" roughness={0.3} />
+      </mesh>
+      {/* red stripe along both sides */}
+      {[-0.101, 0.101].map((x) => (
+        <mesh key={x} position={[x, 0.085, -0.03]}>
+          <boxGeometry args={[0.004, 0.03, 0.34]} />
+          <meshStandardMaterial color="#d8242e" />
+        </mesh>
+      ))}
+      {/* red cross on the roof */}
+      <mesh position={[0, 0.183, -0.03]}>
+        <boxGeometry args={[0.1, 0.004, 0.026]} />
+        <meshStandardMaterial color="#d8242e" emissive="#d8242e" emissiveIntensity={0.5} />
+      </mesh>
+      <mesh position={[0, 0.183, -0.03]}>
+        <boxGeometry args={[0.026, 0.004, 0.1]} />
+        <meshStandardMaterial color="#d8242e" emissive="#d8242e" emissiveIntensity={0.5} />
+      </mesh>
+      <mesh ref={bar} position={[0, 0.2, 0.12]}>
+        <boxGeometry args={[0.12, 0.02, 0.04]} />
+        <meshStandardMaterial color="#40100e" emissive="#ff3a3a" emissiveIntensity={0.3} />
+      </mesh>
+      <sprite ref={glow} position={[0, 0.21, 0.12]} scale={[0.4, 0.4, 1]}>
+        <spriteMaterial map={glowMap} color="#ff4a4a" transparent opacity={0} depthWrite={false} blending={AdditiveBlending} toneMapped={false} />
+      </sprite>
+      {WHEELS.map(([x, y, z]) => (
+        <mesh key={`${x}${z}`} position={[x * 1.1, y, z * 1.25]} rotation={[0, 0, Math.PI / 2]}>
           <cylinderGeometry args={[0.04, 0.04, 0.03, 12]} />
           <meshStandardMaterial color="#0c0f16" roughness={0.9} />
         </mesh>

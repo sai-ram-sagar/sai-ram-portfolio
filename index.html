@@ -23,22 +23,43 @@
         /* colour palette, mirrors usePalette() in src/hooks/usePalette.js */
         try {
           var palette = localStorage.getItem("palette");
-          if (palette) document.documentElement.dataset.palette = palette;
+          /* only the palettes still offered; anything else (or nothing saved) gets Spider-Man, the default */
+          if (palette !== "classic" && palette !== "violet" && palette !== "spiderman") palette = "spiderman";
+          document.documentElement.dataset.palette = palette;
+          /* the opening animation starts from an empty screen: keep the page hidden from the first
+             paint (NameIntro clears this as soon as it takes over, or after 4 seconds at most) */
+          if (!window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+            document.documentElement.setAttribute("data-boot", "");
+            setTimeout(function () {
+              document.documentElement.removeAttribute("data-boot");
+            }, 4000);
+          }
         } catch (e) {}
       })();
     </script>
-    <title>Sai Ram Sagar - Software Developer</title>
+    <title>Sai Ram - Software Developer</title>
     <meta
       name="description"
-      content="Sai Ram Sagar is a Software Developer in Hyderabad building real-time and geospatial web applications with React.js and Node.js."
+      content="Sai Ram is a Software Developer in Hyderabad building real-time and geospatial web applications with React.js and Node.js."
     />
-    <meta property="og:title" content="Sai Ram Sagar - Software Developer" />
+    <meta property="og:title" content="Sai Ram - Software Developer" />
     <meta
       property="og:description"
       content="Real-time and geospatial web applications with React.js and Node.js."
     />
     <meta property="og:type" content="website" />
     <style>
+      html[data-boot] #root {
+        opacity: 0 !important;
+      }
+      /* Spider-Man opens on black, so there is no flash of anything else before it */
+      html[data-boot][data-palette="spiderman"],
+      html[data-boot][data-palette="spiderman"] body {
+        background: #000 !important;
+      }
+      html[data-boot][data-palette="spiderman"] #boot {
+        opacity: 0 !important;
+      }
       /* self-contained: this has to render before the stylesheet is parsed */
       #boot {
         position: fixed;

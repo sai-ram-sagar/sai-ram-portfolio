@@ -22,6 +22,7 @@ const remainingSet = featured.length ? rest : [];
 
 const GroupHeading = ({ kind, children, count }) => (
   <h3 className={styles.groupTitle} data-reveal="fade">
+    <span className={`${styles.groupRule} ${styles.groupRuleLead}`} aria-hidden="true" />
     <span className={styles.groupLabel}>{kind}</span>
     <span className={styles.groupText}>{children}</span>
     <span className={styles.groupRule} aria-hidden="true" />
@@ -45,8 +46,8 @@ export const Projects = () => {
     >
       {work.length > 0 && (
         <div className={styles.group}>
-          <GroupHeading kind="Professional" count={work.length}>
-            Platform projects
+          <GroupHeading kind="At work" count={work.length}>
+            Public-safety systems
           </GroupHeading>
           <div className={styles.bleed}>
             <ProjectShowcase items={work} />
@@ -55,8 +56,8 @@ export const Projects = () => {
       )}
 
       <div className={styles.group}>
-        <GroupHeading kind="Personal" count={projects.length}>
-          Projects you can open
+        <GroupHeading kind="Self-built" count={projects.length}>
+          Live apps you can try
         </GroupHeading>
 
         <div className={styles.projectGrid}>

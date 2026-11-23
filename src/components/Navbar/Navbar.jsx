@@ -15,11 +15,39 @@ const LINKS = [
 
 const SECTION_IDS = LINKS.map((link) => link.id);
 
+/* the spider's legs, top-down: [root x, root y, knee x, knee y, foot x, foot y] - four a side */
+const LEGS = [-1, 1].flatMap((side) =>
+  [
+    [3, 2, 7, 6, 10, 9],
+    [1, 2, 3, 7, 4, 10],
+    [-2, 2, -4, 7, -7, 10],
+    [-5, 2, -9, 6, -13, 9],
+  ].map(([x, y, kx, ky, ex, ey]) => [x, y * side * 0.9, kx, ky * side, ex, ey * side])
+);
+
 export const Navbar = () => {
   const [menuOpen, setMenuOpen] = useState(false);
   const menuBtn = useRef(null);
   const listRef = useRef(null);
   const activeId = useScrollSpy(SECTION_IDS);
+  const crawlerRef = useRef(null);
+
+  /* the spider only crawls while the page is actually scrolling */
+  useEffect(() => {
+    let timer;
+    const onScroll = () => {
+      const el = crawlerRef.current;
+      if (!el) return;
+      el.dataset.moving = "";
+      clearTimeout(timer);
+      timer = setTimeout(() => delete el.dataset.moving, 180);
+    };
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => {
+      window.removeEventListener("scroll", onScroll);
+      clearTimeout(timer);
+    };
+  }, []);
 
   /*
    * The active pill is one element that slides between links rather than a
@@ -71,15 +99,13 @@ export const Navbar = () => {
     <>
       <header className={`${styles.header} ${menuOpen ? styles.solid : ""}`}>
         <nav className={styles.nav} aria-label="Primary">
-          <a className={styles.brand} href="#top">
-            <span className={styles.mark} aria-hidden="true">
-              <span className={styles.markText}>SR</span>
-            </span>
-            <span className={styles.brandText}>
-              <span className={styles.brandName}>Sai Ram</span>
-              <span className={styles.brandRole}>Software Developer</span>
-            </span>
-          </a>
+          {/* the left cell is as wide as the buttons on the right, which keeps the menu centred */}
+          <div className={styles.balance}>
+            <a className={styles.available} href="#contact">
+              <span className={styles.availableDot} aria-hidden="true" />
+              <span>Open to work</span>
+            </a>
+          </div>
 
           <ul className={styles.desktopLinks} ref={listRef}>
             <li className={styles.pill} aria-hidden="true" />
@@ -122,6 +148,25 @@ export const Navbar = () => {
         {/* reading position, driven entirely by --scroll-progress */}
         <span className={styles.progress} aria-hidden="true">
           <span className={styles.progressBar} />
+        </span>
+
+        {/* Spider-Man palette only: a spider crawls along the leading edge of that bar */}
+        <span className={styles.crawler} ref={crawlerRef} aria-hidden="true">
+          <svg viewBox="-14 -11 28 22">
+            {LEGS.map(([x, y, kx, ky, ex, ey], i) => (
+              <path
+                key={i}
+                className={styles.leg}
+                d={`M${x} ${y} L${kx} ${ky} L${ex} ${ey}`}
+                style={{ transformOrigin: `${x}px ${y}px`, animationDelay: `${(i % 2) * -0.14}s` }}
+              />
+            ))}
+            <ellipse className={styles.abdomen} cx="-4" cy="0" rx="6" ry="4.2" />
+            <path className={styles.mark} d="M-7 0 L-1 0 M-4 -2.4 L-4 2.4" />
+            <circle className={styles.head} cx="4.6" cy="0" r="3.1" />
+            <circle className={styles.eye} cx="6.2" cy="-1.1" r="0.7" />
+            <circle className={styles.eye} cx="6.2" cy="1.1" r="0.7" />
+          </svg>
         </span>
       </header>
 

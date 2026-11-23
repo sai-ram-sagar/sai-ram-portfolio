@@ -34,7 +34,6 @@
    ============================================================ */
 .stageArea {
   position: relative;
-  /* the scene is the section: a full screen less the page header */
   height: clamp(560px, calc(100svh - 62px), 960px);
 }
 
@@ -113,12 +112,15 @@
 }
 
 .title {
-  font-size: var(--fs-h2);
+  /* a notch smaller than the section headings, and on one line: the title is
+     allowed to run out over the animation rather than wrap inside its column */
+  font-size: clamp(1.5rem, 1.1rem + 1.5vw, 2.25rem);
   font-weight: 600;
-  line-height: 1.05;
+  line-height: 1.1;
   letter-spacing: var(--tracking-tight);
   color: var(--sc-ink);
-  text-wrap: balance;
+  white-space: nowrap;
+  width: max-content;
 }
 
 .summary {
@@ -259,10 +261,28 @@
    Breakpoints
    ============================================================ */
 @media (min-width: 761px) {
-  /* the title, contributions and stack float over the scene: it must always be
-     tall enough to hold them, so they can never spill onto what follows */
+  /*
+   * The section is as tall as its copy needs, not a fixed screenful: the text
+   * block sits in the flow and the scene fills the same box behind it, so
+   * there is no empty band left over after a project.
+   */
+  .project {
+    min-height: 34rem;
+    padding-bottom: 0.5rem;
+  }
+
   .stageArea {
-    min-height: 50rem;
+    position: absolute;
+    inset: 0;
+    height: auto;
+    min-height: 0;
+  }
+
+  .titleBlock {
+    position: relative;
+    top: auto;
+    left: auto;
+    margin: clamp(1.25rem, 3svh, 2.25rem) 0 0 var(--sc-gutter);
   }
 }
 
@@ -291,6 +311,11 @@
 }
 
 @media (max-width: 999px) {
+  /* narrower screens: keep the longest title (ERSS) inside the viewport */
+  .title {
+    font-size: clamp(1.15rem, 3vw, 1.6rem);
+  }
+
   .titleBlock {
     max-width: min(27rem, 54%);
   }
@@ -320,8 +345,12 @@
     opacity: 1;
   }
 
+  /* on phones the title sits above the scene, so it wraps normally */
   .title {
     font-size: var(--fs-h3);
+    white-space: normal;
+    width: auto;
+    text-wrap: balance;
   }
 
   .summary {

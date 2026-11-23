@@ -116,6 +116,15 @@
   max-width: 20ch;
 }
 
+/* a title that stays on one line when there is room (it wraps on narrow screens) */
+@media (min-width: 900px) {
+  .titleOneLine {
+    width: max-content;
+    max-width: none;
+    white-space: nowrap;
+  }
+}
+
 .caption {
   margin-top: var(--sp-4);
   max-width: 54ch;
