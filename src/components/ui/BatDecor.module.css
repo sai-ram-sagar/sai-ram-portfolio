@@ -1,0 +1,213 @@
+@import "../../vars.css";
+
+/*
+ * Batman palette decorations: a chibi Batman hanging from a rope in the top-right corner.
+ * Only mounted for the Batman palette, above the page but below the modals, and never
+ * catching a click except on Batman himself.
+ */
+.root {
+  position: fixed;
+  inset: 0;
+  z-index: 150;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+/* ---------- Batman on his rope ---------- */
+.dangler {
+  /* figure width; the rope sits 10.2% in from the figure's left edge (it is part of the artwork) */
+  --fig: clamp(52px, 4.6vw, 72px);
+  position: absolute;
+  top: 0;
+  /* the figure itself (not its rope) ends this far from the right edge */
+  right: calc(clamp(1.4rem, 3.4vw, 4rem) + var(--fig) * 0.4);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  transform-origin: 50% 0;
+  animation: drop 20s ease-in-out 5s 1 both;
+}
+
+/* rope + Batman as one pendulum, slowly swaying about the top of the screen */
+.swinger {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  transform-origin: 50% 0;
+  animation: sway 7s ease-in-out infinite;
+}
+
+/* the rope from the artwork, repeated upwards so it runs off the top of the screen */
+.rope {
+  display: block;
+  width: calc(var(--fig) * 0.041);
+  height: 46vh;
+  background-repeat: repeat-y;
+  background-position: 50% 100%;
+  background-size: 100% auto;
+  /* the same light rim as Batman's, so the rope and his hands read as one rope */
+  filter: drop-shadow(0 0 0.7px rgba(160, 172, 205, 0.95)) drop-shadow(0 0 7px rgba(var(--accent-2-rgb), 0.5))
+    drop-shadow(0 3px 5px rgba(0, 0, 0, 0.4));
+}
+
+:global(html[data-theme="light"]) .rope {
+  filter: drop-shadow(0 3px 5px rgba(21, 26, 40, 0.3));
+}
+
+.figure {
+  position: relative;
+  /* slide the figure so that its rope lines up with the rope above it */
+  left: calc(var(--fig) * 0.398);
+  margin-top: -1px;
+  width: var(--fig);
+  /* a thin cool rim light so the black suit reads against a dark page */
+  filter: drop-shadow(0 0 0.7px rgba(160, 172, 205, 0.95)) drop-shadow(0 0 7px rgba(var(--accent-2-rgb), 0.5))
+    drop-shadow(0 3px 5px rgba(0, 0, 0, 0.4));
+  pointer-events: auto;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+
+:global(html[data-theme="light"]) .figure {
+  filter: drop-shadow(0 3px 5px rgba(21, 26, 40, 0.3));
+}
+
+.cutout {
+  position: relative;
+}
+
+.bodyImg {
+  position: relative;
+  display: block;
+  width: 100%;
+  height: auto;
+  user-select: none;
+}
+
+/* until his first click, a yellow glow around his outline pulses to say "click me" */
+.beckon {
+  animation: beckon 1.8s ease-in-out 7.5s infinite;
+}
+
+@keyframes beckon {
+  0%,
+  100% {
+    filter: drop-shadow(0 0 0.7px rgba(160, 172, 205, 0.95)) drop-shadow(0 0 7px rgba(var(--accent-2-rgb), 0.5))
+      drop-shadow(0 3px 5px rgba(0, 0, 0, 0.4)) drop-shadow(0 0 0 rgba(var(--accent-rgb), 0));
+  }
+  50% {
+    filter: drop-shadow(0 0 0.7px rgba(160, 172, 205, 0.95)) drop-shadow(0 0 7px rgba(var(--accent-2-rgb), 0.5))
+      drop-shadow(0 3px 5px rgba(0, 0, 0, 0.4)) drop-shadow(0 0 6px rgba(var(--accent-rgb), 0.7))
+      drop-shadow(0 0 13px rgba(var(--accent-rgb), 0.35));
+  }
+}
+
+/* what he says: always to the left of him, with the tail pointing at his rope */
+.bubble,
+.say {
+  position: absolute;
+  right: calc(100% - 2%);
+  top: 46%;
+  z-index: 3;
+  padding: 0.25rem 0.65rem;
+  border-radius: 10px;
+  background: var(--accent);
+  color: var(--on-accent);
+  font-family: var(--font-display);
+  font-size: 0.82rem;
+  font-weight: 700;
+  line-height: 1.2;
+  white-space: nowrap;
+  transform-origin: 100% 60%;
+}
+
+.bubble::after,
+.say::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  right: -4px;
+  width: 8px;
+  height: 8px;
+  margin-top: -4px;
+  transform: rotate(45deg);
+  background: inherit;
+  border-radius: 2px;
+}
+
+/* the greeting he shows by himself */
+.bubble {
+  opacity: 0;
+  animation: bubble 20s ease-in-out 5s 1 both;
+}
+
+/* what he says when clicked */
+.say {
+  animation: say-pop 0.3s cubic-bezier(0.2, 1.4, 0.4, 1) both;
+}
+
+@keyframes say-pop {
+  from {
+    opacity: 0;
+    transform: scale(0.6);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* rest above the screen, lower himself for a while, wait, then climb back up */
+@keyframes drop {
+  0%,
+  5% {
+    transform: translateY(-110%);
+  }
+  15%,
+  90% {
+    transform: translateY(-28vh);
+  }
+  100% {
+    transform: translateY(-110%);
+  }
+}
+
+@keyframes bubble {
+  0%,
+  15% {
+    opacity: 0;
+    transform: scale(0.6);
+  }
+  18%,
+  38% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  41%,
+  100% {
+    opacity: 0;
+    transform: scale(0.6);
+  }
+}
+
+/* slow, small sway: it eases in and out at both ends, like a real pendulum */
+@keyframes sway {
+  0%,
+  100% {
+    transform: rotate(-1.4deg);
+  }
+  50% {
+    transform: rotate(1.4deg);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .dangler {
+    display: none;
+  }
+
+  .swinger,
+  .bubble {
+    animation: none;
+  }
+}

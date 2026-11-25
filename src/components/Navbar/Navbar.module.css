@@ -162,6 +162,78 @@
   }
 }
 
+/* ------------------------------------------------------------
+   Batman palette: the same bar, with the Batmobile driving along its
+   leading edge as the page scrolls (it only shakes and glows while moving)
+   ------------------------------------------------------------ */
+.batmobile {
+  display: none;
+  position: absolute;
+  bottom: -1px;
+  left: clamp(24px, calc(var(--scroll-progress, 0) * 100%), calc(100% - 24px));
+  width: 48px;
+  height: 21px;
+  margin-left: -24px;
+  pointer-events: none;
+  opacity: 0;
+  filter: drop-shadow(0 0 5px rgba(var(--accent-rgb), 0.55));
+  transition: opacity var(--dur-3) var(--e-out);
+}
+
+:global(html[data-palette="batman"][data-scrolled]) .batmobile {
+  display: block;
+  opacity: 1;
+}
+
+:global(html[data-palette="batman"]) .progress {
+  height: 3px;
+}
+
+.batmobile img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  user-select: none;
+}
+
+/* a short streak of light behind it while it is driving */
+.batmobile::before {
+  content: "";
+  position: absolute;
+  right: 92%;
+  bottom: 3px;
+  width: 22px;
+  height: 3px;
+  border-radius: 3px;
+  background: linear-gradient(to left, rgba(var(--accent-rgb), 0.85), transparent);
+  opacity: 0;
+  transition: opacity var(--dur-2) var(--e-out);
+}
+
+.batmobile[data-moving]::before {
+  opacity: 1;
+}
+
+.batmobile[data-moving] img {
+  animation: rumble 0.22s ease-in-out infinite;
+}
+
+@keyframes rumble {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-0.8px);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .batmobile[data-moving] img {
+    animation: none;
+  }
+}
+
 /* ============================================================
    Brand
    ============================================================ */

@@ -117,7 +117,7 @@
 }
 
 /* a title that stays on one line when there is room (it wraps on narrow screens) */
-@media (min-width: 900px) {
+@media (min-width: 1100px) {
   .titleOneLine {
     width: max-content;
     max-width: none;
@@ -131,4 +131,13 @@
   font-size: var(--fs-lead);
   line-height: 1.55;
   color: var(--color-text-muted);
+}
+
+/* one line when the screen is wide enough (not in the two-column Contact header, which is too narrow) */
+@media (min-width: 1200px) {
+  .inner:not(.split) .caption {
+    width: max-content;
+    max-width: none;
+    white-space: nowrap;
+  }
 }

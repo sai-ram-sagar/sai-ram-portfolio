@@ -3,6 +3,7 @@ import { Menu, X, ArrowUpRight } from "lucide-react";
 import { useScrollSpy } from "../../hooks/useScrollSpy";
 import { ThemeToggle } from "../ui/ThemeToggle";
 import { PaletteMenu } from "../ui/PaletteMenu";
+import batmobileUrl from "/assets/batman/batmobile.webp?url";
 import styles from "./Navbar.module.css";
 
 const LINKS = [
@@ -31,16 +32,17 @@ export const Navbar = () => {
   const listRef = useRef(null);
   const activeId = useScrollSpy(SECTION_IDS);
   const crawlerRef = useRef(null);
+  const batmobileRef = useRef(null);
 
   /* the spider only crawls while the page is actually scrolling */
   useEffect(() => {
     let timer;
     const onScroll = () => {
-      const el = crawlerRef.current;
-      if (!el) return;
-      el.dataset.moving = "";
+      const els = [crawlerRef.current, batmobileRef.current].filter(Boolean);
+      if (!els.length) return;
+      els.forEach((el) => (el.dataset.moving = ""));
       clearTimeout(timer);
-      timer = setTimeout(() => delete el.dataset.moving, 180);
+      timer = setTimeout(() => els.forEach((el) => delete el.dataset.moving), 180);
     };
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => {
@@ -167,6 +169,11 @@ export const Navbar = () => {
             <circle className={styles.eye} cx="6.2" cy="-1.1" r="0.7" />
             <circle className={styles.eye} cx="6.2" cy="1.1" r="0.7" />
           </svg>
+        </span>
+
+        {/* Batman palette only: the Batmobile drives along the same bar as you scroll */}
+        <span className={styles.batmobile} ref={batmobileRef} aria-hidden="true">
+          <img src={batmobileUrl} alt="" draggable="false" />
         </span>
       </header>
 

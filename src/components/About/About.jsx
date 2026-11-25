@@ -19,7 +19,7 @@ export const About = () => (
     index="01"
     label="About"
     oneLineTitle
-    title="Software for the moments that can't wait."
+    title="Building software that helps people in emergencies."
     caption="I build web apps where every second counts - live dashboards, maps that move, and audio that becomes text as people speak."
   >
     <div className={styles.grid}>

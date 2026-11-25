@@ -18,6 +18,41 @@
   --sc-gutter: max(var(--page-pad), calc((100cqw - var(--page-max)) / 2 + var(--page-pad)));
 
   position: relative;
+  isolation: isolate;
+}
+
+/* one glow drifting down the whole showcase: the three projects share a single, unbroken background */
+.showcase::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background: linear-gradient(
+    180deg,
+    transparent 0%,
+    rgba(var(--accent-rgb), 0.07) 50%,
+    transparent 100%
+  );
+  background-size: 100% 42%;
+  background-repeat: no-repeat;
+  animation: showcaseGlow 14s ease-in-out infinite alternate;
+}
+
+@keyframes showcaseGlow {
+  from {
+    background-position: 0 -10%;
+  }
+  to {
+    background-position: 0 110%;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .showcase::before {
+    animation: none;
+    background-position: 0 50%;
+  }
 }
 
 .project {
@@ -25,8 +60,10 @@
   scroll-margin-top: var(--nav-h-compact);
 }
 
+/* the three projects run straight into one another: no gap, and no panel of their own, so the page's
+   animated glow is one continuous background behind all of them */
 .project + .project {
-  margin-top: clamp(0.5rem, 2vw, 1.5rem);
+  margin-top: 0;
 }
 
 /* ============================================================
@@ -50,15 +87,6 @@
   padding: 0 0 var(--sp-3);
   pointer-events: none;
   transition: opacity var(--dur-4) var(--e-out);
-}
-
-/* soft shade behind the copy keeps it legible over busy parts of the scene */
-.titleBlock::before {
-  content: "";
-  position: absolute;
-  inset: -3rem -5rem -4rem -5rem;
-  z-index: -1;
-  background: radial-gradient(ellipse closest-side at 50% 50%, color-mix(in srgb, var(--color-bg) 80%, transparent), transparent);
 }
 
 .project[data-active="false"] .titleBlock {
@@ -268,7 +296,7 @@
    */
   .project {
     min-height: 34rem;
-    padding-bottom: 0.5rem;
+    padding-bottom: 0;
   }
 
   .stageArea {
@@ -321,12 +349,8 @@
   }
 }
 
-/* phones: copy sits above the scene instead of over it, on its own dark panel */
+/* phones: copy sits above the scene instead of over it */
 @media (max-width: 760px) {
-  .project {
-    background: var(--color-bg);
-  }
-
   .titleBlock {
     padding-top: var(--sp-6);
     position: relative;
@@ -335,10 +359,6 @@
     max-width: none;
     padding-inline: var(--page-pad);
     padding-bottom: var(--sp-5);
-  }
-
-  .titleBlock::before {
-    display: none;
   }
 
   .project[data-active="false"] .titleBlock {

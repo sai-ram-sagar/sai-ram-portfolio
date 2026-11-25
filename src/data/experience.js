@@ -9,16 +9,20 @@ export const experience = [
     role: "Software Developer",
     period: "May 2024 - Present",
     location: "Hyderabad, India",
-    context: "Emergency Response Support System (ERSS) for Telangana Police",
+    /* the three projects worked on, shown as cards under the role */
+    projects: [
+      { id: "erss", name: "Emergency Response Support System (ERSS)", note: "for Telangana Police" },
+      { id: "dfr", name: "Drone as First Responder", note: "drone mission planning" },
+      { id: "stt", name: "Real-Time Speech-to-Text System", note: "PBX to STT bridge" },
+    ],
+    /* a few clear points covering all three projects together */
     highlights: [
-      "Built real-time CAD workflows in React.js for SOS alerts, emergency calls and live incidents, used by up to 50 dispatch operators.",
-      "Developed a Speech-to-Text pipeline (telephony audio → VAD → WebSocket → STT → Pusher → CAD UI) that shows live call transcripts in under 1 second.",
-      "Built live vehicle tracking and police-station geofencing on Leaflet across 700+ stations, with 100-200 active complaints kept visible using zoom-based rendering and tile caching.",
-      "Replaced page refreshes with Pusher/WebSocket events for alerts, vehicle positions and transcripts.",
-      "Built the shared React component layer (tables, modals, popups, state patterns) reused across 50+ modules.",
-      "Cut duplicated code into shared utilities, guided by SonarQube findings.",
-      "Fixed production issues (map render crashes, dropped WebSockets, API timeouts) using Bugsnag and PM2.",
-      "Used AI-assisted and CLI workflows to speed up delivery while owning code quality.",
+      "Built the real-time dispatch screens in React.js that up to 50 operators use to handle emergency calls, SOS alerts and live incidents.",
+      "Built live maps that track police vehicles and station boundaries across 700+ stations, keeping 100-200 active complaints on screen without slowing down.",
+      "Developed a speech-to-text pipeline that shows a caller's words on the operator's screen as a live transcript in under 1 second.",
+      "Built the Flight Hub for the drone project, where operators plan a drone's route through any number of waypoints, and helped shape mission planning and dispatch.",
+      "Replaced page refreshes with live updates (Pusher/WebSocket), so alerts, vehicle positions and transcripts appear instantly.",
+      "Built the shared React components reused across 50+ modules, and fixed production issues such as map crashes, dropped connections and slow APIs.",
     ],
     stack: [
       "React.js",

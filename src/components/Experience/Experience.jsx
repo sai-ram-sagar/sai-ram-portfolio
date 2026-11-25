@@ -38,15 +38,20 @@ export const Experience = () => {
                 <MapPin size={13} strokeWidth={1.7} aria-hidden="true" />
                 {role.location}
               </p>
-              {role.context && (
-                <p
-                  className={styles.context}
-                  data-reveal="fade"
-                  style={{ "--reveal-delay": "190ms" }}
-                >
-                  {role.context}
-                </p>
-              )}
+              <ul className={styles.projectCards} aria-label="Projects">
+                {role.projects.map((project, i) => (
+                  <li
+                    key={project.id}
+                    data-reveal="fade"
+                    style={{ "--reveal-delay": `${190 + i * 70}ms` }}
+                  >
+                    <a className={styles.projectCard} href="#projects">
+                      <span className={styles.projectName}>{project.name}</span>
+                      <span className={styles.projectNote}>{project.note}</span>
+                    </a>
+                  </li>
+                ))}
+              </ul>
             </header>
 
             <div className={styles.body}>

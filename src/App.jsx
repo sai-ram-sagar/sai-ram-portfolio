@@ -10,6 +10,7 @@ import { Education } from "./components/Education/Education";
 import { Contact } from "./components/Contact/Contact";
 import { Footer } from "./components/Footer/Footer";
 import { SpiderDecor } from "./components/ui/SpiderDecor";
+import { BatDecor } from "./components/ui/BatDecor";
 import { NameIntro } from "./components/ui/NameIntro";
 import { useScrollReveal } from "./hooks/useScrollReveal";
 import { usePageScroll } from "./hooks/usePageScroll";
@@ -25,6 +26,7 @@ function App() {
       </a>
       <Background />
       <SpiderDecor />
+      <BatDecor />
       <NameIntro />
       <Navbar />
       <main className={styles.main}>

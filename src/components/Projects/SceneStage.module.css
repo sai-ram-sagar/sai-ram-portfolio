@@ -91,6 +91,12 @@
   display: none;
 }
 
+/* the shimmer is per-frame furniture: in the full-height showcases one continuous glow runs behind all
+   three projects instead (see ProjectShowcase), so there is no separate glowing panel per scene */
+.stage.immersive .skeleton {
+  display: none;
+}
+
 /* a quiet cue that the scene can be turned; the canvas itself shows a grab cursor */
 .hint {
   position: absolute;

@@ -26,6 +26,11 @@ export const PALETTES = [
     label: "Spider-Man",
     swatch: ["#050507", "#ff3b44"],
   },
+  {
+    id: "batman",
+    label: "Batman",
+    swatch: ["#0b0d12", "#f6cb12"],
+  },
 ];
 
 export const isPalette = (id) => PALETTES.some((palette) => palette.id === id);

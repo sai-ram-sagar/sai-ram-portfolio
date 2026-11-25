@@ -24,7 +24,7 @@
         try {
           var palette = localStorage.getItem("palette");
           /* only the palettes still offered; anything else (or nothing saved) gets Spider-Man, the default */
-          if (palette !== "classic" && palette !== "violet" && palette !== "spiderman") palette = "spiderman";
+          if (["classic", "violet", "spiderman", "batman"].indexOf(palette) < 0) palette = "spiderman";
           document.documentElement.dataset.palette = palette;
           /* the opening animation starts from an empty screen: keep the page hidden from the first
              paint (NameIntro clears this as soon as it takes over, or after 4 seconds at most) */
@@ -58,6 +58,14 @@
         background: #000 !important;
       }
       html[data-boot][data-palette="spiderman"] #boot {
+        opacity: 0 !important;
+      }
+      /* Batman opens on Gotham night for the same reason */
+      html[data-boot][data-palette="batman"],
+      html[data-boot][data-palette="batman"] body {
+        background: #05060a !important;
+      }
+      html[data-boot][data-palette="batman"] #boot {
         opacity: 0 !important;
       }
       /* self-contained: this has to render before the stylesheet is parsed */

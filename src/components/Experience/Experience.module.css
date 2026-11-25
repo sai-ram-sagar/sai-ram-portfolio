@@ -130,15 +130,43 @@
   color: var(--color-text-dim);
 }
 
-.context {
+/* the three projects, as small cards under the role */
+.projectCards {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-2);
   margin-top: var(--sp-3);
-  padding: 0.4rem 0.7rem;
+}
+
+.projectCard {
+  display: flex;
+  flex-direction: column;
+  gap: 0.1rem;
+  padding: 0.5rem 0.75rem;
   border-radius: var(--r-sm);
   border: 1px solid var(--line-1);
   border-left: 2px solid rgba(var(--accent-2-rgb), 0.5);
   background: var(--glass-1);
   box-shadow: var(--inner-top);
+  transition:
+    border-color var(--dur-2) var(--e-out),
+    background-color var(--dur-2) var(--e-out);
+}
+
+.projectCard:hover {
+  border-color: rgba(var(--accent-rgb), 0.4);
+  border-left-color: var(--accent);
+  background: var(--glass-2);
+}
+
+.projectName {
   font-size: var(--fs-body-sm);
+  font-weight: 500;
+  color: var(--color-text-strong);
+}
+
+.projectNote {
+  font-size: 0.78rem;
   color: var(--color-text-muted);
 }
 

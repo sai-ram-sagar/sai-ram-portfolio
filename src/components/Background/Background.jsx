@@ -1,3 +1,4 @@
+import { GothamSkyline } from "./GothamSkyline";
 import styles from "./Background.module.css";
 
 /**
@@ -16,6 +17,7 @@ export const Background = () => (
     <div className={styles.auroraTop} />
     <div className={styles.auroraMid} />
     <div className={styles.auroraLow} />
+    <GothamSkyline />
     <div className={styles.grain} />
     <div className={styles.vignette} />
   </div>

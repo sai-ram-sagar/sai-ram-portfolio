@@ -624,3 +624,79 @@
   --shadow-lg: 0 30px 72px -30px rgba(12, 14, 20, 0.3);
 }
 
+/* batman - Gotham night: near-black with navy surfaces and a Bat-signal yellow; warm paper for light mode */
+[data-palette="batman"][data-theme="dark"] {
+  color-scheme: dark;
+  --color-bg: #0b0d12;
+  --color-bg-deep: #05060a;
+  --color-surface-1: #11141b;
+  --color-surface-2: #181c26;
+  --color-surface-3: #202636;
+  --color-edge: #2c3347;
+  --glass-1: rgba(232, 236, 248, 0.028);
+  --glass-2: rgba(232, 236, 248, 0.05);
+  --glass-3: rgba(232, 236, 248, 0.078);
+  --inner-top: inset 0 1px 0 rgba(232, 236, 248, 0.06);
+  --line-1: rgba(232, 236, 248, 0.08);
+  --line-2: rgba(232, 236, 248, 0.13);
+  --line-3: rgba(232, 236, 248, 0.2);
+  --accent: #f6cb12;
+  --accent-soft: #ffe76a;
+  --accent-deep: #988829;
+  --accent-2: #515c7c;
+  --accent-2-soft: #8f9bbd;
+  --accent-rgb: 246, 203, 18;
+  --accent-2-rgb: 81, 92, 124;
+  --signal: #f6cb12;
+  --signal-rgb: 246, 203, 18;
+  --on-accent: #0b0d12;
+  --color-text-strong: #f6f3e6;
+  --color-text: #e9e7dd;
+  --color-text-muted: #9a9ca6;
+  --color-text-dim: #666a78;
+  --nav-glass: rgba(11, 13, 18, 0.76);
+  --panel-bg: rgba(5, 6, 10, 0.96);
+  --scrim: rgba(3, 4, 7, 0.88);
+  --backdrop-top: #141824;
+  --grid-line: rgba(232, 236, 248, 0.04);
+  --vignette: rgba(0, 0, 0, 0.62);
+}
+
+[data-palette="batman"][data-theme="light"] {
+  color-scheme: light;
+  --color-bg: #f7f5ea;
+  --color-bg-deep: #ebe8d6;
+  --color-surface-1: #fffef8;
+  --color-surface-2: #fffffa;
+  --color-surface-3: #fffef8;
+  --color-edge: #dcd7bd;
+  --glass-1: rgba(21, 26, 40, 0.03);
+  --glass-2: rgba(21, 26, 40, 0.052);
+  --glass-3: rgba(21, 26, 40, 0.082);
+  --line-1: rgba(21, 26, 40, 0.1);
+  --line-2: rgba(21, 26, 40, 0.16);
+  --line-3: rgba(21, 26, 40, 0.26);
+  --accent: #a67c00;
+  --accent-soft: #7d5d00;
+  --accent-deep: #5c4400;
+  --accent-2: #3b4766;
+  --accent-2-soft: #5a678c;
+  --accent-rgb: 166, 124, 0;
+  --accent-2-rgb: 59, 71, 102;
+  --signal: #a67c00;
+  --signal-rgb: 166, 124, 0;
+  --on-accent: #fffef6;
+  --color-text-strong: #151a28;
+  --color-text: #1c2234;
+  --color-text-muted: #5a5f70;
+  --color-text-dim: #8a8d99;
+  --nav-glass: rgba(247, 245, 234, 0.82);
+  --panel-bg: rgba(247, 245, 234, 0.97);
+  --scrim: rgba(21, 26, 40, 0.55);
+  --backdrop-top: #fffef8;
+  --grid-line: rgba(21, 26, 40, 0.05);
+  --vignette: rgba(21, 26, 40, 0.07);
+  --shadow-sm: 0 1px 2px rgba(21, 26, 40, 0.07);
+  --shadow-md: 0 14px 34px -16px rgba(21, 26, 40, 0.22);
+  --shadow-lg: 0 30px 72px -30px rgba(21, 26, 40, 0.3);
+}
