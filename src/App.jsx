@@ -11,6 +11,7 @@ import { Contact } from "./components/Contact/Contact";
 import { Footer } from "./components/Footer/Footer";
 import { SpiderDecor } from "./components/ui/SpiderDecor";
 import { BatDecor } from "./components/ui/BatDecor";
+import { BatPeek } from "./components/ui/BatPeek";
 import { NameIntro } from "./components/ui/NameIntro";
 import { useScrollReveal } from "./hooks/useScrollReveal";
 import { usePageScroll } from "./hooks/usePageScroll";
@@ -27,6 +28,7 @@ function App() {
       <Background />
       <SpiderDecor />
       <BatDecor />
+      <BatPeek />
       <NameIntro />
       <Navbar />
       <main className={styles.main}>

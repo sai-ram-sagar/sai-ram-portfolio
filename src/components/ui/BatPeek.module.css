@@ -1,0 +1,77 @@
+/* Batman peeking over the bottom edge: head tilts and irises slide toward the cursor. */
+.root {
+  --dx: 0;
+  --dy: 0;
+  position: fixed;
+  right: clamp(0.75rem, 4vw, 4rem);
+  /* sits on the phone tab bar when there is one */
+  bottom: calc(var(--tabbar-h, 0px) + env(safe-area-inset-bottom, 0px));
+  z-index: 40;
+  width: clamp(92px, 9vw, 150px);
+  container-type: inline-size;
+  pointer-events: none;
+  user-select: none;
+  /* hidden below the edge until he rises, then only the top of him shows */
+  transform: translateY(104%);
+  transition: transform 900ms cubic-bezier(0.22, 1.2, 0.36, 1);
+}
+
+.root[data-shown="true"] {
+  transform: translateY(24%);
+}
+
+/* the cursor is close: he cranes up for a better look */
+.root[data-shown="true"][data-near="true"] {
+  transform: translateY(12%);
+  transition-duration: 380ms;
+}
+
+.head {
+  position: relative;
+  transform-origin: 50% 100%;
+  transform: translateX(calc(var(--dx) * 1.4cqw)) rotate(calc(var(--dx) * 4deg));
+  transition: transform 260ms ease-out;
+  filter: drop-shadow(0 0 10px rgba(var(--accent-rgb), 0.35));
+}
+
+.body,
+.iris {
+  display: block;
+  -webkit-user-drag: none;
+}
+
+.body {
+  width: 100%;
+  height: auto;
+}
+
+/* each socket is the eye's own shape, so the iris can never leave it */
+.socket {
+  position: absolute;
+  inset: 0;
+  -webkit-mask-size: 100% 100%;
+  mask-size: 100% 100%;
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+}
+
+.iris {
+  position: absolute;
+  height: auto;
+  transform: translate(calc(var(--dx) * 3.2cqw), calc(var(--dy) * 2.6cqw));
+  transition: transform 140ms ease-out;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .root,
+  .head,
+  .iris {
+    transition: none;
+  }
+}
+
+@media print {
+  .root {
+    display: none;
+  }
+}

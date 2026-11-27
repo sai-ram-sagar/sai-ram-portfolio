@@ -22,8 +22,7 @@
     backdrop-filter var(--dur-3) var(--e-out);
 }
 
-:global(html[data-scrolled]) .header,
-.solid {
+:global(html[data-scrolled]) .header {
   background-color: var(--nav-glass);
   border-bottom-color: var(--line-1);
   backdrop-filter: blur(18px) saturate(165%);
@@ -494,123 +493,96 @@
   transform: translateY(0) scale(0.985);
 }
 
-.menuBtn {
+/* ============================================================
+   Bottom tab bar - below the desktop breakpoint
+   ============================================================ */
+.tabbar {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: var(--z-nav);
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+  background-color: var(--nav-glass);
+  border-top: 1px solid var(--line-1);
+  backdrop-filter: blur(18px) saturate(165%);
+  -webkit-backdrop-filter: blur(18px) saturate(165%);
+}
+
+.tabs {
+  display: flex;
+  align-items: stretch;
+  justify-content: space-around;
+  height: var(--tabbar-h);
+  max-width: 34rem;
+  margin-inline: auto;
+}
+
+.tabs li {
+  flex: 1;
+  display: flex;
+}
+
+.tab {
+  position: relative;
+  flex: 1;
   display: grid;
   place-items: center;
-  width: 38px;
-  height: 38px;
-  border-radius: var(--r-sm);
-  color: var(--color-text);
-  border: 1px solid var(--line-1);
-  background: var(--glass-1);
-  box-shadow: var(--inner-top);
+  color: var(--color-text-muted);
+  -webkit-tap-highlight-color: transparent;
   transition:
-    border-color var(--dur-2) var(--e-out),
     color var(--dur-2) var(--e-out),
     transform var(--dur-1) var(--e-out);
 }
 
-.menuBtn:hover {
-  border-color: var(--line-3);
-  color: var(--color-text-strong);
+.tab svg {
+  transition: transform var(--dur-3) var(--e-out);
 }
 
-.menuBtn:active {
-  transform: scale(0.94);
+.tab:active {
+  transform: scale(0.88);
 }
 
-/* ============================================================
-   Mobile panel
-   ============================================================ */
-.panel {
-  position: fixed;
-  inset: var(--nav-h) 0 0;
-  z-index: var(--z-panel);
-  overflow-y: auto;
-  padding: clamp(1.75rem, 7vw, 3rem) var(--page-pad) clamp(2rem, 8vw, 4rem);
-  background: var(--panel-bg);
-  backdrop-filter: blur(24px);
-  -webkit-backdrop-filter: blur(24px);
-  border-top: 1px solid var(--line-1);
-  opacity: 0;
-  transition: opacity var(--dur-3) var(--e-out);
+/* the current section: accent icon, lifted slightly, with a small marker on the top edge */
+.tab[data-active="true"] {
+  color: var(--accent);
 }
 
-.panelOpen {
-  opacity: 1;
+.tab[data-active="true"] svg {
+  transform: translateY(-1px) scale(1.08);
 }
 
-.panelLinks {
-  display: flex;
-  flex-direction: column;
+.tab::before {
+  content: "";
+  position: absolute;
+  top: -1px;
+  left: 50%;
+  width: 22px;
+  height: 2px;
+  border-radius: 0 0 2px 2px;
+  background: var(--accent);
+  transform: translateX(-50%) scaleX(0);
+  transition: transform var(--dur-3) var(--e-out);
 }
 
-.panelLinks li {
-  opacity: 0;
-  transform: translateY(16px);
+.tab[data-active="true"]::before {
+  transform: translateX(-50%) scaleX(1);
 }
 
-.panelOpen .panelLinks li {
-  animation: panelIn var(--dur-4) var(--e-entrance) forwards;
-  animation-delay: calc(55ms * var(--i));
+.tab:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: -4px;
+  border-radius: var(--r-sm);
 }
 
-.panelLinks a {
-  display: flex;
-  align-items: center;
-  gap: var(--sp-4);
-  padding: 0.9rem 0.15rem;
-  border-bottom: 1px solid var(--line-1);
-  font-family: var(--font-display);
-  font-size: clamp(1.7rem, 1.1rem + 3.2vw, 2.5rem);
-  font-weight: 500;
-  letter-spacing: var(--tracking-tight);
-  color: var(--color-text-muted);
-  transition:
-    color var(--dur-2) var(--e-out),
-    padding-left var(--dur-3) var(--e-out);
-}
+/* keep the end of the page clear of the bar */
+@media (max-width: 919px) {
+  :global(:root) {
+    --tabbar-h: 58px;
+  }
 
-.panelLinks a:hover,
-.panelLinks a:focus-visible,
-.panelLinks a[aria-current] {
-  color: var(--color-text-strong);
-  padding-left: 0.6rem;
-}
-
-.panelLabel {
-  flex: 1;
-  min-width: 0;
-}
-
-.panelIndex {
-  font-family: var(--font-mono);
-  font-size: var(--fs-eyebrow);
-  letter-spacing: var(--tracking-eyebrow);
-  color: var(--accent-soft);
-}
-
-.panelArrow {
-  flex-shrink: 0;
-  opacity: 0;
-  color: var(--accent-soft);
-  transform: translateX(-6px);
-  transition:
-    opacity var(--dur-2) var(--e-out),
-    transform var(--dur-2) var(--e-out);
-}
-
-.panelLinks a:hover .panelArrow,
-.panelLinks a:focus-visible .panelArrow,
-.panelLinks a[aria-current] .panelArrow {
-  opacity: 1;
-  transform: none;
-}
-
-@keyframes panelIn {
-  to {
-    opacity: 1;
-    transform: none;
+  :global(body) {
+    padding-bottom: calc(var(--tabbar-h) + env(safe-area-inset-bottom, 0px));
   }
 }
 
@@ -626,8 +598,7 @@
     display: inline-flex;
   }
 
-  .menuBtn,
-  .panel {
+  .tabbar {
     display: none;
   }
 }
@@ -639,11 +610,6 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .panelLinks li {
-    opacity: 1;
-    transform: none;
-  }
-
   .ctaSweep {
     display: none;
   }

@@ -1,5 +1,5 @@
-import { useCallback, useEffect, useLayoutEffect, useRef, useState } from "react";
-import { Menu, X, ArrowUpRight } from "lucide-react";
+import { useCallback, useEffect, useLayoutEffect, useRef } from "react";
+import { ArrowUpRight, Briefcase, House, LayoutGrid, Mail, Sparkles, User } from "lucide-react";
 import { useScrollSpy } from "../../hooks/useScrollSpy";
 import { ThemeToggle } from "../ui/ThemeToggle";
 import { PaletteMenu } from "../ui/PaletteMenu";
@@ -7,11 +7,11 @@ import batmobileUrl from "/assets/batman/batmobile.webp?url";
 import styles from "./Navbar.module.css";
 
 const LINKS = [
-  { id: "about", label: "About" },
-  { id: "experience", label: "Experience" },
-  { id: "projects", label: "Projects" },
-  { id: "skills", label: "Skills" },
-  { id: "contact", label: "Contact" },
+  { id: "about", label: "About", Icon: User },
+  { id: "experience", label: "Experience", Icon: Briefcase },
+  { id: "projects", label: "Projects", Icon: LayoutGrid },
+  { id: "skills", label: "Skills", Icon: Sparkles },
+  { id: "contact", label: "Contact", Icon: Mail },
 ];
 
 const SECTION_IDS = LINKS.map((link) => link.id);
@@ -27,8 +27,6 @@ const LEGS = [-1, 1].flatMap((side) =>
 );
 
 export const Navbar = () => {
-  const [menuOpen, setMenuOpen] = useState(false);
-  const menuBtn = useRef(null);
   const listRef = useRef(null);
   const activeId = useScrollSpy(SECTION_IDS);
   const crawlerRef = useRef(null);
@@ -80,26 +78,9 @@ export const Navbar = () => {
     return () => window.removeEventListener("resize", positionPill);
   }, [positionPill]);
 
-  /* lock the page and close on Escape while the mobile panel is open */
-  useEffect(() => {
-    if (!menuOpen) return;
-    const onKeyDown = (event) => {
-      if (event.key === "Escape") {
-        setMenuOpen(false);
-        menuBtn.current?.focus();
-      }
-    };
-    document.body.style.overflow = "hidden";
-    window.addEventListener("keydown", onKeyDown);
-    return () => {
-      document.body.style.overflow = "";
-      window.removeEventListener("keydown", onKeyDown);
-    };
-  }, [menuOpen]);
-
   return (
     <>
-      <header className={`${styles.header} ${menuOpen ? styles.solid : ""}`}>
+      <header className={styles.header}>
         <nav className={styles.nav} aria-label="Primary">
           {/* the left cell is as wide as the buttons on the right, which keeps the menu centred */}
           <div className={styles.balance}>
@@ -133,17 +114,6 @@ export const Navbar = () => {
             <PaletteMenu />
             <ThemeToggle />
 
-            <button
-              ref={menuBtn}
-              type="button"
-              className={styles.menuBtn}
-              aria-expanded={menuOpen}
-              aria-controls="mobile-menu"
-              aria-label={menuOpen ? "Close menu" : "Open menu"}
-              onClick={() => setMenuOpen((open) => !open)}
-            >
-              {menuOpen ? <X size={19} aria-hidden="true" /> : <Menu size={19} aria-hidden="true" />}
-            </button>
           </div>
         </nav>
 
@@ -178,27 +148,33 @@ export const Navbar = () => {
       </header>
 
       {/*
-        Deliberately a sibling of <header>: the header's backdrop-filter makes
-        it a containing block for fixed children, which would clamp this panel
-        to the height of the bar instead of the viewport.
+        Phones and tablets: the sections live in a tab bar along the bottom edge, icons only,
+        like a social app. A sibling of <header> so the header's backdrop-filter cannot become
+        its containing block.
       */}
-      <nav
-        id="mobile-menu"
-        aria-label="Mobile"
-        className={`${styles.panel} ${menuOpen ? styles.panelOpen : ""}`}
-        hidden={!menuOpen}
-      >
-        <ul className={styles.panelLinks}>
-          {LINKS.map((link, index) => (
-            <li key={link.id} style={{ "--i": index }}>
+      <nav className={styles.tabbar} aria-label="Sections">
+        <ul className={styles.tabs}>
+          <li>
+            <a
+              href="#top"
+              className={styles.tab}
+              data-active={activeId === ""}
+              aria-label="Home"
+              aria-current={activeId === "" ? "true" : undefined}
+            >
+              <House size={22} strokeWidth={1.9} aria-hidden="true" />
+            </a>
+          </li>
+          {LINKS.map(({ id, label, Icon }) => (
+            <li key={id}>
               <a
-                href={`#${link.id}`}
-                onClick={() => setMenuOpen(false)}
-                aria-current={activeId === link.id ? "true" : undefined}
+                href={`#${id}`}
+                className={styles.tab}
+                data-active={activeId === id}
+                aria-label={label}
+                aria-current={activeId === id ? "true" : undefined}
               >
-                <span className={styles.panelIndex}>{String(index + 1).padStart(2, "0")}</span>
-                <span className={styles.panelLabel}>{link.label}</span>
-                <ArrowUpRight className={styles.panelArrow} size={18} aria-hidden="true" />
+                <Icon size={22} strokeWidth={1.9} aria-hidden="true" />
               </a>
             </li>
           ))}

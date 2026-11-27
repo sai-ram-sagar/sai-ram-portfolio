@@ -1,4 +1,6 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
+import { flushSync } from "react-dom";
+import { transitionPalette } from "../utils/paletteTransition";
 import { DEFAULT_PALETTE, isPalette } from "../data/palettes";
 
 const STORAGE_KEY = "palette";
@@ -42,9 +44,21 @@ export const usePalette = () => {
     }
   }, [palette]);
 
-  const setPalette = useCallback((next) => {
-    if (!isPalette(next)) return;
-    setPaletteState(next);
+  const current = useRef(palette);
+  current.current = palette;
+
+  /* `origin` is the screen point the choice was made at; the change plays out from it */
+  const setPalette = useCallback((next, origin) => {
+    if (!isPalette(next) || next === current.current) return;
+    transitionPalette(
+      next,
+      () => {
+        /* written here as well as in the effect: a view transition must see the finished DOM */
+        document.documentElement.dataset.palette = next;
+        flushSync(() => setPaletteState(next));
+      },
+      origin
+    );
     try {
       localStorage.setItem(STORAGE_KEY, next);
     } catch {

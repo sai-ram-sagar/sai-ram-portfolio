@@ -84,6 +84,7 @@ export const SpiderDecor = () => {
   const [say, setSay] = useState(null);
   const [touched, setTouched] = useState(false);
   const clicks = useRef(0);
+  const funLine = useRef(0);
   const leaving = useRef(false);
   const mountedAt = useRef(0);
   const leaveAt = useRef(LEAVE_AT); // ms after mount at which he leaves
@@ -145,7 +146,7 @@ export const SpiderDecor = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  // Click 1: he points at the projects and scrolls there. Later clicks: a friendly line. Each click keeps him 5 s longer; he only leaves when the
+  // A click takes you to the projects if you are not there already; once you are, he says a friendly line. Each click keeps him 5 s longer; he only leaves when the
   // time is up (always with "Whee!").
   const onPlay = () => {
     const el = root.current;
@@ -156,17 +157,23 @@ export const SpiderDecor = () => {
     findAnim(el, "drop")?.pause();
     ["wave", "bubble"].forEach((k) => findAnim(el, k)?.cancel());
 
-    const step = clicks.current;
     clicks.current += 1;
 
-    if (step === 0) {
+    // Not on the projects yet: point there and go. Already there: say one of the friendly lines.
+    const projects = document.getElementById("projects");
+    const box = projects?.getBoundingClientRect();
+    const inProjects =
+      !!box && box.top < window.innerHeight * 0.6 && box.bottom > window.innerHeight * 0.4;
+
+    if (projects && !inProjects) {
       speak("Let's see his projects, they are interesting!");
       wave();
       setTimeout(() => {
-        document.getElementById("projects")?.scrollIntoView({ behavior: "smooth", block: "start" });
+        projects.scrollIntoView({ behavior: "smooth", block: "start" });
       }, 600);
     } else {
-      speak(FUN_LINES[(step - 1) % FUN_LINES.length]);
+      speak(FUN_LINES[funLine.current % FUN_LINES.length]);
+      funLine.current += 1;
       wave();
     }
 

@@ -18,6 +18,9 @@ html {
   scrollbar-gutter: stable;
   scroll-padding-top: calc(var(--nav-h-compact) + var(--sp-6));
   -webkit-text-size-adjust: 100%;
+  /* nothing may widen the page: on phones an element nudged off-screen by a scroll reveal would
+     otherwise stretch the layout viewport and push fixed UI (tab bar, dock) off the edge */
+  overflow-x: clip;
 }
 
 body {
@@ -309,6 +312,29 @@ html[data-reveal-active] [data-revealed] {
   mask-repeat: no-repeat;
   -webkit-mask-size: 0 0;
   mask-size: 0 0;
+}
+
+/* ============================================================
+   Palette change - themed flourish (see utils/paletteTransition)
+
+   The flourish has its own view-transition name so it paints above
+   the circular reveal; the UA's default fade/morph is switched off
+   so it plays exactly as authored.
+   ============================================================ */
+.palette-fx {
+  position: fixed;
+  inset: 0;
+  z-index: 2147483647;
+  pointer-events: none;
+  overflow: hidden;
+  view-transition-name: palette-fx;
+}
+
+::view-transition-group(palette-fx),
+::view-transition-old(palette-fx),
+::view-transition-new(palette-fx) {
+  animation: none;
+  mix-blend-mode: normal;
 }
 
 /* ============================================================

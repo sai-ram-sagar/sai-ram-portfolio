@@ -56,7 +56,8 @@ export const PaletteMenu = () => {
   };
 
   const choose = (id) => {
-    setPalette(id);
+    const rect = buttonRef.current?.getBoundingClientRect();
+    setPalette(id, rect && { x: rect.left + rect.width / 2, y: rect.top + rect.height / 2 });
     setOpen(false);
     buttonRef.current?.focus();
   };
