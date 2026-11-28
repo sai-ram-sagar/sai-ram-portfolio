@@ -360,6 +360,58 @@
   }
 }
 
+/*
+ * The centred card of the ring is the one pulled, on every device; touch
+ * has no hover to do it. Phones also get a thumb-sized link.
+ */
+.folder {
+  --sheet-h: 190px;
+}
+
+@media (max-width: 759px) {
+  .link {
+    width: 44px;
+    height: 44px;
+  }
+
+  .folder:active .front {
+    transform: scale(0.985);
+  }
+}
+
+.folder[data-active="true"] .pocket {
+  box-shadow: var(--shadow-lg);
+}
+
+.folder[data-active="true"] .sheet {
+  transform: translateY(-22px) rotate(-1.4deg);
+}
+
+.folder[data-active="true"] .paper {
+  transform: translateY(-10px) rotate(4deg);
+}
+
+.folder[data-active="true"] .front {
+  transform: rotateX(-7deg);
+}
+
+.folder[data-active="true"] .stamp {
+  opacity: 0.95;
+  transform: rotate(-12deg) scale(1);
+  transition-delay: 0.12s;
+}
+
+.folder[data-active="true"] .tabIndex {
+  color: var(--accent-soft);
+}
+
+.folder[data-active="true"] .link {
+  transform: rotate(45deg);
+  color: var(--on-accent);
+  border-color: transparent;
+  background: var(--gradient-accent);
+}
+
 @media (prefers-reduced-motion: reduce) {
   .sheet,
   .paper,
@@ -382,33 +434,16 @@
   .folder:hover .front,
   .folder:focus-within .front,
   .folder:hover .image,
-  .folder:hover .link {
+  .folder:hover .link,
+  .folder[data-active="true"] .sheet,
+  .folder[data-active="true"] .paper,
+  .folder[data-active="true"] .front,
+  .folder[data-active="true"] .link {
     transform: none;
   }
 
   .folder:hover .stamp,
   .folder:focus-within .stamp {
     transform: rotate(-12deg);
-  }
-}
-
-/* four to a row: a more compact folder - shorter capture, tighter pocket */
-@media (min-width: 1200px) {
-  .folder {
-    --sheet-h: 148px;
-    --tuck: 58px;
-  }
-
-  .front {
-    padding: 0.95rem 0.9rem 0.8rem;
-  }
-
-  .title {
-    font-size: 1rem;
-  }
-
-  .description {
-    font-size: 0.82rem;
-    line-height: 1.5;
   }
 }

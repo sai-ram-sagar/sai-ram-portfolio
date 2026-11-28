@@ -1,0 +1,111 @@
+/* Spider-Man peeking round the right edge: head leans and the white lenses slide toward the cursor. */
+.root {
+  --dx: 0;
+  --dy: 0;
+  position: fixed;
+  right: 0;
+  /* his body runs down the edge and out of the bottom of the screen (or behind the phone tab bar) */
+  bottom: calc(var(--tabbar-h, 0px) + env(safe-area-inset-bottom, 0px));
+  z-index: 40;
+  width: clamp(48px, 4.5vw, 75px);
+  container-type: inline-size;
+  pointer-events: none;
+  user-select: none;
+  /* tucked behind the edge until he leans out */
+  transform: translateX(104%);
+  transition: transform 900ms cubic-bezier(0.22, 1.2, 0.36, 1);
+}
+
+.root[data-shown="true"] {
+  transform: translateX(4%);
+}
+
+/* the cursor is close: he leans further out for a better look */
+.root[data-shown="true"][data-near="true"] {
+  transform: translateX(-2%);
+  transition-duration: 380ms;
+}
+
+/*
+ * The picture is split just below the chin: the body is the part under the
+ * line and never moves; the head is the part above it (with a sliver of neck
+ * overlapping) and pivots on that line, so nothing at the join shifts.
+ */
+.root {
+  filter: drop-shadow(0 0 10px rgba(var(--accent-rgb), 0.4));
+}
+
+.body {
+  display: block;
+  width: 100%;
+  height: auto;
+  clip-path: inset(72.8% 0 0 0);
+  -webkit-user-drag: none;
+}
+
+.head {
+  position: absolute;
+  inset: 0;
+  transform-origin: 85% 75%;
+  transform: translate(calc(var(--dx) * 1.6cqw), calc(var(--dy) * 1.2cqw)) rotate(calc(var(--dx) * 4deg));
+  transition: transform 260ms ease-out;
+}
+
+.headImg {
+  display: block;
+  width: 100%;
+  height: auto;
+  clip-path: inset(0 0 24.8% 0);
+  -webkit-user-drag: none;
+}
+
+/* the socket shape; the lenses inside cannot escape it */
+.socket {
+  position: absolute;
+  inset: 0;
+  -webkit-mask-size: 100% 100%;
+  mask-size: 100% 100%;
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+}
+
+.lens {
+  position: absolute;
+  inset: 0;
+  display: block;
+  width: 100%;
+  height: auto;
+  -webkit-user-drag: none;
+  /* a few pixels of play inside the black rim */
+  transform: translate(calc(var(--dx) * 1.9cqw), calc(var(--dy) * 1.5cqw));
+  transition: transform 140ms ease-out;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .root,
+  .head,
+  .lens {
+    transition: none;
+  }
+}
+
+@media print {
+  .root {
+    display: none;
+  }
+}
+
+/* phones: smaller and tucked further behind the edge, clear of the copy */
+@media (max-width: 759px) {
+  .root {
+    width: 38px;
+  }
+
+  .root[data-shown="true"] {
+    transform: translateX(22%);
+  }
+
+  .root[data-shown="true"][data-near="true"] {
+    transform: translateX(10%);
+  }
+}

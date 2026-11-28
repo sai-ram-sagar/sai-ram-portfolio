@@ -21,6 +21,7 @@ export const ProjectCard = ({
   project: { title, imageSrc, description, skills, demo },
   index = 0,
   delay = 0,
+  active = false,
 }) => {
   const { ready, imageProps } = useImageReady();
   const { ref, onPointerMove } = usePointerSpotlight();
@@ -31,6 +32,7 @@ export const ProjectCard = ({
       ref={ref}
       onPointerMove={onPointerMove}
       className={styles.folder}
+      data-active={active}
       data-reveal="scale"
       style={{ "--reveal-delay": `${delay}ms` }}
     >

@@ -1,4 +1,5 @@
-import { useEffect, useRef, useState } from "react";
+import { useRef } from "react";
+import { usePaletteIs, usePeekGaze } from "../../hooks/usePeekGaze";
 import peekUrl from "/assets/batman/batman-peek.webp?url";
 import irisLUrl from "/assets/batman/batman-iris-l.webp?url";
 import irisRUrl from "/assets/batman/batman-iris-r.webp?url";
@@ -15,8 +16,6 @@ const EYES = [
   { cx: 327, cy: 332, iris: irisRUrl, mask: eyeRUrl },
 ];
 
-const clamp = (v, lo, hi) => Math.min(hi, Math.max(lo, v));
-
 /**
  * A little Batman peeking up over the bottom edge of the page whose eyes - and head -
  * follow the cursor. With nothing to follow (touch, or a still mouse) he looks around on
@@ -25,62 +24,7 @@ const clamp = (v, lo, hi) => Math.min(hi, Math.max(lo, v));
  */
 const Peek = () => {
   const rootRef = useRef(null);
-  const [shown, setShown] = useState(false);
-
-  useEffect(() => {
-    const root = rootRef.current;
-    if (!root) return undefined;
-    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
-      const t = setTimeout(() => setShown(true), 800);
-      return () => clearTimeout(t);
-    }
-
-    let frame = 0;
-    let last = performance.now();
-    let idleTimer = 0;
-    let wander = 0;
-
-    const look = (dx, dy, near) => {
-      root.style.setProperty("--dx", dx.toFixed(3));
-      root.style.setProperty("--dy", dy.toFixed(3));
-      root.dataset.near = near ? "true" : "false";
-    };
-
-    const onMove = (event) => {
-      last = performance.now();
-      cancelAnimationFrame(frame);
-      frame = requestAnimationFrame(() => {
-        const rect = root.getBoundingClientRect();
-        /* aim from the eyes, a little below the top of the visible head */
-        const ox = rect.left + rect.width / 2;
-        const oy = rect.top + rect.height * 0.5;
-        const vx = event.clientX - ox;
-        const vy = event.clientY - oy;
-        look(clamp(vx / 320, -1, 1), clamp(vy / 260, -1, 1), Math.hypot(vx, vy) < 170);
-      });
-    };
-
-    /* with nothing to follow, glance about now and then */
-    const idle = () => {
-      if (performance.now() - last > 4000) {
-        look(rand(-1, 1), rand(-0.6, 0.8), false);
-      }
-      wander = window.setTimeout(idle, rand(1600, 3200));
-    };
-    const rand = (a, b) => a + Math.random() * (b - a);
-
-    window.addEventListener("pointermove", onMove, { passive: true });
-    wander = window.setTimeout(idle, 3000);
-    const rise = window.setTimeout(() => setShown(true), 1200);
-
-    return () => {
-      window.removeEventListener("pointermove", onMove);
-      cancelAnimationFrame(frame);
-      clearTimeout(idleTimer);
-      clearTimeout(wander);
-      clearTimeout(rise);
-    };
-  }, []);
+  const shown = usePeekGaze(rootRef, { eyeY: 0.5 });
 
   return (
     <div className={styles.root} ref={rootRef} data-shown={shown} aria-hidden="true">
@@ -111,19 +55,4 @@ const Peek = () => {
 };
 
 /** Batman palette only; each time it is chosen he peeks up afresh. */
-export const BatPeek = () => {
-  const [active, setActive] = useState(
-    () => document.documentElement.dataset.palette === "batman",
-  );
-
-  useEffect(() => {
-    const root = document.documentElement;
-    const sync = () => setActive(root.dataset.palette === "batman");
-    sync();
-    const observer = new MutationObserver(sync);
-    observer.observe(root, { attributes: true, attributeFilter: ["data-palette"] });
-    return () => observer.disconnect();
-  }, []);
-
-  return active ? <Peek /> : null;
-};
+export const BatPeek = () => (usePaletteIs("batman") ? <Peek /> : null);

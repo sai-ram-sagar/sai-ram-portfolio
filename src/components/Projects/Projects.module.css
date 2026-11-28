@@ -96,8 +96,7 @@
 /* ============================================================
    Grids
    ============================================================ */
-.workGrid,
-.projectGrid {
+.workGrid {
   display: grid;
   gap: var(--sp-4);
 }
@@ -126,29 +125,9 @@
   }
 }
 
-@media (min-width: 760px) {
-  .projectGrid {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-}
-
 @media (min-width: 1000px) {
   .workGrid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-}
-
-@media (min-width: 1060px) {
-  .projectGrid {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-  }
-}
-
-/* wide screens: four to a row, so the eight projects sit in two tidy rows */
-@media (min-width: 1200px) {
-  .projectGrid {
-    grid-template-columns: repeat(4, minmax(0, 1fr));
-    gap: var(--sp-3);
   }
 }
 
@@ -161,5 +140,172 @@
 
   .group:has(.bleed) + .group::before {
     top: -1.75rem;
+  }
+}
+
+
+/* ============================================================
+   Project ring
+
+   Every card shares one grid cell, so the cell is as tall as the tallest
+   card and all of them stretch to it: identical size, centred. Position,
+   scale and depth are written to each slot by the carousel in Projects.jsx.
+   ============================================================ */
+.stage {
+  display: grid;
+  justify-items: center;
+  width: 100cqw;
+  margin-inline: calc(50% - 50cqw);
+  padding-block: 2.75rem 2.5rem;
+  perspective: 1200px;
+  overflow: hidden;
+  /* vertical swipes still scroll the page; sideways ones turn the ring */
+  touch-action: pan-y;
+  user-select: none;
+  -webkit-user-select: none;
+  cursor: grab;
+}
+
+.stage:active {
+  cursor: grabbing;
+}
+
+.stage img {
+  -webkit-user-drag: none;
+}
+
+.slot {
+  grid-area: 1 / 1;
+  display: flex;
+  flex-direction: column;
+  width: min(78%, 21rem);
+  will-change: transform, opacity;
+}
+
+.slot > * {
+  flex: 1;
+}
+
+@media (min-width: 760px) {
+  .slot {
+    width: 21rem;
+  }
+
+  .stage {
+    -webkit-mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
+    mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
+  }
+}
+
+/* ============================================================
+   Pager - position, arrows, pause
+   ============================================================ */
+.pager {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--sp-4);
+  margin-top: var(--sp-3);
+}
+
+.counter {
+  flex-shrink: 0;
+  font-family: var(--font-mono);
+  font-size: var(--fs-eyebrow);
+  letter-spacing: var(--tracking-eyebrow);
+  font-weight: 600;
+  color: var(--accent);
+}
+
+.counterOf {
+  font-weight: 400;
+  color: var(--color-text-dim);
+}
+
+.dots {
+  display: flex;
+  align-items: center;
+  min-width: 0;
+}
+
+/* a 28px hit area around a small mark */
+.dot {
+  position: relative;
+  width: 20px;
+  height: 28px;
+  padding: 0;
+  background: none;
+  border: 0;
+  cursor: pointer;
+}
+
+.dot::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 6px;
+  height: 6px;
+  border-radius: 999px;
+  background: var(--line-2);
+  transform: translate(-50%, -50%);
+  transition:
+    width var(--dur-3) var(--e-out),
+    background-color var(--dur-3) var(--e-out);
+}
+
+.dot[data-active="true"]::after {
+  width: 16px;
+  background: var(--accent);
+}
+
+.controls {
+  display: flex;
+  flex-shrink: 0;
+  gap: var(--sp-2);
+}
+
+.ctrl {
+  display: grid;
+  place-items: center;
+  width: 36px;
+  height: 36px;
+  padding: 0;
+  border-radius: 50%;
+  border: 1px solid var(--line-2);
+  background: transparent;
+  color: var(--color-text);
+  cursor: pointer;
+  transition:
+    background-color var(--dur-3) var(--e-out),
+    border-color var(--dur-3) var(--e-out),
+    opacity var(--dur-3) var(--e-out);
+}
+
+.ctrl:hover:not(:disabled) {
+  border-color: var(--accent);
+  background: rgba(var(--accent-rgb), 0.1);
+}
+
+.ctrl:disabled {
+  opacity: 0.35;
+  cursor: default;
+}
+
+.ctrl:focus-visible,
+.dot:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+/* phones: arrows are redundant with swiping, and the pause stays */
+@media (max-width: 759px) {
+  .ctrl:not(:last-child) {
+    display: none;
+  }
+
+  .ctrl {
+    width: 44px;
+    height: 44px;
   }
 }
